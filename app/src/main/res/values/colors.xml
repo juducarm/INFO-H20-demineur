@@ -7,4 +7,18 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="midnightBlue">#191970</color>
+    <color name="navyBlue">#000080</color>
+    <color name="slateBlue">#6a5acd</color>
+    <color name="blue">#0000ff</color>
+    <color name="skyBlue">#87ceeb</color>
+    <color name="lightSkyBlue">#87cefa</color>
+    <color name="steelBlue">#4682b4</color>
+    <color name="lightSteelBlue">#b0c4de</color>
+    <color name="paleTurquoise">#afeeee</color>
+    <color name="darkTurquoise">#00ced1</color>
+
+    <!-- couleurs FieldView -->
+    <color name="backgroundPaint_color">@color/lightSteelBlue</color>
 </resources>
