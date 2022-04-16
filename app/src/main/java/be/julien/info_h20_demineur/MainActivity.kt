@@ -15,10 +15,12 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var  fieldView: FieldView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         fieldView = findViewById<FieldView>(R.id.main_layout)
+        textTest.text = "bonjour"
 
 
     }
