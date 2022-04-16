@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/jujud/AndroidStudioProjects/INFOH20demineur/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/jujud/AndroidStudioProjects/INFOH20demineur/app/src/main/res/layout/activity_main.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.27314814814814814" />
+        <entry key="app/src/main/res/layout/fragment_field.xml" value="0.359375" />
       </map>
     </option>
   </component>
