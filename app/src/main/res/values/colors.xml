@@ -21,4 +21,5 @@
 
     <!-- couleurs FieldView -->
     <color name="backgroundPaint_color">@color/lightSteelBlue</color>
+    <color name="main_layout">@color/blue</color>
 </resources>
