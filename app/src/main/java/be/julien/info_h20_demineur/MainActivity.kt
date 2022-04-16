@@ -27,20 +27,20 @@ class MainActivity : AppCompatActivity() {
             if (bouton_principal.text == getString(R.string.afficher_jeu)) {
                 bouton_principal.text = getString(R.string.afficher_menu )
 
-                val fieldFragment = FieldFragment()  //creation du fragment clavier
+                val fragmentField = FragmentField()  //creation du fragment clavier
 
                 val manager = supportFragmentManager //appel au gestionnaire de fragment
 
                 //transaction vers le nouveau fragment
                 val transaction = manager.beginTransaction()
-                transaction.replace(R.id.fragment_container, fieldFragment)
+                transaction.replace(R.id.fragment_container, fragmentField)
                 transaction.addToBackStack(null) //conserve le fragment en mémoire
                 transaction.commit()
             }
 
             else {
                 bouton_principal.text = getString(R.string.afficher_jeu)
-                val fragmentMenu = MenuFragment()  //creation du fragment clavier
+                val fragmentMenu = FragmentMenu()  //creation du fragment clavier
 
                 val manager = supportFragmentManager //appel au gestionnaire de fragment
 
