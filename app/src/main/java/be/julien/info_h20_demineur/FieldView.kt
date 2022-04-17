@@ -25,9 +25,13 @@ import androidx.fragment.app.FragmentActivity
 class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr), SurfaceHolder.Callback, Runnable {
     lateinit var canvas: Canvas
     var drawing = false
+    var screenWidth = 0f
+    var screenHeight = 0f
+    val box = Box(0.0f, this)
     var nbreboxes = width % 18
-    var pos_x = 0.0
-    var pos_y = 0.0
+    var pos_x : Float = 0.0f
+    var pos_y : Float = 0.0f
+    val nbreBoxes = 18
     lateinit var thread: Thread
     val resolution = PointF(2400f,1080f) //resolution de l'ecran
 
@@ -44,24 +48,24 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
 
-    /*override fun onSizeChanged(w:Int, h:Int, oldw:Int, oldh:Int) {
+    override fun onSizeChanged(w:Int, h:Int, oldw:Int, oldh:Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         screenWidth = w.toFloat()
         screenHeight = h.toFloat()
-        box.size = (screenWidth / 18f)
+        box.boxSize = (w / 18f)
+
     }
-
-
     fun draw(){
-        for (m in 1..nbreboxes) {
-            for (n in 1..nbreboxes) {
-                box.draw(pos_x, pos_y, size)
-                pos_x += box.size
+        for (m in 1..nbreBoxes) {
+            for (n in 1..nbreBoxes) {
+                PointF(pos_x, pos_y)
+                //box.draw()
+                pos_x += box.boxSize
             }
-            pos_y += box.size
+            pos_y += box.boxSize
 
         }
-    }*/
+    }
 
     fun pause() {
         drawing = false
