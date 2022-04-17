@@ -52,19 +52,27 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         for (box in theBoxes) {
-            box.DrawHidden(canvas)
+          box.DrawDiscover(canvas)
         }
     }
     //création des boxes
     fun boxCreation() {
         (0..nbrBoxesWidth).forEach { x ->
             (0..nbrBoxesHeight).forEach { y ->
-                val bomb = Bomb(Point(x - 1, y - 1), boxSize, this)
-                val safeBox = SafeBox(Point(x - 1, y - 1), boxSize, this)
-                val closeBox = CloseBox(Point(x - 1, y - 1), boxSize, this)
-                if (random.nextDouble() < 0.1) theBombs.add(bomb)
-                if (random.nextDouble() > 0.9) theSafeBoxes.add(safeBox)
-                else theCloseBoxes.add(closeBox)
+                var box = Box(Point(0, 0), 0f, this)
+                if (random.nextDouble() <= 0.1) {
+                    box = Bomb(Point(x - 1, y - 1), boxSize, this)
+                    theBombs.add(box)
+                }
+                if (random.nextDouble() > 0.9) {
+                    box = SafeBox(Point(x - 1, y - 1), boxSize, this)
+                    theSafeBoxes.add(box)
+                }
+                else {
+                    box = CloseBox(Point(x - 1, y - 1), boxSize, this)
+                    theCloseBoxes.add(box)
+                }
+                theBoxes.add(box)
                 }
             }
         }
