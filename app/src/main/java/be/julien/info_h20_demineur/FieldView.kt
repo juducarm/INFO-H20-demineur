@@ -21,47 +21,44 @@ import android.util.SparseIntArray
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 
+/* LISTE DES CHANGEMENTS QUE J'AI FAIT (tu peux biensur rechanger si tu trouves que c'était mieux avant)
+J'ai mis 2 paramètres pour le nbr de box, comme ça on est pas obligé que ce soit un carré
+j'ai enlevé le truc "onSizedChanged", parce que ça sert juste à ce qu'on puisse faire fonctionner l'app
+en écran portrait et paysage, mais notre app elle reste en portrait
+j'ai changé la variable position en fieldPosition. Elle indique les coordonnées de la case sur le plan des cases
+ */
 
-class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr), SurfaceHolder.Callback, Runnable {
-    lateinit var canvas: Canvas
+
+class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
+    SurfaceView(context, attributes,defStyleAttr), SurfaceHolder.Callback, Runnable {
+
+    var canvas: Canvas? = null
     var drawing = false
-    var nbreboxes = width % 18
-    var pos_x = 0.0
-    var pos_y = 0.0
+    val nbrBoxesWidth = 10
+    val nbrBoxesHeight = 10
+    val theBoxes = ArrayList<Box>()
+    var pixelPosition = PointF() //position sur l'écran
+    var fieldPosition = PointF() //position sur la plan des cases
     lateinit var thread: Thread
-    val resolution = PointF(2400f,1080f) //resolution de l'ecran
+    val resolution = PointF(1080f, 1920f) //nombre de pixels sur le fragment
+    val boxSize = maxOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
 
-
-
-    override fun onTouchEvent(e: MotionEvent): Boolean {
-        when (e.action) {
-            MotionEvent.ACTION_DOWN -> {
-                println(e.rawX.toString())
-                println(e.rawY.toString())
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        for (box in theBoxes) {
+            box.DrawHidden(canvas)
+        }
+    }
+    //création des boxs
+    fun boxCreation() {
+        (0..nbrBoxesWidth).forEach { x ->
+            (0..nbrBoxesHeight).forEach { y ->
+                val box = Box(Point(x - 1, y - 1), boxSize, this)
+                theBoxes.add(box)
+                }
             }
         }
-        return true
-    }
 
-
-    /*override fun onSizeChanged(w:Int, h:Int, oldw:Int, oldh:Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        screenWidth = w.toFloat()
-        screenHeight = h.toFloat()
-        box.size = (screenWidth / 18f)
-    }
-
-
-    fun draw(){
-        for (m in 1..nbreboxes) {
-            for (n in 1..nbreboxes) {
-                box.draw(pos_x, pos_y, size)
-                pos_x += box.size
-            }
-            pos_y += box.size
-
-        }
-    }*/
 
     fun pause() {
         drawing = false
@@ -74,21 +71,36 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         thread.start()
     }
 
-
-    override fun surfaceCreated(p0: SurfaceHolder) {
-        TODO("Not yet implemented")
+    override fun surfaceChanged(
+        holder: SurfaceHolder, format: Int,
+        width: Int, height: Int
+    ) {
     }
 
-    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
-        TODO("Not yet implemented")
+    override fun surfaceCreated(holder: SurfaceHolder) {
+        thread = Thread(this)
+        thread.start()
     }
 
-    override fun surfaceDestroyed(p0: SurfaceHolder) {
-        TODO("Not yet implemented")
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
+        thread.join()
     }
 
-    override fun run() {
-        TODO("Not yet implemented")
-    }
+    override fun run() {}
 
 }
+
+
+    /* utile pour tester le fonctionnement de onTouchEvent :
+    override fun onTouchEvent(e: MotionEvent): Boolean {
+        when (e.action) {
+            MotionEvent.ACTION_DOWN -> {
+
+            }
+        }
+        return true
+    }
+*/
+
+
+

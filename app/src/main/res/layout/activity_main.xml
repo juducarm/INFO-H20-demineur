@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_main"
@@ -11,7 +12,7 @@
 
 
     <Button
-        android:id="@+id/bouton_principal"
+        android:id="@+id/btnChangeFragment"
         style="@style/style_texte_principal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/nom_instrument"
+        android:id="@+id/text2"
         style="@style/style_texte_principal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,22 +34,22 @@
         android:background="@color/main_layout"
         android:padding="@dimen/default_padding"
         android:text="text 2"
-        app:layout_constraintBottom_toTopOf="@+id/nom_preset"
+        app:layout_constraintBottom_toTopOf="@+id/text1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/nom_preset"
+        android:id="@+id/text1"
         style="@style/style_texte_principal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/main_layout"
         android:padding="@dimen/default_padding"
-        android:text="text 1"
+        android:text="text1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nom_instrument"
+        app:layout_constraintTop_toBottomOf="@id/text2"
         app:layout_constraintBottom_toTopOf="@id/fragment_container"/>
 
     <FrameLayout
@@ -61,21 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <be.julien.info_h20_demineur.FieldView
-            android:id="@+id/main_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/skyBlue" />
-
-    </FrameLayout>
-
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
 

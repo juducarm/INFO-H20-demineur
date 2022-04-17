@@ -13,8 +13,10 @@ import android.view.View
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_field.*
 
 class MainActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,33 +25,34 @@ class MainActivity : AppCompatActivity() {
 
 
         //bouton de changement de fragment
-        bouton_principal.setOnClickListener {
-            if (bouton_principal.text == getString(R.string.afficher_jeu)) {
-                bouton_principal.text = getString(R.string.afficher_menu )
+        btnChangeFragment.setOnClickListener {
+            if (btnChangeFragment.text == getString(R.string.afficher_jeu)) {
+                btnChangeFragment.text = getString(R.string.afficher_menu)
 
                 val fragmentField = FragmentField()  //creation du fragment clavier
 
                 val manager = supportFragmentManager //appel au gestionnaire de fragment
+
 
                 //transaction vers le nouveau fragment
                 val transaction = manager.beginTransaction()
                 transaction.replace(R.id.fragment_container, fragmentField)
                 transaction.addToBackStack(null) //conserve le fragment en mémoire
                 transaction.commit()
-            }
-
-            else {
-                bouton_principal.text = getString(R.string.afficher_jeu)
+            } else {
+                btnChangeFragment.text = getString(R.string.afficher_jeu)
                 val fragmentMenu = FragmentMenu()  //creation du fragment clavier
 
                 val manager = supportFragmentManager //appel au gestionnaire de fragment
 
                 //transaction vers le nouveau fragment
                 val transaction = manager.beginTransaction()
-                transaction.replace(R.id.fragment_container,fragmentMenu)
+                transaction.replace(R.id.fragment_container, fragmentMenu)
                 transaction.addToBackStack(null) //conserve le fragment en mémoire
                 transaction.commit()
             }
         }
+
+
     }
 }
