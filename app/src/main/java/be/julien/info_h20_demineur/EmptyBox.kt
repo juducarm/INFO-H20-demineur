@@ -19,7 +19,9 @@ class EmptyBox(fieldPosition: android.graphics.Point, size : Float, view: FieldV
     override fun DrawDiscover(canvas: Canvas?) {
         super.DrawDiscover(canvas)
         canvas?.drawRect(areaWithGrid, paint) // dessin de la case
+        println("DrawDiscover / bombes : $bombsAround")
     }
+
 
     fun findBombsAround(theBombs: ArrayList<Bomb>) {
 
@@ -31,10 +33,10 @@ class EmptyBox(fieldPosition: android.graphics.Point, size : Float, view: FieldV
                 bomb.fieldPosition.y - fieldPosition.y)
             if (AroundList.contains(temoin)) {
                 bombsAround++
-                println("nombre de bomes : $bombsAround")
+                /*println("nombre de bomes : $bombsAround")
                 print("Position1 : $fieldPosition et Position2 : ")
                 println(bomb.fieldPosition)
-                println(" temoin : $temoin")
+                println(" temoin : $temoin")*/
                 paint.color = Color.BLUE
             }
         }

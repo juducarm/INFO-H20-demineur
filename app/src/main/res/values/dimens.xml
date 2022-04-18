@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Esthétique -->
     <dimen name="magre_boutton_principal">20dp</dimen>
     <dimen name="magre_texte_milieu">20dp</dimen>
     <dimen name="default_padding">5dp</dimen>
+    <dimen name="heightTopBar">100dp</dimen>
+
+    <!-- Paramètres du jeu -->
+    <integer name="nbrBoxesHeight">7</integer>
+    <integer name="nbrBoxesWidth">7</integer>
+    <integer name="gameDifficutly">10</integer>
+
 </resources>
