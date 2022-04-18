@@ -15,8 +15,8 @@ class Bomb(fieldPosition: Point, view: FieldView):
         paint.color = Color.BLACK
     }
 
-    override fun Draw(canvas: Canvas?) {
-        super.Draw(canvas)
+    override fun draw(canvas: Canvas?) {
+        super.draw(canvas)
         if (!hide) {
             canvas?.drawRect(areaWithGrid, paint) // dessin de la case
         }
@@ -25,14 +25,6 @@ class Bomb(fieldPosition: Point, view: FieldView):
     //envoie sa présence à chaque EmptyBox autours d'elle
    fun warningBomb(theEmptyBoxes: ArrayList<EmptyBox>) {
 
-        //liste permettant d'accéder aux cases autours
-        val aroundList = listOf(
-            Point(-1, -1), Point(-1, 0), Point(-1, 1),
-            Point(1, -1), Point(1, 0), Point(1, 1),
-            Point(0, 1), Point(0, -1)
-        )
-
-        //envoie du message
         aroundList.forEach { point ->
             val fieldAround = Point(point.x + fieldPosition.x, point.y + fieldPosition.y)
             if (theEmptyBoxes.any { it.fieldPosition == fieldAround }) { //vérifie si il ya une EmptyBox sur la case

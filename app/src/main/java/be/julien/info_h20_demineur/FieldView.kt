@@ -33,7 +33,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         super.onDraw(canvas)
         //theEmptyBoxes.forEach { box -> box.findBombsAround(theBombs) }
         theBombs.forEach { it.warningBomb(theEmptyBoxes) }
-        theBoxes.forEach { it.Draw(canvas) }
+        theBoxes.forEach { it.draw(canvas) }
     }
 
     //création des boxes
@@ -61,7 +61,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         when (e.action) {MotionEvent.ACTION_DOWN -> {
             //eventOnField : position du clic sur le field
             val eventOnField = Point((e.rawX / boxSize).toInt(),((e.rawY - pixelsTopBar)/ boxSize).toInt())
-            println("position du clic : $eventOnField")
             //repere la case sous le clic
             val boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
             boxUnderEvent.hide = false
