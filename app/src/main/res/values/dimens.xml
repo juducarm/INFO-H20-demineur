@@ -11,5 +11,6 @@
     <integer name="nbrBoxesHeight">7</integer>
     <integer name="nbrBoxesWidth">7</integer>
     <integer name="gameDifficutly">10</integer>
+    <integer name="gridSize">5</integer>
 
 </resources>

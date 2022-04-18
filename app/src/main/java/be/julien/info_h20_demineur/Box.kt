@@ -1,19 +1,18 @@
 package be.julien.info_h20_demineur
 
 
-import android.content.res.Resources
 import android.graphics.*
-import android.os.Parcelable
-import kotlinx.android.synthetic.main.*
+
 
 //classe abstraite car elle ne se manifestera qu'à travers ses sous-classes
-open class Box(val fieldPosition: android.graphics.Point, val size : Float, var view: FieldView) {
+open class Box(val fieldPosition: android.graphics.Point, var view: FieldView) {
 
-
+    var hide = true
+    val size = view.boxSize
     val area = RectF(fieldPosition.x * size , fieldPosition.y * size, (fieldPosition.x + 1) * size,
         (fieldPosition.y + 1) * size)
     val hiddenBoxPaint = Paint()
-    val gridSize = 7
+    val gridSize = view.gridSize
     val gridPaint = Paint()
     val areaWithGrid = RectF(area.left + gridSize, area.top + gridSize, area.right - gridSize,
         area.bottom - gridSize)
@@ -29,10 +28,13 @@ open class Box(val fieldPosition: android.graphics.Point, val size : Float, var 
     }
 
     open fun DrawDiscover(canvas: Canvas?) {
+            //canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case
+        }
+    open fun Draw(canvas: Canvas?) {
         canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case
+        if (hide) {
+            canvas?.drawRect(areaWithGrid, hiddenBoxPaint) // dessin de la case cachée
+        }
+        else {}
     }
-
-
-
-
 }

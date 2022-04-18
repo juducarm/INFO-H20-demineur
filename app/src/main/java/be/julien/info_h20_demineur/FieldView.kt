@@ -1,21 +1,10 @@
 package be.julien.info_h20_demineur
 
-import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.SurfaceHolder
 import android.view.SurfaceView
-import kotlinx.android.synthetic.main.*
-import android.app.AlertDialog
-import android.app.Dialog
-import android.content.DialogInterface
+import android.content.Context
 import android.graphics.*
-import android.media.AudioAttributes
-import android.media.SoundPool
-import android.os.Bundle
-import android.util.SparseIntArray
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -24,7 +13,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     SurfaceView(context, attributes,defStyleAttr) {
 
     var random = Random()
-    var canvas: Canvas? = null
 
     //listes d'objets
     val theBoxes = ArrayList<Box>()
@@ -37,15 +25,15 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val resolution = PointF(1080f, 1920f) //nombre de pixels sur le fragment
     val pixelsTopBar = resources.getDimension(R.dimen.heightTopBar) //hauteur en pixel de la TopBar (Float)
     val boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
+    val gridSize = resources.getInteger(R.integer.gridSize)
     val gameDifficulty = resources.getInteger(R.integer.gameDifficutly).toFloat() / 100
 
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         //theEmptyBoxes.forEach { box -> box.findBombsAround(theBombs) }
-        theBombs.forEach { bomb -> bomb.warningBomb(theEmptyBoxes) }
-        theBoxes.forEach { box -> box.DrawHidden(canvas) }
-        println("dessine")
+        theBombs.forEach { it.warningBomb(theEmptyBoxes) }
+        theBoxes.forEach { it.Draw(canvas) }
     }
 
     //création des boxes
@@ -56,11 +44,11 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                 lateinit var box: Box
 
                 if (random.nextDouble() <= gameDifficulty) {
-                    box = Bomb(Point(x - 1, y - 1), boxSize, this)
+                    box = Bomb(Point(x - 1, y - 1), this)
                     theBombs.add(box)
                 }
                 else {
-                    box = EmptyBox(Point(x - 1, y - 1), boxSize, this)
+                    box = EmptyBox(Point(x - 1, y - 1), this)
                     theEmptyBoxes.add(box)
                 }
                 theBoxes.add(box)
@@ -75,10 +63,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             val eventOnField = Point((e.rawX / boxSize).toInt(),((e.rawY - pixelsTopBar)/ boxSize).toInt())
             println("position du clic : $eventOnField")
             //repere la case sous le clic
-            val BoxUnderEvent = theBoxes.filter{ it.fieldPosition == eventOnField}.single()
-            println(BoxUnderEvent)
-            BoxUnderEvent.DrawDiscover(canvas)
-            theBoxes.forEach { box -> box.DrawHidden(canvas) }
+            val boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
+            boxUnderEvent.hide = false
+            invalidate()
             }
         }
         return true
