@@ -12,6 +12,7 @@ open class Box(val fieldPosition: android.graphics.Point, val size : Float, var 
 
     val area = RectF(fieldPosition.x * size , fieldPosition.y * size, (fieldPosition.x + 1) * size,
         (fieldPosition.y + 1) * size)
+    val theBoxesAround = ArrayList<Box>() //liste des 6 cases autours de la case
     val hiddenBoxPaint = Paint()
     val gridSize = 5
     val gridPaint = Paint()
@@ -33,6 +34,7 @@ open class Box(val fieldPosition: android.graphics.Point, val size : Float, var 
     open fun DrawDiscover(canvas: Canvas?) {
         canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case
     }
+
 
 
 

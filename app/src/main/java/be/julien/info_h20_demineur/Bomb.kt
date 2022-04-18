@@ -19,4 +19,8 @@ class Bomb(fieldPosition: android.graphics.Point, size : Float, view: FieldView)
         super.DrawDiscover(canvas)
         canvas?.drawRect(areaWithGrid, paint) // dessin de la case
     }
+
+    fun warningBomb() {
+
+    }
 }

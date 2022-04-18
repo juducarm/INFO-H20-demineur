@@ -41,36 +41,33 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val nbrBoxesHeight = 10
     val theBoxes = ArrayList<Box>()
     val theBombs = ArrayList<Bomb>()
-    val theSafeBoxes = ArrayList<SafeBox>()
-    val theCloseBoxes = ArrayList<CloseBox>()
-    var pixelPosition = PointF() //position sur l'écran
-    var fieldPosition = PointF() //position sur la plan des cases
+    val theEmptyBoxes = ArrayList<EmptyBox>()
     lateinit var thread: Thread
     val resolution = PointF(1080f, 1920f) //nombre de pixels sur le fragment
     val boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
+    val gameDifficulty = 0.1
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        for (box in theBoxes) {
-          box.DrawDiscover(canvas)
+
+        theEmptyBoxes.forEach { box -> box.findBombsAround(theBombs) }
+        theBoxes.forEach { box -> box.DrawDiscover(canvas)
         }
     }
     //création des boxes
     fun boxCreation() {
-        (0..nbrBoxesWidth).forEach { x ->
-            (0..nbrBoxesHeight).forEach { y ->
-                var box = Box(Point(0, 0), 0f, this)
-                if (random.nextDouble() <= 0.1) {
+        (1..nbrBoxesWidth).forEach { x ->
+            (1..nbrBoxesHeight).forEach { y ->
+
+                lateinit var box: Box
+
+                if (random.nextDouble() <= gameDifficulty) {
                     box = Bomb(Point(x - 1, y - 1), boxSize, this)
                     theBombs.add(box)
                 }
-                if (random.nextDouble() > 0.9) {
-                    box = SafeBox(Point(x - 1, y - 1), boxSize, this)
-                    theSafeBoxes.add(box)
-                }
                 else {
-                    box = CloseBox(Point(x - 1, y - 1), boxSize, this)
-                    theCloseBoxes.add(box)
+                    box = EmptyBox(Point(x - 1, y - 1), boxSize, this)
+                    theEmptyBoxes.add(box)
                 }
                 theBoxes.add(box)
                 }
