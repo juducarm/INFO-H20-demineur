@@ -21,6 +21,7 @@ class FragmentField : Fragment() {
         fieldView.setWillNotDraw(false)
         fieldView.invalidate()
         fieldView.boxCreation()
+        fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
         return layoutView
     }
 

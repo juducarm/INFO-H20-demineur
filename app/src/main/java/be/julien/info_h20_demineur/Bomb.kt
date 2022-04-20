@@ -29,9 +29,10 @@ class Bomb(fieldPosition: Point, view: FieldView):
             val fieldAround = Point(point.x + fieldPosition.x, point.y + fieldPosition.y)
             if (theEmptyBoxes.any { it.fieldPosition == fieldAround }) { //vérifie si il ya une EmptyBox sur la case
                 val boxAround = theEmptyBoxes.single { it.fieldPosition == fieldAround }
+                boxAround.isSafe = false //la case n'est pas safe
                 boxAround.bombsAround++
-                boxAround.paint.color = Color.BLUE
-                }
+                boxAround.boxPaint.color = Color.BLUE
+            }
         }
 
 

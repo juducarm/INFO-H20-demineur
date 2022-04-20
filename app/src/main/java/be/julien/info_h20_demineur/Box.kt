@@ -17,6 +17,7 @@ open class Box(val fieldPosition: android.graphics.Point, var view: FieldView) {
     val areaWithGrid = RectF(area.left + gridSize, area.top + gridSize, area.right - gridSize,
         area.bottom - gridSize)
 
+    var isSafe = true // est true si la case n'est pas une bomb et n'est pas entourée de bomb
     val aroundList = listOf( //liste permettant d'accéder aux cases autours
         Point(-1, -1), Point(-1, 0), Point(-1, 1),
         Point(1, -1), Point(1, 0), Point(1, 1),
@@ -35,12 +36,17 @@ open class Box(val fieldPosition: android.graphics.Point, var view: FieldView) {
 
     open fun DrawDiscover(canvas: Canvas?) {
             //canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case
-        }
+    }
+
     open fun draw(canvas: Canvas?) {
         canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case
         if (hide) {
             canvas?.drawRect(areaWithGrid, hiddenBoxPaint) // dessin de la case cachée
         }
 
+    }
+
+    operator fun invoke(): EmptyBox { //permet de change la classe de l'objet de Box à EmptyBo
+    return EmptyBox(fieldPosition, view)
     }
 }

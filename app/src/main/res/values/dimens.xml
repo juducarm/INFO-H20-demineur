@@ -8,9 +8,9 @@
     <dimen name="heightTopBar">100dp</dimen>
 
     <!-- Paramètres du jeu -->
-    <integer name="nbrBoxesHeight">15</integer>
+    <integer name="nbrBoxesHeight">22</integer>
     <integer name="nbrBoxesWidth">15</integer>
-    <integer name="gameDifficutly">7</integer>
-    <integer name="gridSize">2</integer>
+    <integer name="gameDifficutly">10</integer>
+    <integer name="gridSize">3</integer>
 
 </resources>

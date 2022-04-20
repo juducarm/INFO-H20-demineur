@@ -18,6 +18,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val theBoxes = ArrayList<Box>()
     val theBombs = ArrayList<Bomb>()
     val theEmptyBoxes = ArrayList<EmptyBox>()
+    val discoverdBoxes = ArrayList<Box>()
 
     //réglages
     val nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth)
@@ -29,10 +30,10 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val gameDifficulty = resources.getInteger(R.integer.gameDifficutly).toFloat() / 100
 
 
+
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        //theEmptyBoxes.forEach { box -> box.findBombsAround(theBombs) }
-        theBombs.forEach { it.warningBomb(theEmptyBoxes) }
         theBoxes.forEach { it.draw(canvas) }
     }
 
@@ -45,6 +46,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
                 if (random.nextDouble() <= gameDifficulty) {
                     box = Bomb(Point(x - 1, y - 1), this)
+                    box.isSafe = false //la case n'est pas safe (cf. classe Box)
                     theBombs.add(box)
                 }
                 else {
@@ -61,10 +63,17 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         when (e.action) {MotionEvent.ACTION_DOWN -> {
             //eventOnField : position du clic sur le field
             val eventOnField = Point((e.rawX / boxSize).toInt(),((e.rawY - pixelsTopBar)/ boxSize).toInt())
+            println("Case du clic : $eventOnField")
             //repere la case sous le clic
             val boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
+            discoverdBoxes.add(boxUnderEvent)
             boxUnderEvent.hide = false
-            invalidate()
+            if (boxUnderEvent.isSafe) {
+                val emptyBox: EmptyBox = boxUnderEvent.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
+                emptyBox.cleanField() //devoile toute la partie safe autours de la case
+                emptyBox.showAround()
+            }
+            invalidate() //appel à la méthode onDraw
             }
         }
         return true
