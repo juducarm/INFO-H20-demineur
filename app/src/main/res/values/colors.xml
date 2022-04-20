@@ -7,7 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
+    <color name="chineseSilver">#CCCCCC</color>
     <color name="midnightBlue">#191970</color>
     <color name="navyBlue">#000080</color>
     <color name="slateBlue">#6a5acd</color>
@@ -18,9 +18,18 @@
     <color name="lightSteelBlue">#b0c4de</color>
     <color name="paleTurquoise">#afeeee</color>
     <color name="darkTurquoise">#00ced1</color>
+    <color name="gradient">#5618E9</color>
+    <color name="linear">#8909F9</color>
 
     <!-- couleurs FieldView -->
     <color name="backgroundPaint_color">@color/lightSteelBlue</color>
     <color name="main_layout">@color/blue</color>
     <color name="hiddenBox_color">@color/slateBlue</color>
+    
+    <!--couleur MenuView-->
+    <color name="backgroundMenuNightOff">@color/navyBlue</color>
+    <color name="backgroundMenuNightOn">@color/chineseSilver</color>
+    <color name="backgroundButtonNightOn">@color/gradient</color>
+    <color name="backgroundButtonNightOff">@color/white</color>
+
 </resources>
