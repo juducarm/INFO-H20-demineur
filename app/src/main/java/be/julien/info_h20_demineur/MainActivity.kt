@@ -1,5 +1,6 @@
 package be.julien.info_h20_demineur
 
+import android.content.SharedPreferences
 import android.graphics.PointF
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -14,9 +15,11 @@ import android.os.PersistableBundle
 import android.view.View
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
+import androidx.appcompat.app.AppCompatDelegate
 import be.julien.info_h20_demineur.R.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_field.*
+import kotlinx.android.synthetic.main.fragment_menu.*
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -88,6 +91,36 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }.start()
 
 
+    }
+
+    fun changeMode() {
+        val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
+        val sharedPrefEdit: SharedPreferences.Editor = appSettingPrefs.edit()
+        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
+
+        if (isNightModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+
+        Changecouleur.setOnClickListener(View.OnClickListener {
+            if (isNightModeOn) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPrefEdit.putBoolean("NightMode", false)
+                sharedPrefEdit.apply()
+
+
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPrefEdit.putBoolean("NightMode", true)
+                sharedPrefEdit.apply()
+
+            }
+
+
+        })
     }
 
 

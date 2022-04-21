@@ -3,16 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/Background">
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/reglages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/purple_700"
+        android:background="@color/BackgroundBtn"
         android:text="Réglages"
+        android:textColor="@color/textBtn"
         android:textSize="17dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +39,7 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/Case"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">
 
@@ -57,7 +60,9 @@
                     android:layout_height="wrap_content"
                     android:text="HARD LEVEL"
                     android:textAlignment="center"
+                    android:textColor="@color/textBtnCase"
                     android:textSize="13dp" />
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/difficulte"
                     android:layout_width="wrap_content"
@@ -75,6 +80,7 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/Case"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">
 
@@ -95,14 +101,16 @@
                     android:layout_height="wrap_content"
                     android:text="TIMER"
                     android:textAlignment="center"
+                    android:textColor="@color/textBtnCase"
                     android:textSize="15dp" />
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:textOff="Off"
-                    android:textOn="On"/>
+                    android:textOn="On" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -115,6 +123,7 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/Case"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">
 
@@ -135,7 +144,9 @@
                     android:layout_height="wrap_content"
                     android:text="SON"
                     android:textAlignment="center"
+                    android:textColor="@color/textBtnCase"
                     android:textSize="15dp" />
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/son"
                     android:layout_width="wrap_content"
@@ -153,6 +164,7 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/Case"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">
 
@@ -173,12 +185,17 @@
                     android:layout_height="wrap_content"
                     android:text="MODE NUIT"
                     android:textAlignment="center"
+                    android:textColor="@color/textBtnCase"
                     android:textSize="14dp" />
-                <Switch
-                    android:id="@+id/modeNuit"
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/Changecouleur"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"/>
+                    android:background="@color/BtnCase"
+                    android:checked="true"
+                    android:text="@string/textBtnModeNight"
+                    android:textColor="@color/textBtnCase" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

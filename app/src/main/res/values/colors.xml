@@ -32,9 +32,13 @@
     <color name="number_color">@color/white</color>
     
     <!--couleur MenuView-->
-    <color name="backgroundMenuNightOff">@color/navyBlue</color>
-    <color name="backgroundMenuNightOn">@color/chineseSilver</color>
-    <color name="backgroundButtonNightOn">@color/gradient</color>
-    <color name="backgroundButtonNightOff">@color/white</color>
+    <color name="Background">#CCCCCC</color>
+    <color name="BackgroundBtn">@color/white</color>
+    <color name="textBtn">#191C1E</color>
+    <color name="Case">#FFFFFFFF</color>
+    <color name="textCase">#CCCCCC</color>
+    <color name="BtnCase">#CCCCCC</color>
+    <color name="textBtnCase">#191C1E</color>
+
 
 </resources>
