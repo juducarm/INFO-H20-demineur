@@ -1,5 +1,6 @@
 package be.julien.info_h20_demineur
 
+
 import android.graphics.PointF
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -22,57 +23,49 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.timer
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity() {
 
     lateinit var timer: TextView
 
-    override fun onClick(v: View) {
-
-        when(v.id) {
-            R.id.btnChangeFragment -> {
-                if (btnChangeFragment.text == getString(string.afficher_jeu)) {
-                    btnChangeFragment.text = getString(string.afficher_menu)
-
-                    val fragmentField = FragmentField()  //creation du fragment clavier
-                    val manager = supportFragmentManager //appel au gestionnaire de fragment
-
-                    //transaction vers le nouveau fragment
-                    val transaction = manager.beginTransaction()
-                    transaction.replace(id.fragment_container, fragmentField)
-                    transaction.addToBackStack(null) //conserve le fragment en mémoire
-                    transaction.commit()
-                }
-                else {
-                    btnChangeFragment.text = getString(string.afficher_jeu)
-
-                    val fragmentMenu = FragmentMenu()  //creation du fragment clavier
-                    val manager = supportFragmentManager //appel au gestionnaire de fragment
-
-                    //transaction vers le nouveau fragment
-                    val transaction = manager.beginTransaction()
-                    transaction.replace(id.fragment_container, fragmentMenu)
-                    transaction.addToBackStack(null) //conserve le fragment en mémoire
-                    transaction.commit()
-                }
-            }
-
-            R.id.btnFlag -> {
-                if (fieldView.plantFlag) { fieldView.plantFlag = false }
-                else { fieldView.plantFlag = true}
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getWindow().setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN); //cachage de la barre de status
         setContentView(layout.activity_main)
-        btnChangeFragment.setOnClickListener(this)
-        btnFlag.setOnClickListener(this)
 
+
+        //bouton de changement de fragment
+        btnChangeFragment.setOnClickListener {
+            if (btnChangeFragment.text == getString(string.afficher_jeu)) {
+                btnChangeFragment.text = getString(string.afficher_menu)
+
+                val fragmentField = FragmentField()  //creation du fragment clavier
+
+                val manager = supportFragmentManager //appel au gestionnaire de fragment
+
+
+                //transaction vers le nouveau fragment
+                val transaction = manager.beginTransaction()
+                transaction.replace(id.fragment_container, fragmentField)
+                transaction.addToBackStack(null) //conserve le fragment en mémoire
+                transaction.commit()
+            } else {
+                btnChangeFragment.text = getString(string.afficher_jeu)
+                val fragmentMenu = FragmentMenu()  //creation du fragment clavier
+
+                val manager = supportFragmentManager //appel au gestionnaire de fragment
+
+                //transaction vers le nouveau fragment
+                val transaction = manager.beginTransaction()
+                transaction.replace(id.fragment_container, fragmentMenu)
+                transaction.addToBackStack(null) //conserve le fragment en mémoire
+                transaction.commit()
+            }
+        }
 
 
         timer = findViewById(R.id.timer)
+
 
         object : CountDownTimer(5000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -89,7 +82,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
     }
-
 
 
 }

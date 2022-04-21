@@ -8,4 +8,5 @@ import android.widget.Button
 class MenuView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
     SurfaceView(context, attributes,defStyleAttr){
 
+
 }

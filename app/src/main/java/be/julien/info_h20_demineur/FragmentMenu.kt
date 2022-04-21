@@ -11,7 +11,6 @@ import android.widget.*
 
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toDrawable
 
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.*
@@ -45,7 +44,7 @@ class FragmentMenu : Fragment() {
                 val backgroundButtonNightOn = resources.getColor(R.color.backgroundButtonNightOn)
                 val backgroundButtonNightOff = resources.getColor(R.color.backgroundButtonNightOff)
                 if(isChecked){
-                    fragment_container.background = backgroundButtonNightOn.toDrawable()
+                    fragment_container.background = backgroundButtonNightOn
                 }
 
             }

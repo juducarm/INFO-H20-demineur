@@ -6,17 +6,18 @@
     android:layout_height="match_parent">
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/reglages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/purple_700"
+        android:background="@drawable/gradient"
         android:text="Réglages"
         android:textSize="17dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <GridLayout
         android:id="@+id/gridLayout"
@@ -37,6 +38,7 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/cases"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">
 
@@ -58,6 +60,7 @@
                     android:text="HARD LEVEL"
                     android:textAlignment="center"
                     android:textSize="13dp" />
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/difficulte"
                     android:layout_width="wrap_content"
@@ -75,6 +78,7 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/cases"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">
 
@@ -96,13 +100,14 @@
                     android:text="TIMER"
                     android:textAlignment="center"
                     android:textSize="15dp" />
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:textOff="Off"
-                    android:textOn="On"/>
+                    android:textOn="On" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -115,6 +120,7 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/cases"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">
 
@@ -136,6 +142,7 @@
                     android:text="SON"
                     android:textAlignment="center"
                     android:textSize="15dp" />
+
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/son"
                     android:layout_width="wrap_content"
@@ -153,6 +160,7 @@
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
             android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/cases"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp">
 
@@ -174,11 +182,12 @@
                     android:text="MODE NUIT"
                     android:textAlignment="center"
                     android:textSize="14dp" />
-                <Switch
+
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/modeNuit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"/>
+                    android:checked="true" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
