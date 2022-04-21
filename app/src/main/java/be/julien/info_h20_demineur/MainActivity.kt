@@ -70,38 +70,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnChangeFragment.setOnClickListener(this)
         btnFlag.setOnClickListener(this)
 
-/*
-        //bouton de changement de fragment
-        btnChangeFragment.setOnClickListener {
-            if (btnChangeFragment.text == getString(string.afficher_jeu)) {
-                btnChangeFragment.text = getString(string.afficher_menu)
-
-                val fragmentField = FragmentField()  //creation du fragment clavier
-
-                val manager = supportFragmentManager //appel au gestionnaire de fragment
-
-
-                //transaction vers le nouveau fragment
-                val transaction = manager.beginTransaction()
-                transaction.replace(id.fragment_container, fragmentField)
-                transaction.addToBackStack(null) //conserve le fragment en mémoire
-                transaction.commit()
-            } else {
-                btnChangeFragment.text = getString(string.afficher_jeu)
-                val fragmentMenu = FragmentMenu()  //creation du fragment clavier
-
-                val manager = supportFragmentManager //appel au gestionnaire de fragment
-
-                //transaction vers le nouveau fragment
-                val transaction = manager.beginTransaction()
-                transaction.replace(id.fragment_container, fragmentMenu)
-                transaction.addToBackStack(null) //conserve le fragment en mémoire
-                transaction.commit()
-            }
-        }
-
-*/
-
 
 
         timer = findViewById(R.id.timer)

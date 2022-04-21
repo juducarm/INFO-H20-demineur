@@ -16,8 +16,11 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
 
 
     init {
-        boxPaint.color = Color.GRAY
-        numberPaint.color = Color.GREEN
+        if ((fieldPosition.x + fieldPosition.y ) % 2 == 0) {
+            boxPaint.color = view.safeBoxColor1
+        }
+        else {boxPaint.color = view.safeBoxColor2}
+        numberPaint.color = view.numberColor
         numberPaint.textSize = view.boxSize
     }
 
@@ -25,10 +28,14 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
         super.draw(canvas)
         if (!hide) {
             canvas?.drawRect(areaWithGrid, boxPaint) // dessin de la case
-            canvas?.drawText("$bombsAround", // dessin du nombre
-                area.left + (view.boxSize/4),
-                area.bottom - (view.boxSize/10),
-                numberPaint)
+            if (bombsAround != 0) {
+                canvas?.drawText(
+                    "$bombsAround", // dessin du nombre
+                    area.left + (view.boxSize / 4),
+                    area.bottom - (view.boxSize / 10),
+                    numberPaint
+                )
+            }
 
         }
     }
@@ -39,7 +46,7 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
             if (view.theEmptyBoxes.any { it.fieldPosition == fieldAround}) {//verifie si la case n'est pas hors du field
                 val boxAround = view.theEmptyBoxes.single { it.fieldPosition == fieldAround } // récupère l'objet case
                 boxAround.hide = false
-                if (!view.discoverdBoxes.contains(boxAround)) view.discoverdBoxes.add(boxAround)
+                //if (!view.discoverdBoxes.contains(boxAround)) view.discoverdBoxes.add(boxAround)
             }
         }
     }

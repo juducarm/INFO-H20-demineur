@@ -35,6 +35,7 @@ class Bomb(fieldPosition: Point, view: FieldView):
         theBombs.forEach {
             it.hide = false
         }
+        view.invalidate()
 
     }
 
@@ -47,7 +48,7 @@ class Bomb(fieldPosition: Point, view: FieldView):
                 val boxAround = theEmptyBoxes.single { it.fieldPosition == fieldAround }
                 boxAround.isSafe = false //la case n'est pas safe
                 boxAround.bombsAround++
-                boxAround.boxPaint.color = Color.BLUE
+                boxAround.boxPaint.color = view.closeBoxColor
             }
         }
 

@@ -14,12 +14,12 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     var random = Random()
     var plantFlag = false
+    var firstClick = true
 
     //listes d'objets
     val theBoxes = ArrayList<Box>()
     val theBombs = ArrayList<Bomb>()
     val theEmptyBoxes = ArrayList<EmptyBox>()
-    val discoverdBoxes = ArrayList<Box>()
 
     //réglages du jeu
     val nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth)
@@ -30,13 +30,17 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
     val gridSize = resources.getInteger(R.integer.gridSize)
     val gameDifficulty = nbrBombs.toFloat()
-    val hiddenBoxColor1 = resources.getColor(R.color.hiddenBox_color1)
-    val hiddenBoxColor2= resources.getColor(R.color.hiddenBox_color2)
+
 
     //réglages graphiques
     val imageBomb = resources.getDrawable(R.drawable.ic_bomb)
     val imageFlag = resources.getDrawable(R.drawable.ic_flag)
-
+    val hiddenBoxColor1 = resources.getColor(R.color.hiddenBox_color1)
+    val hiddenBoxColor2= resources.getColor(R.color.hiddenBox_color2)
+    val safeBoxColor1 = resources.getColor(R.color.safeBox_color1)
+    val safeBoxColor2 = resources.getColor(R.color.safeBox_color2)
+    val closeBoxColor = resources.getColor(R.color.closeBox_color)
+    val numberColor = resources.getColor(R.color.number_color)
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -70,25 +74,32 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         when (e.action) {MotionEvent.ACTION_DOWN -> {
             //eventOnField : position du clic sur le field
             val eventOnField = Point((e.rawX / boxSize).toInt(),((e.rawY - pixelsTopBar)/ boxSize).toInt())
-            println("Case du clic : $eventOnField")
-            print("Nombres de bombes : ")
-            println(theBombs.size)
             //repere la case sous le clic
-            val boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
-            if (plantFlag) {
-                if (boxUnderEvent.plantFlag) {boxUnderEvent.plantFlag = false}
-                else {boxUnderEvent.plantFlag = true}
-            }
-            else {
-                discoverdBoxes.add(boxUnderEvent)
-                boxUnderEvent.hide = false
-                if (boxUnderEvent.isSafe) {
-                    val emptyBox: EmptyBox =
-                        boxUnderEvent.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
-                    emptyBox.cleanField() //devoile toute la partie safe autours de la case
-                    emptyBox.showAround()
+            var boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
+            if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
+                firstClick = false
+                while (!boxUnderEvent.isSafe) {
+                    theBombs.clear()
+                    theEmptyBoxes.clear()
+                    theBoxes.clear()
+                    boxCreation()
+                    theBombs.forEach { it.warningBomb(theEmptyBoxes) }
+                    boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
                 }
             }
+                if (plantFlag) {
+                    if (boxUnderEvent.plantFlag) {boxUnderEvent.plantFlag = false}
+                    else {boxUnderEvent.plantFlag = true}
+                }
+                else {
+                    boxUnderEvent.hide = false
+                    if (boxUnderEvent.isSafe) {
+                        val emptyBox: EmptyBox =
+                            boxUnderEvent.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
+                        emptyBox.cleanField() //devoile toute la partie safe autours de la case
+                        emptyBox.showAround()
+                    }
+                }
            invalidate() //appel à la méthode onDraw
             }
         }

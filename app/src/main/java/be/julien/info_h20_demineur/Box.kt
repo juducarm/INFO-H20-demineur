@@ -28,7 +28,6 @@ abstract class Box(val fieldPosition: android.graphics.Point, var view: FieldVie
     var plantFlag = false // dessine un drapeau si true
 
 
-
     init {
         if ((fieldPosition.x + fieldPosition.y ) % 2 == 0) {
             hiddenBoxPaint.color = view.hiddenBoxColor1
@@ -38,30 +37,6 @@ abstract class Box(val fieldPosition: android.graphics.Point, var view: FieldVie
         gridPaint.color = Color.WHITE
     }
 
-    fun DrawHidden(canvas: Canvas?) {
-        canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case
-        canvas?.drawRect(areaWithGrid, hiddenBoxPaint) // dessin de la case
-    }
-
-    open fun DrawDiscover(canvas: Canvas?) {
-            //canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case
-    }
-
-    /*
-    open fun draw(canvas: Canvas?) {
-        if (plantFlag) {
-            view.imageBomb.setBounds(areaWithGrid.left.toInt(), areaWithGrid.top.toInt(),
-                areaWithGrid.right.toInt(), areaWithGrid.bottom.toInt())
-        }
-        else {
-            if (hide) {
-                canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case
-                canvas?.drawRect(areaWithGrid, hiddenBoxPaint) // dessin de la case cachée
-            }
-        }
-
-    }
-*/
     open fun draw(canvas: Canvas?) {
         if (hide) {
             canvas?.drawRect(area, gridPaint) //dessin de la grille autours de la case

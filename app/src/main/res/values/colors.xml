@@ -21,12 +21,15 @@
     <color name="gradient">#5618E9</color>
     <color name="linear">#8909F9</color>
 
-    <!-- couleurs FieldView -->
+    <!-- couleurs du champs de cases -->
     <color name="backgroundPaint_color">@color/lightSteelBlue</color>
     <color name="main_layout">@color/blue</color>
     <color name="hiddenBox_color1">@color/paleTurquoise</color>
-    <color name="hiddenBox_color2">@color/darkTurquoise</color>
-
+    <color name="hiddenBox_color2">@color/skyBlue</color>
+    <color name="safeBox_color1">@color/lightSteelBlue</color>
+    <color name="safeBox_color2">@color/chineseSilver</color>
+    <color name="closeBox_color">@color/darkTurquoise</color>
+    <color name="number_color">@color/white</color>
     
     <!--couleur MenuView-->
     <color name="backgroundMenuNightOff">@color/navyBlue</color>
