@@ -24,7 +24,9 @@
     <!-- couleurs FieldView -->
     <color name="backgroundPaint_color">@color/lightSteelBlue</color>
     <color name="main_layout">@color/blue</color>
-    <color name="hiddenBox_color">@color/slateBlue</color>
+    <color name="hiddenBox_color1">@color/paleTurquoise</color>
+    <color name="hiddenBox_color2">@color/darkTurquoise</color>
+
     
     <!--couleur MenuView-->
     <color name="backgroundMenuNightOff">@color/navyBlue</color>

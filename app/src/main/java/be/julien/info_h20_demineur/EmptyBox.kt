@@ -18,14 +18,16 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
     init {
         boxPaint.color = Color.GRAY
         numberPaint.color = Color.GREEN
-        numberPaint.textSize = size
+        numberPaint.textSize = view.boxSize
     }
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
         if (!hide) {
             canvas?.drawRect(areaWithGrid, boxPaint) // dessin de la case
-            canvas?.drawText("$bombsAround", area.left + (size/4), area.bottom - (size/10),
+            canvas?.drawText("$bombsAround", // dessin du nombre
+                area.left + (view.boxSize/4),
+                area.bottom - (view.boxSize/10),
                 numberPaint)
 
         }
