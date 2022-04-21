@@ -32,17 +32,9 @@
     <color name="number_color">@color/white</color>
     
     <!--couleur MenuView-->
-
-
-    <!--couleur ActivityMain-->
-
-    <color name="Background">#191970</color>
-    <color name="BackgroundButton">#5618E9</color>
-    <color name="textButton">#FFFFFFFF</color>
-    <color name="cases">#FFFFFFFF</color>
-
-
-
-
+    <color name="backgroundMenuNightOff">@color/navyBlue</color>
+    <color name="backgroundMenuNightOn">@color/chineseSilver</color>
+    <color name="backgroundButtonNightOn">@color/gradient</color>
+    <color name="backgroundButtonNightOff">@color/white</color>
 
 </resources>
