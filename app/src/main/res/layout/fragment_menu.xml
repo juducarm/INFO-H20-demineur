@@ -64,10 +64,12 @@
                     android:textSize="13dp" />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/difficulte"
+                    android:id="@+id/HardLevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true" />
+                    android:checked="true"
+                    android:textOff="Off"
+                    android:textOn="On" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

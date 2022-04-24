@@ -20,6 +20,7 @@ import be.julien.info_h20_demineur.R.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_field.*
 import kotlinx.android.synthetic.main.fragment_menu.*
+import be.julien.info_h20_demineur.FieldView
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -116,13 +117,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 sharedPrefEdit.putBoolean("NightMode", true)
                 sharedPrefEdit.apply()
-
             }
-
-
         })
     }
 
-
-
-}
+    }

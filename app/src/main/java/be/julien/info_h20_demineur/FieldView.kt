@@ -22,9 +22,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val theEmptyBoxes = ArrayList<EmptyBox>()
 
     //réglages du jeu
-    val nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth)
-    val nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight)
-    val nbrBombs = resources.getInteger(R.integer.nbrBombs)
+    var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth)
+    var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight)
+    var nbrBombs = resources.getInteger(R.integer.nbrBombs)
     val resolution = PointF(1080f, 1920f) //nombre de pixels sur le fragment
     val pixelsTopBar = resources.getDimension(R.dimen.heightTopBar) //hauteur en pixel de la TopBar (Float)
     val boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
