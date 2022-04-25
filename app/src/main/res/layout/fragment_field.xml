@@ -15,4 +15,30 @@
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintTop_toTopOf="parent" />
+
+     <ImageButton
+         android:id="@+id/btnFlag"
+         android:layout_width="67dp"
+         android:layout_height="71dp"
+         android:layout_marginStart="160dp"
+         android:layout_marginBottom="16dp"
+         android:contentDescription="@string/nombre_de_drapeau"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:srcCompat="@drawable/ic_flag"
+         tools:ignore="ImageContrastCheck" />
+
+     <TextView
+         android:id="@+id/textFlag"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="8dp"
+         android:layout_marginBottom="36dp"
+         android:text="@string/_40"
+         android:textColor="@color/white"
+         android:textSize="20dp"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintLeft_toRightOf="@+id/btnFlag" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

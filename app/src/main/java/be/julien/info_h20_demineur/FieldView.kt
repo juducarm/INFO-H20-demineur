@@ -5,6 +5,8 @@ import android.view.MotionEvent
 import android.view.SurfaceView
 import android.content.Context
 import android.graphics.*
+import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_field.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -15,6 +17,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     var random = Random()
     var plantFlag = false
     var firstClick = true
+    var nbrFlags = 0
+    lateinit var textNbrFlags: TextView
+
 
     //listes d'objets
     val theBoxes = ArrayList<Box>()
@@ -42,6 +47,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val closeBoxColor = resources.getColor(R.color.closeBox_color)
     val numberColor = resources.getColor(R.color.number_color)
 
+
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         theBoxes.forEach { it.draw(canvas) }
@@ -59,51 +66,66 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                     box = Bomb(Point(x - 1, y - 1), this)
                     box.isSafe = false //la case n'est pas safe (cf. classe Box)
                     theBombs.add(box)
-                }
-                else {
+                } else {
                     box = EmptyBox(Point(x - 1, y - 1), this)
                     theEmptyBoxes.add(box)
                 }
                 theBoxes.add(box)
-                }
             }
         }
+        nbrFlags = theBombs.size
+        println(nbrFlags)
+
+    }
 
 
     override fun onTouchEvent(e: MotionEvent): Boolean {
         when (e.action) {MotionEvent.ACTION_DOWN -> {
+            println(theBombs.size)
             //eventOnField : position du clic sur le field
-            val eventOnField = Point((e.rawX / boxSize).toInt(),((e.rawY - pixelsTopBar)/ boxSize).toInt())
+            val eventOnField = Point((e.rawX / boxSize).toInt(), ((e.rawY - pixelsTopBar) / boxSize).toInt())
             //repere la case sous le clic
-            var boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
-            if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
-                firstClick = false
-                while (!boxUnderEvent.isSafe) {
-                    theBombs.clear()
-                    theEmptyBoxes.clear()
-                    theBoxes.clear()
-                    boxCreation()
-                    theBombs.forEach { it.warningBomb(theEmptyBoxes) }
-                    boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
-                }
-            }
+            if (theBoxes.any { it.fieldPosition == eventOnField }) {
+                var boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
                 if (plantFlag) {
-                    if (boxUnderEvent.plantFlag) {boxUnderEvent.plantFlag = false}
-                    else {boxUnderEvent.plantFlag = true}
-                }
-                else {
-                    boxUnderEvent.hide = false
-                    if (boxUnderEvent.isSafe) {
-                        val emptyBox: EmptyBox =
-                            boxUnderEvent.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
-                        emptyBox.cleanField() //devoile toute la partie safe autours de la case
-                        emptyBox.showAround()
+                    if (boxUnderEvent.plantFlag) {
+                        boxUnderEvent.plantFlag = false
+                        nbrFlags++
+                        textNbrFlags.text = nbrFlags.toString()
+                    }
+                    else {
+                        if (nbrFlags > 0) {
+                            boxUnderEvent.plantFlag = true
+                            nbrFlags--
+                            textNbrFlags.text = nbrFlags.toString()
+                        }
                     }
                 }
-           invalidate() //appel à la méthode onDraw
+                else {
+                    if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
+                        firstClick = false
+                        while (!boxUnderEvent.isSafe) {
+                            theBombs.clear()
+                            theEmptyBoxes.clear()
+                            theBoxes.clear()
+                            boxCreation()
+                            theBombs.forEach { it.warningBomb(theEmptyBoxes) }
+                            boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
+                        }
+                    }
+                        boxUnderEvent.hide = false
+                        if (boxUnderEvent.isSafe) {
+                            val emptyBox: EmptyBox =
+                                boxUnderEvent.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
+                            emptyBox.cleanField() //devoile toute la partie safe autours de la case
+                            emptyBox.showAround()
+                        }
+                    }
+                }
+                invalidate() //appel à la méthode onDraw
             }
         }
-        return true
+            return true
     }
 
 

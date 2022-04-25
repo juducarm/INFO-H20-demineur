@@ -16,6 +16,8 @@ import android.view.View
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import be.julien.info_h20_demineur.R.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_field.*
@@ -29,6 +31,10 @@ import kotlin.concurrent.timer
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var timer: TextView
+    val fragmentField = FragmentField()  //creation du fragment champs de case
+    val fragmentMenu = FragmentMenu()  //creation du fragment menu
+    val manager = supportFragmentManager //appel au gestionnaire de fragment
+
 
     override fun onClick(v: View) {
 
@@ -36,9 +42,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnChangeFragment -> {
                 if (btnChangeFragment.text == getString(string.afficher_jeu)) {
                     btnChangeFragment.text = getString(string.afficher_menu)
-
-                    val fragmentField = FragmentField()  //creation du fragment clavier
-                    val manager = supportFragmentManager //appel au gestionnaire de fragment
 
                     //transaction vers le nouveau fragment
                     val transaction = manager.beginTransaction()
@@ -49,9 +52,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 else {
                     btnChangeFragment.text = getString(string.afficher_jeu)
 
-                    val fragmentMenu = FragmentMenu()  //creation du fragment clavier
-                    val manager = supportFragmentManager //appel au gestionnaire de fragment
-
                     //transaction vers le nouveau fragment
                     val transaction = manager.beginTransaction()
                     transaction.replace(id.fragment_container, fragmentMenu)
@@ -60,10 +60,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
 
-            R.id.btnFlag -> {
-                if (fieldView.plantFlag) { fieldView.plantFlag = false }
-                else { fieldView.plantFlag = true}
-            }
         }
     }
 
@@ -72,7 +68,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         getWindow().setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN); //cachage de la barre de status
         setContentView(layout.activity_main)
         btnChangeFragment.setOnClickListener(this)
-        btnFlag.setOnClickListener(this)
 
 
 
