@@ -7,11 +7,13 @@
     <dimen name="default_padding">5dp</dimen>
     <dimen name="heightTopBar">100dp</dimen>
     <dimen name="heightBottomBar">100dp</dimen>
+    <dimen name="heightStatusBar">25dp</dimen>
 
     <!-- Paramètres du jeu -->
-    <integer name="nbrBoxesHeight">10</integer>
-    <integer name="nbrBoxesWidth">8</integer>
-    <integer name="nbrBombs">10</integer>
+
+    <integer name="nbrBoxesHeight">18</integer>
+    <integer name="nbrBoxesWidth">13</integer>
+    <integer name="nbrBombs">40</integer>
     <integer name="gridSize">0</integer>
 
 </resources>

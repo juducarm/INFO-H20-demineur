@@ -31,7 +31,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight)
     var nbrBombs = resources.getInteger(R.integer.nbrBombs)
     val resolution = PointF(1080f, 1920f) //nombre de pixels sur le fragment
-    val pixelsTopBar = resources.getDimension(R.dimen.heightTopBar) //hauteur en pixel de la TopBar (Float)
+
     val boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
     val gridSize = resources.getInteger(R.integer.gridSize)
     val gameDifficulty = nbrBombs.toFloat()
@@ -46,7 +46,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val safeBoxColor2 = resources.getColor(R.color.safeBox_color2)
     val closeBoxColor = resources.getColor(R.color.closeBox_color)
     val numberColor = resources.getColor(R.color.number_color)
-
+    val pixelsStatusBar = resources.getDimension(R.dimen.heightStatusBar)
+    val pixelsTopBar = resources.getDimension(R.dimen.heightTopBar) + pixelsStatusBar//hauteur en pixel de la TopBar (Float)
 
 
     override fun onDraw(canvas: Canvas?) {
