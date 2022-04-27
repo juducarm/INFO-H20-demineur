@@ -16,4 +16,7 @@
     <integer name="nbrBombs">40</integer>
     <integer name="gridSize">0</integer>
 
+    <integer name="hit_reward_hard">5</integer>
+    <integer name="hit_reward_easy">10</integer>
+
 </resources>

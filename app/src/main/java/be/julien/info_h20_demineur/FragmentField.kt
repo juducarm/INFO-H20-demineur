@@ -34,8 +34,8 @@ class FragmentField : Fragment() {
             if (fieldView.plantFlag) { fieldView.plantFlag = false }
             else { fieldView.plantFlag = true}
         }
-        textView.text = fieldView.nbrFlags.toString()
-        fieldView.textNbrFlags = textView
+        /*textView.text = fieldView.nbrFlags.toString()
+        fieldView.textNbrFlags = textView*/
         return layoutView
     }
 

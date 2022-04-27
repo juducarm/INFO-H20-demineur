@@ -28,12 +28,13 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.timer
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+public class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var timer: TextView
     val fragmentField = FragmentField()  //creation du fragment champs de case
     val fragmentMenu = FragmentMenu()  //creation du fragment menu
     val manager = supportFragmentManager //appel au gestionnaire de fragment
+    var timeLeft: Long = 100000
 
 
     override fun onClick(v: View) {
@@ -69,11 +70,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(layout.activity_main)
         btnChangeFragment.setOnClickListener(this)
 
-
-
         timer = findViewById(R.id.timer)
-
-        object : CountDownTimer(5000, 1000) {
+        object : CountDownTimer(timeLeft, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 var hms = String.format("%02d:%02d:%02d",
                     TimeUnit.MILLISECONDS.toHours(millisUntilFinished),

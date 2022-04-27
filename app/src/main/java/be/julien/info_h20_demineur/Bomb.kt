@@ -21,6 +21,7 @@ class Bomb(fieldPosition: Point, view: FieldView):
         super.draw(canvas)
         if (!hide) {
             showAllBombs(view.theBombs)
+            view.gameLost()
            // canvas?.drawRect(areaWithGrid, paint) // dessin de la case
             view.imageBomb.setBounds(areaWithGrid.left.toInt(), areaWithGrid.top.toInt(),
                 areaWithGrid.right.toInt(), areaWithGrid.bottom.toInt())
