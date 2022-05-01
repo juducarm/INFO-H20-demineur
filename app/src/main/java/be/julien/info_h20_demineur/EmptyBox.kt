@@ -29,6 +29,7 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
         if (!hide) {
             canvas?.drawRect(areaWithGrid, boxPaint) // dessin de la case
             if (bombsAround != 0) {
+                view.discoveredBoxes += 1
                 canvas?.drawText(
                     "$bombsAround", // dessin du nombre
                     area.left + (view.boxSize / 4),
@@ -58,6 +59,7 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
             if (view.theEmptyBoxes.any { it.fieldPosition == fieldAround}) {//verifie si la case n'est pas hors du field
                 val boxAround = view.theEmptyBoxes.single { it.fieldPosition == fieldAround } //recupère l'objet case
                 if (boxAround.isSafe && !boxAround.cleaned) {
+                    view.discoveredBoxes += 1
                     boxAround.showAround()
                     boxAround.cleanField()
                 }

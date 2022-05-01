@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.graphics.*
 import android.os.Bundle
+import android.view.SurfaceHolder
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -18,18 +19,30 @@ import android.os.CountDownTimer as CountDownTimer
 
 
 class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
-    SurfaceView(context, attributes,defStyleAttr) {
+    SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
 
     var random = Random()
     var plantFlag = false
     var firstClick = true
     val activity = context as FragmentActivity
+    var drawing = true
+    lateinit var thread: Thread
+    lateinit var canvas: Canvas
 
     //listes d'objets
     val theBoxes = ArrayList<Box>()
     val theBombs = ArrayList<Bomb>()
     val theEmptyBoxes = ArrayList<EmptyBox>()
     var discoveredBoxes = 0
+    val bomb = Bomb(Point(), this)
+    val emptyBox = EmptyBox(Point(), this)
+
+    //temporel
+    var totalElapsedTime = 0.0
+    var timeLeft = 100.0 //Pour indiquer le temps dans la fenetre de dialogue finale
+    val HIT_REWARD_HARD = resources.getInteger(R.integer.hit_reward_hard).toLong() //Car getDouble ne fonctionne pas
+    val HIT_REWARD_EASY = resources.getInteger(R.integer.hit_reward_easy).toLong()  //bonus du mode facile
+    var HIT_REWARD: Long = 0
 
     //réglages du jeu
     val nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth)
@@ -41,12 +54,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
     val gridSize = resources.getInteger(R.integer.gridSize)
     val gameDifficulty = nbrBombs.toFloat()
-    var timeLeft = 0.0 //Pour indiquer le temps dans la fenetre de dialogue finale
-    val HIT_REWARD_HARD =
-        resources.getInteger(R.integer.hit_reward_hard).toLong() //Car getDouble ne fonctionne pas
-    val HIT_REWARD_EASY =
-        resources.getInteger(R.integer.hit_reward_easy).toLong()  //bonus du mode facile
-    var HIT_REWARD: Long = 0
     val textPaint = Paint()
     var gameOver = false
 
@@ -66,42 +73,150 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     init {
         textPaint.textSize = w / 20f
         textPaint.color = Color.BLACK
-        timeLeft = 10.0
     }
 
 
-    fun timeFLoading(elapsedTimeMS: Double) {
-        val interval = elapsedTimeMS / 1000.0
-        timeLeft -= interval
 
-        if (timeLeft <= 0.0) {
-            timeLeft = 0.0
-            /*gameOver = true
-            drawing = false
-            showGameOverDialog(R.string.lose)*/
-        }
-    }
-
-    /*
-    fun increaseTimeLeft() {
+    /*fun increaseTimeLeft() {
         if (gameDifficulty >= 30) { //définit le reward en cas de touche de case safe en fct de la difficulté
             HIT_REWARD = HIT_REWARD_EASY
         }
         else HIT_REWARD = HIT_REWARD_HARD
-        timeLeft += HIT_REWARD
-    }*/
+    }
+    */
 
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        theBoxes.forEach { it.draw(canvas) }
+    }
+
+    fun draw() {
+        if (holder.surface.isValid) {
+            canvas = holder.lockCanvas()
+            canvas.drawRect(30f, 1400f, canvas.width.toFloat(),
+                canvas.height.toFloat(), backgroundPaint)
+            val formatted = String.format("%.2f", timeLeft)
+            canvas.drawText("Il reste $formatted secondes. ",
+                30f, 1400f, textPaint)
+            holder.unlockCanvasAndPost(canvas)
+        }
+    }
+
+    //création des boxes
+    fun boxCreation() {
+        (1..nbrBoxesWidth).forEach { x ->
+            (1..nbrBoxesHeight).forEach { y ->
+
+                lateinit var box: Box
+                val aléatoire = random.nextInt(nbrBoxesHeight * nbrBoxesWidth)
+
+                if (aléatoire <= gameDifficulty) {
+                    box = Bomb(Point(x - 1, y - 1), this)
+                    box.isSafe = false //la case n'est pas safe (cf. classe Box)
+                    theBombs.add(box)
+                } else {
+                    box = EmptyBox(Point(x - 1, y - 1), this)
+                    theEmptyBoxes.add(box)
+                }
+                theBoxes.add(box)
+            }
+        }
+    }
+
+    override fun run() {
+        var previousFrameTime = System.currentTimeMillis()
+        while (drawing) {
+            val currentTime = System.currentTimeMillis()
+            var elapsedTimeMS:Double=(currentTime-previousFrameTime).toDouble()
+            totalElapsedTime += elapsedTimeMS / 1000.0
+            updatePositions(elapsedTimeMS)
+            draw()
+            previousFrameTime = currentTime
+        }
+    }
+
+    fun updatePositions(elapsedTimeMS: Double) {
+        val interval = elapsedTimeMS / 1000.0
+        timeLeft -= interval
+        println(timeLeft)
+
+        if (timeLeft <= 0.0) {
+            timeLeft = 0.0
+            gameLost()
+        }
+    }
+
+
+
+    override fun onTouchEvent(e: MotionEvent): Boolean {
+        if (drawing == true) {
+            when (e.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    //eventOnField : position du clic sur le field
+                    val eventOnField =
+                        Point(
+                            (e.rawX / boxSize).toInt(),
+                            ((e.rawY - pixelsTopBar) / boxSize).toInt()
+                        )
+                    //repere la case sous le clic
+                    var boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
+                    if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
+                        firstClick = false
+                        while (!boxUnderEvent.isSafe) {
+                            theBombs.clear()
+                            theEmptyBoxes.clear()
+                            theBoxes.clear()
+                            boxCreation()
+                            theBombs.forEach { it.warningBomb(theEmptyBoxes) }
+                            boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
+                        }
+                    }
+                    if (plantFlag) {
+                        if (boxUnderEvent.plantFlag) {
+                            boxUnderEvent.plantFlag = false
+                        }
+                        else {
+                            boxUnderEvent.plantFlag = true
+                        }
+                    } else {
+                        boxUnderEvent.hide = false
+                        if (boxUnderEvent.isSafe) {
+                            val emptyBox: EmptyBox =
+                                boxUnderEvent.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
+                            emptyBox.cleanField() //devoile toute la partie safe autours de la case
+                            emptyBox.showAround()
+                        }
+                    }
+                    invalidate() //appel à la méthode onDraw
+                }
+            }
+
+        }
+        return true
+    }
+
+    fun pause() {
+        drawing = false
+        thread.join()
+    }
+
+    fun resume() {
+        drawing = true
+        thread = Thread(this)
+        thread.start()
+    }
 
     fun showGameOverDialog(messageId: Int) {
         class GameResult : DialogFragment() {
             override fun onCreateDialog(bundle: Bundle?): Dialog {
                 val builder = AlertDialog.Builder(getActivity())
                 builder.setTitle(resources.getString(messageId))
-                builder.setMessage(
+                /*builder.setMessage(
                     resources.getString(
                         R.string.results_format, discoveredBoxes //totalElapsedTime
                     )
-                )
+                )*/
                 builder.setPositiveButton(R.string.reset_game,
                     DialogInterface.OnClickListener { _, _ -> newGame() }
                 )
@@ -124,97 +239,42 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         )
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        theBoxes.forEach { it.draw(canvas) }
-    }
-
-    //création des boxes
-    fun boxCreation() {
-        (1..nbrBoxesWidth).forEach { x ->
-            (1..nbrBoxesHeight).forEach { y ->
-
-                lateinit var box: Box
-                var aléatoire = random.nextInt(nbrBoxesHeight * nbrBoxesWidth)
-
-                if (aléatoire <= gameDifficulty) {
-                    box = Bomb(Point(x - 1, y - 1), this)
-                    box.isSafe = false //la case n'est pas safe (cf. classe Box)
-                    theBombs.add(box)
-                } else {
-                    box = EmptyBox(Point(x - 1, y - 1), this)
-                    theEmptyBoxes.add(box)
-                }
-                theBoxes.add(box)
-            }
-        }
-    }
-
     fun newGame() {
-        boxCreation()
         discoveredBoxes = 0
+        totalElapsedTime = 0.0
+        timeLeft = 100.0
+        plantFlag = false
+        firstClick = true
+        bomb.hide = true
+        emptyBox.hide = true
         if (gameOver) {
             gameOver = false
         }
+        boxCreation()
     }
 
-    fun gameWin() {
+    fun gameWon() {
         showGameOverDialog(R.string.win)
+        pause()
+        drawing = false
         gameOver = true
     }
 
     fun gameLost() {
         showGameOverDialog(R.string.lose)
+        //pause()
+        drawing = false
         gameOver = true
     }
 
-    override fun onTouchEvent(e: MotionEvent): Boolean {
-        if (gameOver == false) {
-            when (e.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    //eventOnField : position du clic sur le field
-                    val eventOnField =
-                        Point(
-                            (e.rawX / boxSize).toInt(),
-                            ((e.rawY - pixelsTopBar) / boxSize).toInt()
-                        )
-                    //repere la case sous le clic
-                    var boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
-                    if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
-                        firstClick = false
-                        while (!boxUnderEvent.isSafe) {
-                            theBombs.clear()
-                            theEmptyBoxes.clear()
-                            theBoxes.clear()
-                            boxCreation()
-                            theBombs.forEach { it.warningBomb(theEmptyBoxes) }
-                            boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
-                        }
-                    }
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int,
+                                width: Int, height: Int) {}
 
-                    if (plantFlag) {
-                        if (boxUnderEvent.plantFlag) {
-                            boxUnderEvent.plantFlag = false
-                        } else {
-                            boxUnderEvent.plantFlag = true
-                        }
-                    } else {
-                        boxUnderEvent.hide = false
-                        if (boxUnderEvent.isSafe) {
-                            val emptyBox: EmptyBox =
-                                boxUnderEvent.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
-                            emptyBox.cleanField() //devoile toute la partie safe autours de la case
-                            emptyBox.showAround()
-                        }
-                    }
+    override fun surfaceCreated(holder: SurfaceHolder) {}
 
-                    invalidate() //appel à la méthode onDraw
-                }
-            }
+    override fun surfaceDestroyed(holder: SurfaceHolder) {}
 
-        }
-        return true
-    }
+
 
 }
 
