@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="Background" format="color"/>
+    <attr name="BackgroundBtn" format="color"/>
+    <attr name="textBtn" format="color"/>
+    <attr name="Case" format="color"/>
+    <attr name="textCase" format="color"/>
+    <attr name="BtnCase" format="color"/>
+    <attr name="textBtnCase" format="color"/>
+</resources>

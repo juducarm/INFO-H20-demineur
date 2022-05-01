@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/BackgroundBtn"
-        android:text="Réglages"
+        android:text="@string/Réglages"
         android:textColor="@color/textBtn"
         android:textSize="17dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,13 +63,14 @@
                     android:textColor="@color/textBtnCase"
                     android:textSize="13dp" />
 
-                <androidx.appcompat.widget.SwitchCompat
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/HardLevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:textOff="Off"
-                    android:textOn="On" />
+                    android:text="@string/Activer"
+                    android:textColor="@color/textBtnCase"
+                    android:background="@drawable/gradient"/>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -101,7 +102,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TIMER"
+                    android:text="@string/CaseTimer"
                     android:textAlignment="center"
                     android:textColor="@color/textBtnCase"
                     android:textSize="15dp" />
@@ -144,16 +145,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SON"
+                    android:text="@string/CaseLanguetxt"
                     android:textAlignment="center"
                     android:textColor="@color/textBtnCase"
                     android:textSize="15dp" />
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/son"
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/Changelangue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true" />
+                    android:background="@drawable/gradient"
+                    android:checked="true"
+                    android:text="@string/CaseLangue"
+                    android:textColor="@color/textBtnCase" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -185,7 +189,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MODE NUIT"
+                    android:text="@string/CaseModeNuit"
                     android:textAlignment="center"
                     android:textColor="@color/textBtnCase"
                     android:textSize="14dp" />
@@ -194,9 +198,9 @@
                     android:id="@+id/Changecouleur"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/BtnCase"
+                    android:background="@drawable/gradient"
                     android:checked="true"
-                    android:text="@string/textBtnModeNight"
+                    android:text="@string/Activer"
                     android:textColor="@color/textBtnCase" />
 
             </LinearLayout>

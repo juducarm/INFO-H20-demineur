@@ -31,7 +31,7 @@
     <color name="closeBox_color">@color/darkTurquoise</color>
     <color name="number_color">@color/white</color>
     
-    <!--couleur MenuView-->
+    <!--Light Color-->
     <color name="Background">#CCCCCC</color>
     <color name="BackgroundBtn">@color/white</color>
     <color name="textBtn">#191C1E</color>
@@ -39,6 +39,16 @@
     <color name="textCase">#CCCCCC</color>
     <color name="BtnCase">#CCCCCC</color>
     <color name="textBtnCase">#191C1E</color>
+
+    <!--Night Color-->
+    <color name="BackgroundNight">#191970</color>
+    <color name="BackgroundBtnNight">#5618E9</color>
+    <color name="textBtnNight">#FFFFFF</color>
+    <color name="CaseNight">#FFFFFFFF</color>
+    <color name="textCaseNight">#CCCCCC</color>
+    <color name="BtnCaseNight">#CCCCCC</color>
+    <color name="textBtnCaseNight">#191C1E</color>
+
 
 
 </resources>

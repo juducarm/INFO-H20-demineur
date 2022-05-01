@@ -16,8 +16,8 @@ import android.view.View
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.appcompat.widget.AppCompatButton
+
 import be.julien.info_h20_demineur.R.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_field.*
@@ -31,6 +31,7 @@ import kotlin.concurrent.timer
 public class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var timer: TextView
+    lateinit var Changecouleur: AppCompatButton
     val fragmentField = FragmentField()  //creation du fragment champs de case
     val fragmentMenu = FragmentMenu()  //creation du fragment menu
     val manager = supportFragmentManager //appel au gestionnaire de fragment
@@ -69,6 +70,9 @@ public class MainActivity : AppCompatActivity(), View.OnClickListener {
         getWindow().setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN); //cachage de la barre de status
         setContentView(layout.activity_main)
         btnChangeFragment.setOnClickListener(this)
+
+
+
 
         timer = findViewById(R.id.timer)
         object : CountDownTimer(timeLeft, 1000) {
@@ -114,4 +118,4 @@ public class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    }
+}

@@ -4,9 +4,9 @@
     <string name="afficher_menu">go to MENU</string>
     <string name="menu">MENU</string>
     <string name="field">FIELD</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="textBtnModeNight">Activer</string>
+    <string name="Désactiver">Activer</string>
     <string name="nombre_de_drapeau">nombre de drapeau</string>
     <string name="_40">40</string>
     <string name="win">Bravo, tu as gagné !</string>
@@ -14,4 +14,14 @@
     <string name="reset_game">Redémarre le jeu</string>
     <string name="results_format">Nombre de cases découvertes : %1$d </string> <!-- ajouter : \nTemps écoulé : %2$.1f (pour voir le temps écoulé)-->
 
+    <string name="Activer">Activer</string>
+    <string name="CaseTimer">Minuterie</string>
+    <string name="CaseHardLevel">Mode difficile</string>
+    <string name="CaseLangue">Anglais</string>
+    <string name="CaseModeNuit">Mode nuit</string>
+    <string name="Bouton">Bouton</string>
+    <string name="Texte1">Texte 1</string>
+    <string name="Text2">Texte 2</string>
+    <string name="CaseLanguetxt">Langue</string>
+    <string name="Réglages">Réglages</string>
 </resources>

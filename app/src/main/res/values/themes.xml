@@ -20,4 +20,26 @@
     <item name="android:textSize">18sp</item>
 </style>
 
+    <!-- Light application theme.-->
+    <style name="AppTheme.Base.Light" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="Background">@color/Background</item>
+    <item name="BackgroundBtn">@color/BackgroundBtn</item>
+        <item name="textBtn">@color/textBtn</item>
+        <item name="Case">@color/Case</item>
+        <item name="textCase">@color/textCase</item>
+        <item name="BtnCase">@color/BtnCase</item>
+        <item name="textBtnCase">@color/textBtnCase</item>
+    </style>
+
+    <!-- Night application theme.-->
+<style name="AppTheme.Base.Night" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <item name="Background">@color/BackgroundNight</item>
+    <item name="BackgroundBtn">@color/BackgroundBtnNight</item>
+    <item name="textBtn">@color/textBtnNight</item>
+    <item name="Case">@color/CaseNight</item>
+    <item name="textCase">@color/textCaseNight</item>
+    <item name="BtnCase">@color/BtnCaseNight</item>
+    <item name="textBtnCase">@color/textBtnCaseNight</item>
+</style>
+
 </resources>

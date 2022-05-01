@@ -35,6 +35,8 @@ class FragmentMenu : Fragment() {
         Changecouleur?.setOnClickListener(){
             (activity as MainActivity?)!!.changeMode()
         }
+
+
     return view
     }
 }
