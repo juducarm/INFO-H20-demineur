@@ -4,7 +4,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Point
-import android.os.CountDownTimer
 
 
 //la classe Bomb hérite de la classe Box
@@ -21,9 +20,9 @@ class Bomb(fieldPosition: Point, view: FieldView):
         super.draw(canvas)
         if (!hide && view.drawing) { //if (drawing) car ça tourne en boucle sinon
             showAllBombs(view.theBombs)
-           // canvas?.drawRect(areaWithGrid, paint) // dessin de la case
-            view.imageBomb.setBounds(areaWithGrid.left.toInt(), areaWithGrid.top.toInt(),
-                areaWithGrid.right.toInt(), areaWithGrid.bottom.toInt())
+           // canvas?.drawRect(area, paint) // dessin de la case
+            view.imageBomb.setBounds(area.left.toInt(), area.top.toInt(),
+                area.right.toInt(), area.bottom.toInt())
             if (canvas != null) {
                 view.imageBomb.draw(canvas)
             }

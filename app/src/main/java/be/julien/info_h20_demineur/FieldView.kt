@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.SurfaceHolder
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import kotlinx.android.synthetic.main.activity_main.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 import android.os.CountDownTimer as CountDownTimer
@@ -21,24 +20,7 @@ import android.os.CountDownTimer as CountDownTimer
 class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
     SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
 
-    var random = Random()
-    var plantFlag = false
-    var firstClick = true
-    val activity = context as FragmentActivity
-    var drawing = true
-    lateinit var thread: Thread
-    lateinit var canvas: Canvas
-
-    //listes d'objets
-    val theBoxes = ArrayList<Box>()
-    val theBombs = ArrayList<Bomb>()
-    val theEmptyBoxes = ArrayList<EmptyBox>()
-    val theDiscoveredBoxes = ArrayList<Box>()
-    var discoveredBoxes = 0
-    val bomb = Bomb(Point(), this)
-    val emptyBox = EmptyBox(Point(), this)
-
-    //temporel
+    //variables et valeurs pour le temps
     var totalElapsedTime = 0.0
     var timeLeft = 100.0 //Pour indiquer le temps dans la fenetre de dialogue finale
     val HIT_REWARD_HARD = resources.getInteger(R.integer.hit_reward_hard).toLong() //Car getDouble ne fonctionne pas
@@ -53,10 +35,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val pixelsTopBar =
         resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar (Float)
     val boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
-    val gridSize = resources.getInteger(R.integer.gridSize)
     val gameDifficulty = nbrBombs.toFloat()
     val textPaint = Paint()
-    var gameOver = false
 
     //réglages graphiques
     val imageBomb = resources.getDrawable(R.drawable.ic_bomb)
@@ -70,48 +50,27 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     private val w = width
     val backgroundPaint = Paint()
 
+    //variables et valeurs pour le jeu
+    var gameOver = false
+    var discoveredBoxes = 0
+    var random = Random()
+    var flagMode = false
+    var firstClick = true
+    val activity = context as FragmentActivity
+    var drawing = true
+    lateinit var thread: Thread
+    lateinit var canvas: Canvas
+
+    //listes d'objets
+    val theBoxes = ArrayList<Box>()
+    val theBombs = ArrayList<Bomb>()
+    val theEmptyBoxes = ArrayList<EmptyBox>()
+    val theDiscoveredBoxes = ArrayList<Box>()
+
 
     init {
         textPaint.textSize = w / 20f
         textPaint.color = Color.BLACK
-    }
-
-    fun pause() {
-        drawing = false
-        thread.join()
-    }
-
-    fun resume() {
-        drawing = true
-        thread = Thread(this)
-        thread.start()
-    }
-
-    /*fun increaseTimeLeft() {
-        if (gameDifficulty >= 30) { //définit le reward en cas de touche de case safe en fct de la difficulté
-            HIT_REWARD = HIT_REWARD_EASY
-        }
-        else HIT_REWARD = HIT_REWARD_HARD
-    }
-    */
-
-
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        theBoxes.forEach { it.draw(canvas) }
-    }
-
-    fun draw() { //dessin du timing
-        if (holder.surface.isValid) {
-            canvas = holder.lockCanvas()
-            canvas.drawRect(0f, 0f, canvas.width.toFloat(),
-                canvas.height.toFloat(), backgroundPaint)
-            val formatted = String.format("%.2f", timeLeft)
-            canvas.drawText("Il reste $formatted secondes. ",
-                30f, 1400f, textPaint)
-            println("dessin du temps")
-            holder.unlockCanvasAndPost(canvas)
-        }
     }
 
     //création des boxes
@@ -135,6 +94,95 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         }
     }
 
+    //gestion du clic du joueur
+    override fun onTouchEvent(e: MotionEvent): Boolean {
+        if (drawing) {
+            when (e.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    //clickPosition : position du clic sur le field
+                    val clickPosition =
+                        Point(
+                            (e.rawX / boxSize).toInt(),
+                            ((e.rawY - pixelsTopBar) / boxSize).toInt()
+                        )
+                    //repere la case sous le clic
+                    var boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
+                    if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
+                        firstClick = false
+                        while (!boxUnderClick.isSafe) {
+                            theBombs.clear()
+                            theEmptyBoxes.clear()
+                            theBoxes.clear()
+                            boxCreation()
+                            theBombs.forEach { it.warningBomb(theEmptyBoxes) }
+                            boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
+                        }
+                    }
+                    if (flagMode) {
+                        boxUnderClick.plantFlag()
+                    }
+                    else {
+                        boxUnderClick.discover()
+                        if (boxUnderClick.isSafe) {
+                            val emptyBox: EmptyBox =
+                                boxUnderClick.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
+                            emptyBox.cleanField() //devoile toute la partie safe autours de la case
+                            emptyBox.showAround()
+                        }
+                        if (!theDiscoveredBoxes.contains(boxUnderClick)) {
+                            theDiscoveredBoxes.add(boxUnderClick)
+                        }
+                    }
+                    invalidate() //appel à la méthode onDraw
+                }
+            }
+
+        }
+        return true
+    }
+
+    //gestion du dessin
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        theBoxes.forEach { it.draw(canvas) }
+    }
+
+    fun draw() { //dessin du timing
+        if (holder.surface.isValid) {
+            canvas = holder.lockCanvas()
+            canvas.drawRect(0f, 0f, canvas.width.toFloat(),
+                canvas.height.toFloat(), backgroundPaint)
+            val formatted = String.format("%.2f", timeLeft)
+            canvas.drawText("Il reste $formatted secondes. ",
+                30f, 1400f, textPaint)
+            println("dessin du temps")
+            holder.unlockCanvasAndPost(canvas)
+        }
+    }
+
+    fun pause() {
+        drawing = false
+        thread.join()
+    }
+
+    fun resume() {
+        drawing = true
+        thread = Thread(this)
+        thread.start()
+    }
+
+    /*fun increaseTimeLeft() {
+        if (gameDifficulty >= 30) { //définit le reward en cas de touche de case safe en fct de la difficulté
+            HIT_REWARD = HIT_REWARD_EASY
+        }
+        else HIT_REWARD = HIT_REWARD_HARD
+    }
+    */
+
+
+
+
+
     override fun run() {
         var previousFrameTime = System.currentTimeMillis()
         if (drawing) {
@@ -155,57 +203,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             timeLeft = 0.0
             gameLost()
         }
-    }
-
-
-    override fun onTouchEvent(e: MotionEvent): Boolean {
-        if (drawing) {
-            when (e.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    //eventOnField : position du clic sur le field
-                    val eventOnField =
-                        Point(
-                            (e.rawX / boxSize).toInt(),
-                            ((e.rawY - pixelsTopBar) / boxSize).toInt()
-                        )
-                    //repere la case sous le clic
-                    var boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
-                    if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
-                        firstClick = false
-                        while (!boxUnderEvent.isSafe) {
-                            theBombs.clear()
-                            theEmptyBoxes.clear()
-                            theBoxes.clear()
-                            boxCreation()
-                            theBombs.forEach { it.warningBomb(theEmptyBoxes) }
-                            boxUnderEvent = theBoxes.single { it.fieldPosition == eventOnField }
-                        }
-                    }
-                    if (plantFlag) {
-                        if (boxUnderEvent.plantFlag) {
-                            boxUnderEvent.plantFlag = false
-                        }
-                        else {
-                            boxUnderEvent.plantFlag = true
-                        }
-                    } else {
-                        boxUnderEvent.hide = false
-                        if (boxUnderEvent.isSafe) {
-                            val emptyBox: EmptyBox =
-                                boxUnderEvent.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
-                            emptyBox.cleanField() //devoile toute la partie safe autours de la case
-                            emptyBox.showAround()
-                        }
-                        if (!theDiscoveredBoxes.contains(boxUnderEvent)) {
-                            theDiscoveredBoxes.add(boxUnderEvent)
-                        }
-                    }
-                    invalidate() //appel à la méthode onDraw
-                }
-            }
-
-        }
-        return true
     }
 
 
@@ -257,7 +254,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         discoveredBoxes = 0
         totalElapsedTime = 0.0
         timeLeft = 100.0
-        plantFlag = false
+        flagMode = false
         firstClick = true
         drawing = true
         gameOver = false

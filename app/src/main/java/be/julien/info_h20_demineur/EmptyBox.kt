@@ -1,7 +1,6 @@
 package be.julien.info_h20_demineur
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Point
 
@@ -16,7 +15,7 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
 
 
     init {
-        if ((fieldPosition.x + fieldPosition.y ) % 2 == 0) {
+        if ((fieldPosition.x + fieldPosition.y ) % 2 == 0) { //permet d'avoir un quadrillage
             boxPaint.color = view.safeBoxColor1
         }
         else {boxPaint.color = view.safeBoxColor2}
@@ -27,7 +26,7 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
         if (!hide) {
-            canvas?.drawRect(areaWithGrid, boxPaint) // dessin de la case
+            canvas?.drawRect(area, boxPaint) // dessin de la case
             if (bombsAround != 0) {
                 canvas?.drawText(
                     "$bombsAround", // dessin du nombre
@@ -45,7 +44,7 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
             val fieldAround = Point(point.x + fieldPosition.x, point.y + fieldPosition.y)
             if (view.theEmptyBoxes.any { it.fieldPosition == fieldAround}) {//verifie si la case n'est pas hors du field
                 val boxAround = view.theEmptyBoxes.single { it.fieldPosition == fieldAround } // récupère l'objet case
-                boxAround.hide = false
+                boxAround.discover()
                 if (!view.theDiscoveredBoxes.contains(boxAround)) view.theDiscoveredBoxes.add(boxAround)
                 view.winCondition()
             }
