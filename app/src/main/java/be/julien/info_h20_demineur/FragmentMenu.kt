@@ -36,8 +36,15 @@ class FragmentMenu : Fragment() {
             (activity as MainActivity?)!!.changeMode()
         }
 
+        val Changelangue = view?.findViewById<AppCompatButton>(R.id.Changelangue)
 
-    return view
+        Changelangue?.setOnClickListener(){
+            (activity as MainActivity?)!!.changeLangue()
+        }
+
+
+
+        return view
     }
 }
 

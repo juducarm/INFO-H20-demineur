@@ -11,12 +11,17 @@
 
     <!-- Paramètres du jeu -->
 
-    <integer name="nbrBoxesHeight">18</integer>
-    <integer name="nbrBoxesWidth">13</integer>
-    <integer name="nbrBombs">40</integer>
+    <integer name="nbrBoxesHeight">10</integer>
+    <integer name="nbrBoxesWidth">8</integer>
+    <integer name="nbrBombs">10</integer>
     <integer name="gridSize">0</integer>
 
     <integer name="hit_reward_hard">5</integer>
     <integer name="hit_reward_easy">10</integer>
+
+
+    <integer name="nbrBoxesHeightHardLevel">18</integer>
+    <integer name="nbrBoxesWidthHardLevel">13</integer>
+    <integer name="nbrBombsHardLevel">40</integer>
 
 </resources>

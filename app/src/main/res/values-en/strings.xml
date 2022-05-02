@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">INFO-H20-demineur</string>
+    <string name="afficher_jeu">go to FIELD</string>
+    <string name="afficher_menu">go to MENU</string>
+    <string name="menu">MENU</string>
+    <string name="field">FIELD</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Désactiver">Disable</string>
+    <string name="nombre_de_drapeau">number of flag</string>
+    <string name="_40">40</string>
+    <string name="win">congratulations, you have won!</string>
+    <string name="lose">congratulations, you have lost!</string>
+    <string name="reset_game">Restart the game</string>
+    <string name="results_format">"Number of squares found : %1$d "</string>
+    <string name="Activer">Enable</string>
+    <string name="CaseTimer">Timer</string>
+    <string name="CaseHardLevel">Hard level</string>
+    <string name="CaseLangue">English</string>
+    <string name="CaseModeNuit">Night mode</string>
+    <string name="Bouton">Button</string>
+    <string name="Texte1">Text 1</string>
+    <string name="Text2">Text 2</string>
+    <string name="CaseLanguetxt">Language</string>
+    <string name="Réglages">Settings</string>
+</resources>

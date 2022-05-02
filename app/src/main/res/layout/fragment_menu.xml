@@ -58,13 +58,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="HARD LEVEL"
+                    android:text="@string/CaseHardLevel"
                     android:textAlignment="center"
                     android:textColor="@color/textBtnCase"
                     android:textSize="13dp" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/HardLevel"
+                    android:id="@+id/Changelevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Activer"

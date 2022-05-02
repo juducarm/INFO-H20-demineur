@@ -30,11 +30,11 @@
     <color name="safeBox_color2">@color/chineseSilver</color>
     <color name="closeBox_color">@color/darkTurquoise</color>
     <color name="number_color">@color/white</color>
-    
-    <!--Light Color-->
-    <color name="Background">#CCCCCC</color>
-    <color name="BackgroundBtn">@color/white</color>
-    <color name="textBtn">#191C1E</color>
+
+    <!-- Night Color-->
+    <color name="Background">#191970</color>
+    <color name="BackgroundBtn">#5618E9</color>
+    <color name="textBtn">#FFFFFF</color>
     <color name="Case">#FFFFFFFF</color>
     <color name="textCase">#CCCCCC</color>
     <color name="BtnCase">#CCCCCC</color>
