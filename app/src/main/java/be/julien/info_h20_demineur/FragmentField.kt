@@ -16,26 +16,30 @@ class FragmentField : Fragment() {
     lateinit var fieldView: FieldView
     lateinit var textView: TextView
 
-
+    var nbrBoxesWidth = 9 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
+    var nbrBoxesHeight =13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
+    var nbrBombs = 20 //resources.getInteger(R.integer.nbrBombs_EZ)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? {
 
         val layoutView = inflater.inflate(R.layout.fragment_field, container, false)
-        textView = layoutView.findViewById(R.id.textFlag)
 
+        textView = layoutView.findViewById(R.id.textFlag)
         fieldView = layoutView.findViewById(R.id.fieldView)
         fieldView.setWillNotDraw(false)
-        //fieldView.invalidate()
+        fieldView.nbrBoxesHeight = nbrBoxesHeight
+        fieldView.nbrBoxesWidth = nbrBoxesWidth
+        fieldView.nbrBombs = nbrBombs
+        fieldView.boxSize = minOf(fieldView.resolution.x / nbrBoxesWidth, fieldView.resolution.y / nbrBoxesHeight)
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
+
 
         layoutView.btnFlag.setOnClickListener {
             if (fieldView.flagMode) { fieldView.flagMode = false }
             else { fieldView.flagMode = true}
         }
-        /*textView.text = fieldView.nbrFlags.toString()
-        fieldView.textNbrFlags = textView*/
         return layoutView
     }
 

@@ -20,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class FragmentMenu : Fragment() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -30,19 +32,24 @@ class FragmentMenu : Fragment() {
     ): View? {
         var view = inflater.inflate(R.layout.fragment_menu, container, false)
 
-        val Changecouleur = view?.findViewById<AppCompatButton>(R.id.Changecouleur)
+        val btnLangue = view?.findViewById<AppCompatButton>(R.id.btnLanguage)
+        val btnHardMode = view?.findViewById<AppCompatButton>(R.id.btnHardMode)
+        val btnNightMode = view?.findViewById<AppCompatButton>(R.id.btnNightMode)
 
-        Changecouleur?.setOnClickListener(){
-            (activity as MainActivity?)!!.changeMode()
+        btnNightMode?.setOnClickListener {
+            (activity as MainActivity?)!!.changeNightMode()
+            println("nightMode")
         }
 
-        val Changelangue = view?.findViewById<AppCompatButton>(R.id.Changelangue)
-
-        Changelangue?.setOnClickListener(){
-            (activity as MainActivity?)!!.changeLangue()
+        btnLangue?.setOnClickListener {
+            (activity as MainActivity?)!!.changeLanguage()
+            println("changeLange")
         }
 
-
+        btnHardMode?.setOnClickListener {
+            println("hardLevel")
+           (activity as MainActivity?)!!.changeHardMode()
+        }
 
         return view
     }

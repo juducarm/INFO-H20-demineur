@@ -64,7 +64,7 @@
                     android:textSize="13dp" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/Changelevel"
+                    android:id="@+id/btnHardMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Activer"
@@ -151,7 +151,7 @@
                     android:textSize="15dp" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/Changelangue"
+                    android:id="@+id/btnLanguage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/gradient"
@@ -195,7 +195,7 @@
                     android:textSize="14dp" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/Changecouleur"
+                    android:id="@+id/btnNightMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/gradient"

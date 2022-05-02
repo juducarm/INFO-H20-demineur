@@ -5,7 +5,7 @@ import android.graphics.*
 
 
 //classe abstraite car elle ne se manifestera qu'à travers ses sous-classes
-abstract class Box(val fieldPosition: android.graphics.Point, var view: FieldView) {
+abstract class Box(val fieldPosition: Point, var view: FieldView) {
 
     val area = RectF(fieldPosition.x * view.boxSize,//surface couverte par la case
         fieldPosition.y * view.boxSize,
