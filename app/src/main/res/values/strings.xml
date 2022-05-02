@@ -11,7 +11,7 @@
     <string name="_40">40</string>
     <string name="win">Bravo, tu as gagné !</string>
     <string name="lose">Bravo, tu as perdu !</string>
-    <string name="reset_game">Redémarre le jeu</string>
+    <string name="reset_game">Recommencer une partie</string>
     <string name="results_format">Nombre de cases découvertes : %1$d </string> <!-- ajouter : \nTemps écoulé : %2$.1f (pour voir le temps écoulé)-->
 
     <string name="Activer">Activer</string>

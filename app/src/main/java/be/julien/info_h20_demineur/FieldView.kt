@@ -36,7 +36,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val theDiscoveredBoxes = ArrayList<Box>()
     var discoveredBoxes = 0
     val bomb = Bomb(Point(), this)
-    //val box = Box(Point(), this)
     val emptyBox = EmptyBox(Point(), this)
 
     //temporel
@@ -243,6 +242,16 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         )
     }
 
+    fun reset(){
+
+    }
+
+    fun winCondition(){
+        if (theDiscoveredBoxes.size == (nbrBoxesHeight*nbrBoxesHeight - nbrBombs)) {
+            gameWon()
+        }
+    }
+
     fun newGame() {
 
         discoveredBoxes = 0
@@ -250,8 +259,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         timeLeft = 100.0
         plantFlag = false
         firstClick = true
-        bomb.hide = true
-        emptyBox.hide = true
         drawing = true
         gameOver = false
         thread = Thread(this)
@@ -261,23 +268,24 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         theBoxes.clear()
         theEmptyBoxes.clear()
         boxCreation()
-        println("nouvelle game")
+        theBombs.forEach { it.warningBomb(theEmptyBoxes) }
+        invalidate()
     }
 
     fun gameWon() {
+        drawing = false
+        discoveredBoxes = theDiscoveredBoxes.size
         showGameOverDialog(R.string.win)
         pause()
-        drawing = false
     }
 
     fun gameLost() {
         drawing = false
-        discoveredBoxes = theDiscoveredBoxes.size
+        discoveredBoxes = theDiscoveredBoxes.size - 1 //nombre de boxes qui ont été découvertes pdt les partie
         showGameOverDialog(R.string.lose)
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int,
-                                width: Int, height: Int) {}
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
     override fun surfaceCreated(holder: SurfaceHolder) {}
 

@@ -23,7 +23,7 @@ abstract class Box(val fieldPosition: android.graphics.Point, var view: FieldVie
         Point(0, 1), Point(0, -1)
     )
 
-    var hide = true
+    open var hide = true
     var isSafe = true // est true si la case n'est pas une bomb et n'est pas entourée de bomb
     var plantFlag = false // dessine un drapeau si true
 
@@ -33,7 +33,6 @@ abstract class Box(val fieldPosition: android.graphics.Point, var view: FieldVie
             hiddenBoxPaint.color = view.hiddenBoxColor1
         }
         else {hiddenBoxPaint.color = view.hiddenBoxColor2}
-
         gridPaint.color = Color.WHITE
     }
 
