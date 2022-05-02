@@ -61,7 +61,6 @@ public class MainActivity : AppCompatActivity(), View.OnClickListener {
                     transaction.commit()
                 }
             }
-
         }
     }
 
@@ -70,9 +69,6 @@ public class MainActivity : AppCompatActivity(), View.OnClickListener {
         getWindow().setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN); //cachage de la barre de status
         setContentView(layout.activity_main)
         btnChangeFragment.setOnClickListener(this)
-
-
-
 
         timer = findViewById(R.id.timer)
         object : CountDownTimer(timeLeft, 1000) {

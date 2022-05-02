@@ -19,7 +19,7 @@ class Bomb(fieldPosition: Point, view: FieldView):
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
-        if (!hide && view.drawing) {
+        if (!hide && view.drawing) { //if drawing car ca tourne en boucle sinon
             showAllBombs(view.theBombs)
            // canvas?.drawRect(areaWithGrid, paint) // dessin de la case
             view.imageBomb.setBounds(areaWithGrid.left.toInt(), areaWithGrid.top.toInt(),

@@ -36,6 +36,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val theDiscoveredBoxes = ArrayList<Box>()
     var discoveredBoxes = 0
     val bomb = Bomb(Point(), this)
+    //val box = Box(Point(), this)
     val emptyBox = EmptyBox(Point(), this)
 
     //temporel
@@ -101,14 +102,15 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         theBoxes.forEach { it.draw(canvas) }
     }
 
-    fun draw() {
+    fun draw() { //dessin du timing
         if (holder.surface.isValid) {
             canvas = holder.lockCanvas()
-            canvas.drawRect(30f, 1400f, canvas.width.toFloat(),
+            canvas.drawRect(0f, 0f, canvas.width.toFloat(),
                 canvas.height.toFloat(), backgroundPaint)
             val formatted = String.format("%.2f", timeLeft)
             canvas.drawText("Il reste $formatted secondes. ",
                 30f, 1400f, textPaint)
+            println("dessin du temps")
             holder.unlockCanvasAndPost(canvas)
         }
     }
@@ -150,7 +152,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         val interval = elapsedTimeMS / 1000.0
         timeLeft -= interval
         println(timeLeft)
-
         if (timeLeft <= 0.0) {
             timeLeft = 0.0
             gameLost()
@@ -243,6 +244,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun newGame() {
+
         discoveredBoxes = 0
         totalElapsedTime = 0.0
         timeLeft = 100.0
@@ -254,14 +256,18 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         gameOver = false
         thread = Thread(this)
         thread.start()
+        theDiscoveredBoxes.clear()
+        theBombs.clear()
+        theBoxes.clear()
+        theEmptyBoxes.clear()
         boxCreation()
+        println("nouvelle game")
     }
 
     fun gameWon() {
         showGameOverDialog(R.string.win)
         pause()
         drawing = false
-        gameOver = true
     }
 
     fun gameLost() {

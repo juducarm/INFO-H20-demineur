@@ -54,4 +54,5 @@ abstract class Box(val fieldPosition: android.graphics.Point, var view: FieldVie
     operator fun invoke(): EmptyBox { //permet de change la classe de l'objet de Box à EmptyBo
     return EmptyBox(fieldPosition, view)
     }
+
 }
