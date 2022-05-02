@@ -52,7 +52,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val nbrBombs = resources.getInteger(R.integer.nbrBombs)
     val resolution = PointF(1080f, 1920f) //nombre de pixels sur le fragment
     val pixelsTopBar =
-        resources.getDimension(R.dimen.heightTopBar) //hauteur en pixel de la TopBar (Float)
+        resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar (Float)
     val boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
     val gridSize = resources.getInteger(R.integer.gridSize)
     val gameDifficulty = nbrBombs.toFloat()
