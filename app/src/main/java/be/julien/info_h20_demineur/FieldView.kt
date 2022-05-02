@@ -33,6 +33,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val theBoxes = ArrayList<Box>()
     val theBombs = ArrayList<Bomb>()
     val theEmptyBoxes = ArrayList<EmptyBox>()
+    val theDiscoveredBoxes = ArrayList<Box>()
     var discoveredBoxes = 0
     val bomb = Bomb(Point(), this)
     val emptyBox = EmptyBox(Point(), this)
@@ -75,7 +76,16 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         textPaint.color = Color.BLACK
     }
 
+    fun pause() {
+        drawing = false
+        thread.join()
+    }
 
+    fun resume() {
+        drawing = true
+        thread = Thread(this)
+        thread.start()
+    }
 
     /*fun increaseTimeLeft() {
         if (gameDifficulty >= 30) { //définit le reward en cas de touche de case safe en fct de la difficulté
@@ -126,7 +136,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     override fun run() {
         var previousFrameTime = System.currentTimeMillis()
-        while (drawing) {
+        if (drawing) {
             val currentTime = System.currentTimeMillis()
             var elapsedTimeMS:Double=(currentTime-previousFrameTime).toDouble()
             totalElapsedTime += elapsedTimeMS / 1000.0
@@ -148,9 +158,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
 
-
     override fun onTouchEvent(e: MotionEvent): Boolean {
-        if (drawing == true) {
+        if (drawing) {
             when (e.action) {
                 MotionEvent.ACTION_DOWN -> {
                     //eventOnField : position du clic sur le field
@@ -187,6 +196,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                             emptyBox.cleanField() //devoile toute la partie safe autours de la case
                             emptyBox.showAround()
                         }
+                        if (!theDiscoveredBoxes.contains(boxUnderEvent)) {
+                            theDiscoveredBoxes.add(boxUnderEvent)
+                        }
                     }
                     invalidate() //appel à la méthode onDraw
                 }
@@ -196,27 +208,18 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         return true
     }
 
-    fun pause() {
-        drawing = false
-        thread.join()
-    }
 
-    fun resume() {
-        drawing = true
-        thread = Thread(this)
-        thread.start()
-    }
 
     fun showGameOverDialog(messageId: Int) {
         class GameResult : DialogFragment() {
             override fun onCreateDialog(bundle: Bundle?): Dialog {
                 val builder = AlertDialog.Builder(getActivity())
                 builder.setTitle(resources.getString(messageId))
-                /*builder.setMessage(
+                builder.setMessage(
                     resources.getString(
                         R.string.results_format, discoveredBoxes //totalElapsedTime
                     )
-                )*/
+                )
                 builder.setPositiveButton(R.string.reset_game,
                     DialogInterface.OnClickListener { _, _ -> newGame() }
                 )
@@ -247,9 +250,10 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         firstClick = true
         bomb.hide = true
         emptyBox.hide = true
-        if (gameOver) {
-            gameOver = false
-        }
+        drawing = true
+        gameOver = false
+        thread = Thread(this)
+        thread.start()
         boxCreation()
     }
 
@@ -261,10 +265,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun gameLost() {
-        showGameOverDialog(R.string.lose)
-        //pause()
         drawing = false
-        gameOver = true
+        discoveredBoxes = theDiscoveredBoxes.size
+        showGameOverDialog(R.string.lose)
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int,

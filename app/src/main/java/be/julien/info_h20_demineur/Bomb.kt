@@ -19,15 +19,15 @@ class Bomb(fieldPosition: Point, view: FieldView):
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
-        if (!hide) {
+        if (!hide && view.drawing) {
             showAllBombs(view.theBombs)
-            view.gameLost()
            // canvas?.drawRect(areaWithGrid, paint) // dessin de la case
             view.imageBomb.setBounds(areaWithGrid.left.toInt(), areaWithGrid.top.toInt(),
                 areaWithGrid.right.toInt(), areaWithGrid.bottom.toInt())
             if (canvas != null) {
                 view.imageBomb.draw(canvas)
             }
+            view.gameLost()
 
         }
     }
