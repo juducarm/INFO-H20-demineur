@@ -13,7 +13,7 @@
 
     <integer name="nbrBoxesHeight_HARD">18</integer>
     <integer name="nbrBoxesWidth_HARD">13</integer>
-    <integer name="nbrBombs_HARD">40</integer>
+    <integer name="nbrBombs_HARD">5</integer>
     <integer name="nbrBoxesHeight_EZ">13</integer>
     <integer name="nbrBoxesWidth_EZ">9</integer>
     <integer name="nbrBombs_EZ">20</integer>

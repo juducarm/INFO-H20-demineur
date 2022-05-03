@@ -134,6 +134,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                             if (!theDiscoveredBoxes.contains(boxUnderClick)) {
                                 theDiscoveredBoxes.add(boxUnderClick)
                             }
+                            winCondition()
                         }
                         invalidate() //appel à la méthode onDraw
                     }
@@ -181,9 +182,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         else HIT_REWARD = HIT_REWARD_HARD
     }
     */
-
-
-
 
 
     override fun run() {
@@ -242,18 +240,13 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         )
     }
 
-    fun reset(){
-
-    }
-
     fun winCondition(){
-        if (theDiscoveredBoxes.size == (nbrBoxesHeight*nbrBoxesHeight - nbrBombs)) {
+        if (theDiscoveredBoxes.size == (nbrBoxesHeight*nbrBoxesWidth - theBombs.size)) {
             gameWon()
         }
     }
 
     fun newGame() {
-
         discoveredBoxes = 0
         totalElapsedTime = 0.0
         timeLeft = 100.0
@@ -276,7 +269,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         drawing = false
         discoveredBoxes = theDiscoveredBoxes.size
         showGameOverDialog(R.string.win)
-        pause()
     }
 
     fun gameLost() {

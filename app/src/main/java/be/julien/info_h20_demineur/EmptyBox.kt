@@ -61,6 +61,7 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
                     if (!view.theDiscoveredBoxes.contains(boxAround)) {
                         view.theDiscoveredBoxes.add(boxAround)
                     }
+                    view.winCondition()
                     boxAround.showAround()
                     boxAround.cleanField()
                 }
