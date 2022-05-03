@@ -24,11 +24,11 @@
     <!-- couleurs du champs de cases -->
     <color name="backgroundPaint_color">@color/lightSteelBlue</color>
     <color name="main_layout">@color/blue</color>
-    <color name="hiddenBox_color1">@color/paleTurquoise</color>
-    <color name="hiddenBox_color2">@color/skyBlue</color>
-    <color name="safeBox_color1">@color/lightSteelBlue</color>
-    <color name="safeBox_color2">@color/chineseSilver</color>
-    <color name="closeBox_color">@color/darkTurquoise</color>
+    <color name="hiddenBox_color1">@color/gradient</color>
+    <color name="hiddenBox_color2">@color/linear</color>
+    <color name="safeBox_color1">@color/purple_200</color>
+    <color name="safeBox_color2">@color/slateBlue</color>
+    <color name="closeBox_color">@color/midnightBlue</color>
     <color name="number_color">@color/white</color>
 
     <!-- Night Color-->

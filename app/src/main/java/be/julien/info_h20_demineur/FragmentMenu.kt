@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatButton
 
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +18,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_menu.*
 
 
 class FragmentMenu : Fragment() {
@@ -38,16 +40,13 @@ class FragmentMenu : Fragment() {
 
         btnNightMode?.setOnClickListener {
             (activity as MainActivity?)!!.changeNightMode()
-            println("nightMode")
         }
 
         btnLangue?.setOnClickListener {
             (activity as MainActivity?)!!.changeLanguage()
-            println("changeLange")
         }
 
         btnHardMode?.setOnClickListener {
-            println("hardLevel")
            (activity as MainActivity?)!!.changeHardMode()
         }
 

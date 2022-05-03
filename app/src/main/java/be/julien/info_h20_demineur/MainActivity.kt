@@ -14,9 +14,10 @@ import be.julien.info_h20_demineur.R.*
 import kotlinx.android.synthetic.main.fragment_menu.*
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 
-public class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var timer: TextView
     val fragmentField = FragmentField()  //creation du fragment champs de case
@@ -76,33 +77,26 @@ public class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
     }
+    fun getIsNightModeOn(): Boolean {
+        val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
+        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
+
+        return isNightModeOn
+    }
 
     fun changeNightMode() {
         val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
         val sharedPrefEdit: SharedPreferences.Editor = appSettingPrefs.edit()
-        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
-
-        if (isNightModeOn) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
+        println("nightMode : ${getIsNightModeOn()}")
+        if (getIsNightModeOn()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            sharedPrefEdit.putBoolean("NightMode", false)
+            sharedPrefEdit.apply()
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            sharedPrefEdit.putBoolean("NightMode", true)
+            sharedPrefEdit.apply()
         }
-
-/*
-        fragmentMenu.btnNightMode.setOnClickListener(View.OnClickListener {
-            if (isNightModeOn) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                sharedPrefEdit.putBoolean("NightMode", false)
-                sharedPrefEdit.apply()
-            } else
-            {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                sharedPrefEdit.putBoolean("NightMode", true)
-                sharedPrefEdit.apply()
-            }
-        })
-*/
-
     }
 
 
