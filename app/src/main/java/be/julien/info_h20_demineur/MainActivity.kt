@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     val manager = supportFragmentManager //appel au gestionnaire de fragment
     var timeLeft: Long = 100000
 
-
     var hardModeOn = false
 
 

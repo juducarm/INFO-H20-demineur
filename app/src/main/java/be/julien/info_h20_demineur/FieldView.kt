@@ -131,10 +131,11 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                                 emptyBox.cleanField() //devoile toute la partie safe autours de la case
                                 emptyBox.showAround()
                             }
-                            if (!theDiscoveredBoxes.contains(boxUnderClick)) {
+                            if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
                                 theDiscoveredBoxes.add(boxUnderClick)
+                                winCondition()
                             }
-                            winCondition()
+
                         }
                         invalidate() //appel à la méthode onDraw
                     }
