@@ -7,7 +7,7 @@
     <dimen name="default_padding">5dp</dimen>
     <dimen name="heightTopBar">100dp</dimen>
     <dimen name="heightBottomBar">100dp</dimen>
-    <dimen name="heightStatusBar">0dp</dimen>
+    <dimen name="heightStatusBar">15dp</dimen>
 
     <!-- Paramètres du jeu -->
 
