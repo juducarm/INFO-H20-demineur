@@ -213,7 +213,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             var elapsedTimeMS:Double=(currentTime-previousFrameTime).toDouble()
             totalElapsedTime += elapsedTimeMS / 1000.0
             updatePositions(elapsedTimeMS)
-            println("temps écoulé : $totalElapsedTime")
+            //println("temps écoulé : $totalElapsedTime")
             draw()
             previousFrameTime = currentTime
         }
@@ -226,7 +226,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                 canvas.height.toFloat(), backgroundPaint)
             val formatted = String.format("%.2f", timeLeft)
             canvas.drawText("Il reste $formatted secondes. ",
-                30f, 1400f, textPaint)
+                30f, 1000f, textPaint)
             holder.unlockCanvasAndPost(canvas)
         }
     }
@@ -235,7 +235,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     fun updatePositions(elapsedTimeMS: Double) {
         val interval = elapsedTimeMS / 1000.0
         timeLeft -= interval
-        println("temp restant :$timeLeft")
+        //println("temp restant :$timeLeft")
         if (timeLeft <= 0.0) {
             timeLeft = 0.0
             gameLost()
@@ -249,7 +249,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                 builder.setTitle(resources.getString(messageId))
                 builder.setMessage(
                     resources.getString(
-                        R.string.results_format, discoveredBoxes //totalElapsedTime
+                        R.string.results_format, discoveredBoxes, totalElapsedTime
                     )
                 )
                 builder.setPositiveButton(R.string.reset_game,

@@ -12,7 +12,7 @@
     <string name="win">Congratulations, you have won!</string>
     <string name="lose">Congratulations, you have lost!</string>
     <string name="reset_game">Restart the game</string>
-    <string name="results_format">"Number of squares found : %1$d "</string>
+    <string name="results_format">"Number of squares found : %1$d \nTotal time required : %2$.1f "</string>
     <string name="Activer">Enable</string>
     <string name="CaseTimer">Timer</string>
     <string name="CaseHardLevel">Hard level</string>
