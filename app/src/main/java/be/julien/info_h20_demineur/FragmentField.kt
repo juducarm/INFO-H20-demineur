@@ -19,7 +19,7 @@ class FragmentField : Fragment() {
     lateinit var textView: TextView
 
     var nbrBoxesWidth = 9 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
-    var nbrBoxesHeight = 13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
+    var nbrBoxesHeight =13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
     var nbrBombs = 20 //resources.getInteger(R.integer.nbrBombs_EZ)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
@@ -28,7 +28,6 @@ class FragmentField : Fragment() {
         val layoutView = inflater.inflate(R.layout.fragment_field, container, false)
 
         textView = layoutView.findViewById(R.id.textFlag)
-        //textView = layoutView.findViewById(R.id.textTime)
         fieldView = layoutView.findViewById(R.id.fieldView)
         fieldView.setWillNotDraw(false)
         fieldView.textView = textView as MaterialTextView

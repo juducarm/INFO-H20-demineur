@@ -25,7 +25,7 @@ import android.os.CountDownTimer as CountDownTimer
 class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
     SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
 
-    //variables et valeurs pour le temps
+    //variables et valeurs pour le temp
     var totalElapsedTime = 0.0
     var timeLeft = 0.0 //Pour indiquer le temps dans la fenetre de dialogue finale
     val HIT_REWARD_HARD = resources.getInteger(R.integer.hit_reward_hard).toDouble()
@@ -55,6 +55,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val backgroundPaint = Paint()
 
     //variables et valeurs pour le jeu
+    var flagWitness = "Off "
     var gameOver = false
     var discoveredBoxes = 0
     var nbrFlagsLeft = nbrBombs
@@ -130,7 +131,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                                     theBoxes.clear()
                                     boxCreation()
                                     theBombs.forEach { it.warningBomb(theEmptyBoxes) }
-                                    textView.text = theBombs.size.toString()
+                                    textView.text = flagWitness + theBombs.size.toString()
                                     boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
                                 }
                             }
@@ -158,14 +159,21 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //gestion de du mode drapeau
     fun flagMode() {
-        if (flagModeOn) { flagModeOn = false }
-        else { flagModeOn = true}
+        if (flagModeOn) {
+            flagModeOn = false
+            flagWitness = "Off "
+        }
+        else {
+            flagModeOn = true
+            flagWitness = "On "
+        }
+        textView.text = flagWitness + nbrFlagsLeft.toString()
     }
 
     fun countFlagsLeft(flagMode: Boolean) {
         if (flagMode) { nbrFlagsLeft-- }
         else { nbrFlagsLeft++ }
-        textView.text = nbrFlagsLeft.toString()
+        textView.text = flagWitness + nbrFlagsLeft.toString()
     }
 
     //gestion du dessin (ressine tout le plan du jeu à chaque modif
