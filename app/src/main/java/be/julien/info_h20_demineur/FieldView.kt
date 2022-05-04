@@ -226,7 +226,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                 canvas.height.toFloat(), backgroundPaint)
             val formatted = String.format("%.2f", timeLeft)
             canvas.drawText("Il reste $formatted secondes. ",
-                30f, 1000f, textPaint)
+                150f, 1000f, textPaint)
+            //println("desssinnne")
             holder.unlockCanvasAndPost(canvas)
         }
     }
