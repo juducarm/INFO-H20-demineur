@@ -20,7 +20,7 @@ import android.os.CountDownTimer as CountDownTimer
 class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
     SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
 
-    //variables et valeurs pour le temps
+    //variables et valeurs pour le temp
     var totalElapsedTime = 0.0
     var timeLeft = 100.0 //Pour indiquer le temps dans la fenetre de dialogue finale
     val HIT_REWARD_HARD = resources.getInteger(R.integer.hit_reward_hard).toLong() //Car getDouble ne fonctionne pas

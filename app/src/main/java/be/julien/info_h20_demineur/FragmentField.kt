@@ -18,9 +18,9 @@ class FragmentField : Fragment() {
     lateinit var fieldView: FieldView
     lateinit var textView: TextView
 
-    var nbrBoxesWidth = 9 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
-    var nbrBoxesHeight =13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
-    var nbrBombs = 20 //resources.getInteger(R.integer.nbrBombs_EZ)
+    var nbrBoxesWidth = 9
+    var nbrBoxesHeight =13
+    var nbrBombs = 20
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? {
