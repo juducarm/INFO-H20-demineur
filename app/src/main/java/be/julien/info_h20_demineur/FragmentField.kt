@@ -37,9 +37,7 @@ class FragmentField : Fragment() {
         fieldView.boxSize = minOf(fieldView.resolution.x / nbrBoxesWidth, fieldView.resolution.y / nbrBoxesHeight)
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
-        textView.text = fieldView.theBombs.size.toString()
-        println(nbrBombs)
-        println(fieldView.theBombs.size)
+        textView.text = fieldView.flagWitness + fieldView.theBombs.size.toString()
         layoutView.btnFlag.setOnClickListener {
             fieldView.flagMode()
         }
