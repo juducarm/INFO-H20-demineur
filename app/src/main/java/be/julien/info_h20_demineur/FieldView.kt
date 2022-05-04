@@ -35,7 +35,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val pixelsTopBar =
         resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar (Float)
     var boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
-    val gameDifficulty = nbrBombs.toFloat()
     val textPaint = Paint()
 
     //réglages graphiques
@@ -53,13 +52,15 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     //variables et valeurs pour le jeu
     var gameOver = false
     var discoveredBoxes = 0
+    var nbrFlagsLeft = nbrBombs
     var random = Random()
-    var flagMode = false
+    var flagModeOn = false
     var firstClick = true
     val activity = context as FragmentActivity
     var drawing = true
     lateinit var thread: Thread
     lateinit var canvas: Canvas
+    lateinit var textView: com.google.android.material.textview.MaterialTextView
 
     //listes d'objets
     val theBoxes = ArrayList<Box>()
@@ -81,7 +82,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                 lateinit var box: Box
                 val aléatoire = random.nextInt(nbrBoxesHeight * nbrBoxesWidth)
 
-                if (aléatoire <= gameDifficulty) {
+                if (aléatoire <= nbrBombs.toFloat()) {
                     box = Bomb(Point(x - 1, y - 1), this)
                     box.isSafe = false //la case n'est pas safe (cf. classe Box)
                     theBombs.add(box)
@@ -90,6 +91,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                     theEmptyBoxes.add(box)
                 }
                 theBoxes.add(box)
+                nbrFlagsLeft = theBombs.size
             }
         }
     }
@@ -109,21 +111,23 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                         //repere la case sous le clic
                     if (theBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que le clic est sur le champ de case
                         var boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
-                        if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
-                            firstClick = false
-                            while (!boxUnderClick.isSafe) {
-                                theBombs.clear()
-                                theEmptyBoxes.clear()
-                                theBoxes.clear()
-                                boxCreation()
-                                theBombs.forEach { it.warningBomb(theEmptyBoxes) }
-                                boxUnderClick =
-                                    theBoxes.single { it.fieldPosition == clickPosition }
-                            }
-                        }
-                        if (flagMode) {
+
+                        if (flagModeOn) {
                             boxUnderClick.plantFlag()
-                        } else {
+                        }
+                        else {
+                            if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
+                                firstClick = false
+                                while (!boxUnderClick.isSafe) {
+                                    theBombs.clear()
+                                    theEmptyBoxes.clear()
+                                    theBoxes.clear()
+                                    boxCreation()
+                                    theBombs.forEach { it.warningBomb(theEmptyBoxes) }
+                                    textView.text = theBombs.size.toString()
+                                    boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
+                                }
+                            }
                             boxUnderClick.discover()
                             if (boxUnderClick.isSafe) {
                                 val emptyBox: EmptyBox =
@@ -144,6 +148,18 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
         }
         return true
+    }
+
+    //gestion de du mode drapeau
+    fun flagMode() {
+        if (flagModeOn) { flagModeOn = false }
+        else { flagModeOn = true}
+    }
+
+    fun countFlagsLeft(flagMode: Boolean) {
+        if (flagMode) { nbrFlagsLeft-- }
+        else { nbrFlagsLeft++ }
+        textView.text = nbrFlagsLeft.toString()
     }
 
     //gestion du dessin
@@ -251,7 +267,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         discoveredBoxes = 0
         totalElapsedTime = 0.0
         timeLeft = 100.0
-        flagMode = false
+        flagModeOn = false
         firstClick = true
         drawing = true
         gameOver = false
@@ -290,3 +306,5 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
 
 
+
+   
