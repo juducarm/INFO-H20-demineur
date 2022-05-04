@@ -49,10 +49,12 @@ class FragmentField : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        fieldView.pause()
     }
 
     override fun onResume() {
         super.onResume()
+        fieldView.resume()
     }
 
     override fun onStart() {

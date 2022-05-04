@@ -15,6 +15,8 @@ import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.SurfaceHolder
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import java.util.*
@@ -145,6 +147,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                             if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
                                 theDiscoveredBoxes.add(boxUnderClick)
                                 winCondition()
+                                increaseTimeLeft()
                             }
 
                         }
@@ -182,18 +185,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         theBoxes.forEach { it.draw(canvas) }
     }
 
-    fun draw() { //dessin du timing
-        if (holder.surface.isValid) {
-            canvas = holder.lockCanvas()
-            canvas.drawRect(0f, 0f, canvas.width.toFloat(),
-                canvas.height.toFloat(), backgroundPaint)
-            val formatted = String.format("%.2f", timeLeft)
-            canvas.drawText("Il reste $formatted secondes. ",
-                30f, 1400f, textPaint)
-            println("dessin du temps")
-            holder.unlockCanvasAndPost(canvas)
-        }
-    }
 
     fun pause() {
         drawing = false
@@ -222,23 +213,34 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             var elapsedTimeMS:Double=(currentTime-previousFrameTime).toDouble()
             totalElapsedTime += elapsedTimeMS / 1000.0
             updatePositions(elapsedTimeMS)
-            println("mabite.com")
+            println("temps écoulé : $totalElapsedTime")
             draw()
             previousFrameTime = currentTime
         }
     }
 
+    fun draw() { //dessin du timing
+        if (holder.surface.isValid) {
+            canvas = holder.lockCanvas()
+            canvas.drawRect(0f, 0f, canvas.width.toFloat(),
+                canvas.height.toFloat(), backgroundPaint)
+            val formatted = String.format("%.2f", timeLeft)
+            canvas.drawText("Il reste $formatted secondes. ",
+                30f, 1400f, textPaint)
+            holder.unlockCanvasAndPost(canvas)
+        }
+    }
+
+
     fun updatePositions(elapsedTimeMS: Double) {
         val interval = elapsedTimeMS / 1000.0
         timeLeft -= interval
-        println(timeLeft)
+        println("temp restant :$timeLeft")
         if (timeLeft <= 0.0) {
             timeLeft = 0.0
             gameLost()
         }
     }
-
-
 
     fun showGameOverDialog(messageId: Int) {
         class GameResult : DialogFragment() {
@@ -305,7 +307,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun gameLost() {
         drawing = false
-        discoveredBoxes = theDiscoveredBoxes.size - 1 //nombre de boxes qui ont été découvertes pdt les partie
+        if (timeLeft == 0.0) discoveredBoxes = theDiscoveredBoxes.size
+        else discoveredBoxes = theDiscoveredBoxes.size - 1 //nombre de boxes qui ont été découvertes pdt les partie
         showGameOverDialog(R.string.lose)
     }
 
