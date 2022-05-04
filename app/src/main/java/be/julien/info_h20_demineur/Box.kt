@@ -44,8 +44,16 @@ abstract class Box(val fieldPosition: Point, var view: FieldView) {
     }
 
     fun plantFlag() { // met un drapeau sur la case
-        if (flagMode) { flagMode = false }
-        else { flagMode = true }
+        if (flagMode) {
+            flagMode = false
+            view.countFlagsLeft(flagMode)
+        }
+        else {
+            if (view.nbrFlagsLeft > 0) {
+                flagMode = true
+                view.countFlagsLeft(flagMode)
+            }
+        }
     }
 
     fun discover() { //découvre la case
