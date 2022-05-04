@@ -9,8 +9,8 @@
     <string name="Désactiver">Disable</string>
     <string name="nombre_de_drapeau">number of flag</string>
     <string name="_40">40</string>
-    <string name="win">congratulations, you have won!</string>
-    <string name="lose">congratulations, you have lost!</string>
+    <string name="win">Congratulations, you have won!</string>
+    <string name="lose">Congratulations, you have lost!</string>
     <string name="reset_game">Restart the game</string>
     <string name="results_format">"Number of squares found : %1$d "</string>
     <string name="Activer">Enable</string>

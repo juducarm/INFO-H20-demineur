@@ -24,34 +24,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     val fragmentMenu = FragmentMenu()  //creation du fragment menu
     val manager = supportFragmentManager //appel au gestionnaire de fragment
     var timeLeft: Long = 100000
-    var onFragmentMenu = false
 
-
-    var hardModeOn = true
+    var hardModeOn = false
 
 
     override fun onClick(v: View) {
 
         when(v.id) { //when au lieu de setOnClickListener pour pouvoir mettre plusieurs boutons si besoin
             R.id.btnChangeFragment -> {
-                if (onFragmentMenu) {
-                    onFragmentMenu = false
+                if (btnChangeFragment.text == getString(string.afficher_jeu)) {
                     btnChangeFragment.text = getString(string.afficher_menu)
 
                     //transaction vers le nouveau fragment
                     val transaction = manager.beginTransaction()
                     transaction.replace(id.fragment_container, fragmentField)
-                    //transaction.addToBackStack(null)
+                    transaction.addToBackStack(null) //conserve le fragment en mémoire
                     transaction.commit()
                 }
                 else {
-                    onFragmentMenu = true
                     btnChangeFragment.text = getString(string.afficher_jeu)
 
                     //transaction vers le nouveau fragment
                     val transaction = manager.beginTransaction()
                     transaction.replace(id.fragment_container, fragmentMenu)
-                    //transaction.addToBackStack(null)
+                    transaction.addToBackStack(null) //conserve le fragment en mémoire
                     transaction.commit()
                 }
             }
@@ -72,6 +68,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
                     TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)
                 )
+
                 timer.setText(hms)
             }
             override fun onFinish() {}
@@ -79,7 +76,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
     }
-
     fun getIsNightModeOn(): Boolean {
         val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
         val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)

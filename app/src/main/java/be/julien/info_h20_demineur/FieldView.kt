@@ -2,14 +2,19 @@ package be.julien.info_h20_demineur
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.util.AttributeSet
-import android.view.MotionEvent
-import android.view.SurfaceView
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Point
 import android.os.Bundle
+import android.util.AttributeSet
+import android.util.SparseIntArray
+import android.view.MotionEvent
+import android.view.SurfaceView
 import android.view.SurfaceHolder
+import android.graphics.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import java.util.*
@@ -22,10 +27,10 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //variables et valeurs pour le temps
     var totalElapsedTime = 0.0
-    var timeLeft = 100.0 //Pour indiquer le temps dans la fenetre de dialogue finale
-    val HIT_REWARD_HARD = resources.getInteger(R.integer.hit_reward_hard).toLong() //Car getDouble ne fonctionne pas
-    val HIT_REWARD_EASY = resources.getInteger(R.integer.hit_reward_easy).toLong()  //bonus du mode facile
-    var HIT_REWARD: Long = 0
+    var timeLeft = 0.0 //Pour indiquer le temps dans la fenetre de dialogue finale
+    val HIT_REWARD_HARD = resources.getInteger(R.integer.hit_reward_hard).toDouble()
+    val HIT_REWARD_EASY = resources.getInteger(R.integer.hit_reward_easy).toDouble()
+    var HIT_REWARD: Double = 0.0
 
     //réglages du jeu
     var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
@@ -72,6 +77,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     init {
         textPaint.textSize = w / 20f
         textPaint.color = Color.BLACK
+        timeLeft = 60.0
     }
 
     //création des boxes
@@ -108,7 +114,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                             ((e.rawY - pixelsTopBar) / boxSize).toInt()
                         )
 
-                        //repere la case sous le clic
+                    //repere la case sous le clic
                     if (theBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que le clic est sur le champ de case
                         var boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
 
@@ -162,7 +168,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         textView.text = nbrFlagsLeft.toString()
     }
 
-    //gestion du dessin
+    //gestion du dessin (ressine tout le plan du jeu à chaque modif
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         theBoxes.forEach { it.draw(canvas) }
@@ -192,22 +198,23 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         thread.start()
     }
 
-    /*fun increaseTimeLeft() {
-        if (gameDifficulty >= 30) { //définit le reward en cas de touche de case safe en fct de la difficulté
+    fun increaseTimeLeft() {
+        if (theBombs.size >= 20) { //définit le reward en cas de touche de case safe en fct de la difficulté
             HIT_REWARD = HIT_REWARD_EASY
         }
         else HIT_REWARD = HIT_REWARD_HARD
+        timeLeft += HIT_REWARD
     }
-    */
 
 
     override fun run() {
         var previousFrameTime = System.currentTimeMillis()
-        if (drawing) {
+        while (drawing) {
             val currentTime = System.currentTimeMillis()
             var elapsedTimeMS:Double=(currentTime-previousFrameTime).toDouble()
             totalElapsedTime += elapsedTimeMS / 1000.0
             updatePositions(elapsedTimeMS)
+            println("mabite.com")
             draw()
             previousFrameTime = currentTime
         }
@@ -307,4 +314,3 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
 
 
-   

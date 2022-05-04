@@ -8,19 +8,16 @@
         <entry key="..\:/Users/jujud/AndroidStudioProjects/INFOH20demineur/app/src/main/res/layout/fragment_field.xml" value="0.33" />
         <entry key="..\:/Users/jujud/AndroidStudioProjects/INFOH20demineur/app/src/main/res/layout/fragment_layout.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/jujud/AndroidStudioProjects/INFOH20demineur/app/src/main/res/layout/fragment_menu.xml" value="0.302536231884058" />
-        <entry key="..\:/Users/regna/.gradle/caches/transforms-3/334de745c193e6306ed6aadf070f6350/transformed/appcompat-resources-1.4.1/res/drawable/abc_vector_test.xml" value="0.252" />
-        <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/drawable-anydpi/ic_bomb.xml" value="0.1155" />
-        <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/drawable-anydpi/ic_flag.xml" value="0.1155" />
         <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.17" />
         <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/drawable/gradient.xml" value="0.1585" />
         <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/drawable/ic_launcher_background.xml" value="0.17" />
         <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/drawable/solid.xml" value="0.1585" />
         <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/layout/fragment_field.xml" value="0.4" />
-        <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/layout/fragment_menu.xml" value="0.1" />
-        <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1155" />
-        <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1155" />
-        <entry key="..\:/Users/regna/AppData/Local/Android/Sdk/platforms/android-32/data/res/drawable/vector_drawable_progress_bar_large.xml" value="0.195" />
+        <entry key="..\:/Users/regna/AndroidStudioProjects/INFO-H20-demineur/app/src/main/res/layout/fragment_menu.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_field.xml" value="0.2101851851851852" />
+        <entry key="app/src/main/res/layout/fragment_menu.xml" value="0.20833333333333334" />
       </map>
     </option>
   </component>
