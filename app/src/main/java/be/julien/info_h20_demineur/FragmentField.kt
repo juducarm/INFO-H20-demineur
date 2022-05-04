@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.android.material.textview.MaterialTextView
+import kotlinx.android.synthetic.main.fragment_field.*
 import kotlinx.android.synthetic.main.fragment_field.view.*
 
 
@@ -28,17 +30,18 @@ class FragmentField : Fragment() {
         textView = layoutView.findViewById(R.id.textFlag)
         fieldView = layoutView.findViewById(R.id.fieldView)
         fieldView.setWillNotDraw(false)
+        fieldView.textView = textView as MaterialTextView
         fieldView.nbrBoxesHeight = nbrBoxesHeight
         fieldView.nbrBoxesWidth = nbrBoxesWidth
         fieldView.nbrBombs = nbrBombs
         fieldView.boxSize = minOf(fieldView.resolution.x / nbrBoxesWidth, fieldView.resolution.y / nbrBoxesHeight)
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
-
-
+        textView.text = fieldView.theBombs.size.toString()
+        println(nbrBombs)
+        println(fieldView.theBombs.size)
         layoutView.btnFlag.setOnClickListener {
-            if (fieldView.flagMode) { fieldView.flagMode = false }
-            else { fieldView.flagMode = true}
+            fieldView.flagMode()
         }
         return layoutView
     }
