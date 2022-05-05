@@ -16,11 +16,17 @@
     <string name="Activer">Enable</string>
     <string name="CaseTimer">Timer</string>
     <string name="CaseHardLevel">Hard level</string>
-    <string name="CaseLangue">Français</string>
+    <string name="CaseLangue">French</string>
     <string name="CaseModeNuit">Night mode</string>
     <string name="Bouton">Button</string>
     <string name="Texte1">Text 1</string>
     <string name="Text2">Text 2</string>
     <string name="CaseLanguetxt">Language</string>
     <string name="Réglages">Settings</string>
+    <string name="btnONOFF">ON/OFF</string>
+
+    <string name="PopupNightModeON">NIGHT mode on</string>
+    <string name="PopupNightModeOFF">NIGHT mode off</string>
+    <string name="PopupHardModeON">HARD mode on</string>
+    <string name="PopupHardModeOFF">HARD mode off</string>
 </resources>

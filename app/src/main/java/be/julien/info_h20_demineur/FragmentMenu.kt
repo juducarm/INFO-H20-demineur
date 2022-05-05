@@ -49,7 +49,6 @@ class FragmentMenu : Fragment() {
         btnHardMode?.setOnClickListener {
            (activity as MainActivity?)!!.changeHardMode()
         }
-
         return view
     }
 }

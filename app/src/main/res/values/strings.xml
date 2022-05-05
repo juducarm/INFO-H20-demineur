@@ -24,4 +24,12 @@
     <string name="Text2">Texte 2</string>
     <string name="CaseLanguetxt">Langue</string>
     <string name="Réglages">Réglages</string>
+    <string name="btnONOFF">OUI/NON</string>
+
+
+    <string name="PopupNightModeON">Mode NUIT activé</string>
+    <string name="PopupNightModeOFF">Mode NUIT désactivé</string>
+    <string name="PopupHardModeON">Mode DIFFICILE activé</string>
+    <string name="PopupHardModeOFF">Mode DIFFICILE désactivé</string>
+
 </resources>

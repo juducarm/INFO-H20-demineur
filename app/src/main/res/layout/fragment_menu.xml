@@ -67,7 +67,7 @@
                     android:id="@+id/btnHardMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/Activer"
+                    android:text="@string/btnONOFF"
                     android:textColor="@color/textBtnCase"
                     android:background="@drawable/gradient"/>
 
@@ -107,13 +107,13 @@
                     android:textColor="@color/textBtnCase"
                     android:textSize="15dp" />
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/timer"
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnTimer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:textOff="Off"
-                    android:textOn="On" />
+                    android:text="@string/Activer"
+                    android:textColor="@color/textBtnCase"
+                    android:background="@drawable/gradient"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -199,8 +199,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/gradient"
-                    android:checked="true"
-                    android:text="@string/Activer"
+                    android:text="@string/btnONOFF"
                     android:textColor="@color/textBtnCase" />
 
             </LinearLayout>
