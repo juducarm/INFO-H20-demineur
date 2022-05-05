@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_field.view.*
 class FragmentField : Fragment() {
 
     lateinit var fieldView: FieldView
-    lateinit var textView: TextView
+    lateinit var textViewFlag: TextView
 
     var nbrBoxesWidth = 9 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
     var nbrBoxesHeight =13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
@@ -27,20 +27,21 @@ class FragmentField : Fragment() {
 
         val layoutView = inflater.inflate(R.layout.fragment_field, container, false)
 
-        textView = layoutView.findViewById(R.id.textFlag)
+        textViewFlag = layoutView.findViewById(R.id.textFlag)
         fieldView = layoutView.findViewById(R.id.fieldView)
         fieldView.setWillNotDraw(false)
-        fieldView.textView = textView as MaterialTextView
+        fieldView.textViewFlag = textViewFlag as MaterialTextView
         fieldView.nbrBoxesHeight = nbrBoxesHeight
         fieldView.nbrBoxesWidth = nbrBoxesWidth
         fieldView.nbrBombs = nbrBombs
         fieldView.boxSize = minOf(fieldView.resolution.x / nbrBoxesWidth, fieldView.resolution.y / nbrBoxesHeight)
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
-        textView.text = fieldView.theBombs.size.toString()
+        textViewFlag.text = fieldView.theBombs.size.toString()
         layoutView.btnFlag.setOnClickListener {
             fieldView.flagMode()
         }
+
         return layoutView
     }
 

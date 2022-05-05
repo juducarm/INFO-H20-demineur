@@ -25,14 +25,8 @@ import android.os.CountDownTimer as CountDownTimer
 
 
 class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
-    SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
+    SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback {
 
-    //variables et valeurs pour le temp
-    var totalElapsedTime = 0.0
-    var timeLeft = 0.0 //Pour indiquer le temps dans la fenetre de dialogue finale
-    val HIT_REWARD_HARD = resources.getInteger(R.integer.hit_reward_hard).toDouble()
-    val HIT_REWARD_EASY = resources.getInteger(R.integer.hit_reward_easy).toDouble()
-    var HIT_REWARD: Double = 0.0
 
     //réglages du jeu
     var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
@@ -53,7 +47,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val safeBoxColor2 = resources.getColor(R.color.safeBox_color2)
     val closeBoxColor = resources.getColor(R.color.closeBox_color)
     val numberColor = resources.getColor(R.color.number_color)
-    private val w = width
     val backgroundPaint = Paint()
 
     //variables et valeurs pour le jeu
@@ -67,8 +60,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val activity = context as FragmentActivity
     var drawing = true
     lateinit var thread: Thread
-    lateinit var canvas: Canvas
-    lateinit var textView: com.google.android.material.textview.MaterialTextView
+    lateinit var canvasSVP: Canvas
+    lateinit var textViewFlag: com.google.android.material.textview.MaterialTextView
+    lateinit var textViewTimer: com.google.android.material.textview.MaterialTextView
 
     //listes d'objets
     val theBoxes = ArrayList<Box>()
@@ -78,9 +72,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
 
     init {
-        textPaint.textSize = w / 20f
+        textPaint.textSize = width / 20f
         textPaint.color = Color.BLACK
-        timeLeft = 60.0
     }
 
     //création des boxes
@@ -107,7 +100,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //gestion du clic du joueur
     override fun onTouchEvent(e: MotionEvent): Boolean {
-        if (drawing) {
             when (e.action) {
                 MotionEvent.ACTION_DOWN -> {
                     //clickPosition : position du clic sur le field
@@ -123,8 +115,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
                         if (flagModeOn) {
                             boxUnderClick.plantFlag()
-                        }
-                        else {
+                        } else {
                             if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
                                 firstClick = false
                                 while (!boxUnderClick.isSafe) {
@@ -133,8 +124,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                                     theBoxes.clear()
                                     boxCreation()
                                     theBombs.forEach { it.warningBomb(theEmptyBoxes) }
-                                    textView.text = flagWitness + theBombs.size.toString()
-                                    boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
+                                    textViewFlag.text = flagWitness + theBombs.size.toString()
+                                    boxUnderClick =
+                                        theBoxes.single { it.fieldPosition == clickPosition }
                                 }
                             }
                             boxUnderClick.discover()
@@ -144,17 +136,19 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                                 emptyBox.cleanField() //devoile toute la partie safe autours de la case
                                 emptyBox.showAround()
                             }
-                            if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
+                            if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(
+                                    boxUnderClick
+                                )
+                            ) {
                                 theDiscoveredBoxes.add(boxUnderClick)
                                 winCondition()
-                                increaseTimeLeft()
                             }
 
                         }
                         invalidate() //appel à la méthode onDraw
                     }
                 }
-            }
+
 
         }
         return true
@@ -165,94 +159,36 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         if (flagModeOn) {
             flagModeOn = false
             flagWitness = "Off "
-        }
-        else {
+        } else {
             flagModeOn = true
             flagWitness = "On "
         }
-        textView.text = flagWitness + nbrFlagsLeft.toString()
+        textViewFlag.text = flagWitness + nbrFlagsLeft.toString()
     }
 
     fun countFlagsLeft(flagMode: Boolean) {
-        if (flagMode) { nbrFlagsLeft-- }
-        else { nbrFlagsLeft++ }
-        textView.text = flagWitness + nbrFlagsLeft.toString()
+        if (flagMode) {
+            nbrFlagsLeft--
+        } else {
+            nbrFlagsLeft++
+        }
+        textViewFlag.text = flagWitness + nbrFlagsLeft.toString()
     }
 
     //gestion du dessin (ressine tout le plan du jeu à chaque modif
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         theBoxes.forEach { it.draw(canvas) }
+
     }
 
-
-    fun pause() {
-        drawing = false
-        thread.join()
-    }
-
-    fun resume() {
-        drawing = true
-        thread = Thread(this)
-        thread.start()
-    }
-
-    fun increaseTimeLeft() {
-        if (theBombs.size >= 20) { //définit le reward en cas de touche de case safe en fct de la difficulté
-            HIT_REWARD = HIT_REWARD_EASY
-        }
-        else HIT_REWARD = HIT_REWARD_HARD
-        timeLeft += HIT_REWARD
-    }
-
-
-    override fun run() {
-        var previousFrameTime = System.currentTimeMillis()
-        while (drawing) {
-            val currentTime = System.currentTimeMillis()
-            var elapsedTimeMS:Double=(currentTime-previousFrameTime).toDouble()
-            totalElapsedTime += elapsedTimeMS / 1000.0
-            updatePositions(elapsedTimeMS)
-            //println("temps écoulé : $totalElapsedTime")
-            draw()
-            previousFrameTime = currentTime
-        }
-    }
-
-    fun draw() { //dessin du timing
-        if (holder.surface.isValid) {
-            canvas = holder.lockCanvas()
-            canvas.drawRect(0f, 0f, canvas.width.toFloat(),
-                canvas.height.toFloat(), backgroundPaint)
-            val formatted = String.format("%.2f", timeLeft)
-            canvas.drawText("Il reste $formatted secondes. ",
-                150f, 1000f, textPaint)
-            //println("desssinnne")
-            holder.unlockCanvasAndPost(canvas)
-        }
-    }
-
-
-    fun updatePositions(elapsedTimeMS: Double) {
-        val interval = elapsedTimeMS / 1000.0
-        timeLeft -= interval
-        //println("temp restant :$timeLeft")
-        if (timeLeft <= 0.0) {
-            timeLeft = 0.0
-            gameLost()
-        }
-    }
 
     fun showGameOverDialog(messageId: Int) {
         class GameResult : DialogFragment() {
             override fun onCreateDialog(bundle: Bundle?): Dialog {
                 val builder = AlertDialog.Builder(getActivity())
                 builder.setTitle(resources.getString(messageId))
-                builder.setMessage(
-                    resources.getString(
-                        R.string.results_format, discoveredBoxes, totalElapsedTime
-                    )
-                )
+                //builder.setMessage(resources.getString(R.string.results_format, discoveredBoxes, totalElapsedTime))
                 builder.setPositiveButton(R.string.reset_game,
                     DialogInterface.OnClickListener { _, _ -> newGame() }
                 )
@@ -275,22 +211,19 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         )
     }
 
-    fun winCondition(){
-        if (theDiscoveredBoxes.size == (nbrBoxesHeight*nbrBoxesWidth - theBombs.size)) {
+    //gestion de fin du jeu
+    fun winCondition() {
+        if (theDiscoveredBoxes.size == (nbrBoxesHeight * nbrBoxesWidth - theBombs.size)) {
             gameWon()
         }
     }
 
     fun newGame() {
         discoveredBoxes = 0
-        totalElapsedTime = 0.0
-        timeLeft = 100.0
         flagModeOn = false
         firstClick = true
         drawing = true
         gameOver = false
-        thread = Thread(this)
-        thread.start()
         theDiscoveredBoxes.clear()
         theBombs.clear()
         theBoxes.clear()
@@ -307,21 +240,30 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun gameLost() {
-        drawing = false
-        if (timeLeft == 0.0) discoveredBoxes = theDiscoveredBoxes.size
-        else discoveredBoxes = theDiscoveredBoxes.size - 1 //nombre de boxes qui ont été découvertes pdt les partie
+        theBombs.forEach { it.hide = false }
+        discoveredBoxes = theDiscoveredBoxes.size - 1 //nombre de boxes qui ont été découvertes pdt les partie
         showGameOverDialog(R.string.lose)
+        drawing = false
+        invalidate()
+    }
+
+    fun pause() {
+        drawing = false
+    }
+
+    fun resume() {
+        drawing = true
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
     override fun surfaceCreated(holder: SurfaceHolder) {}
 
-    override fun surfaceDestroyed(holder: SurfaceHolder) {}
-
-
+    override fun surfaceDestroyed(p0: SurfaceHolder) {}
 
 }
+
+
 
 
 

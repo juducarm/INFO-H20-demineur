@@ -18,25 +18,18 @@ class Bomb(fieldPosition: Point, view: FieldView):
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
-        if (!hide && view.drawing) { //if (drawing) car ça tourne en boucle sinon
-            showAllBombs(view.theBombs)
-           // canvas?.drawRect(area, paint) // dessin de la case
+        if (!hide ) {
+            //canvas?.drawRect(area, paint) // dessin de la case
             view.imageBomb.setBounds(area.left.toInt(), area.top.toInt(),
                 area.right.toInt(), area.bottom.toInt())
             if (canvas != null) {
                 view.imageBomb.draw(canvas)
             }
-            view.gameLost()
+            if (view.drawing) {view.gameLost()}
         }
     }
 
-    fun showAllBombs(theBombs: ArrayList<Bomb>) {
-        theBombs.forEach {
-            it.hide = false
-        }
-        view.invalidate()
 
-    }
 
     //envoie sa présence à chaque EmptyBox autours d'elle
    fun warningBomb(theEmptyBoxes: ArrayList<EmptyBox>) {
@@ -56,3 +49,5 @@ class Bomb(fieldPosition: Point, view: FieldView):
 
 
 }
+
+

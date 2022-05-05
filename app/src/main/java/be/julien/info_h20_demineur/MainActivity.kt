@@ -20,7 +20,7 @@ import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    lateinit var timer: TextView
+
     val fragmentField = FragmentField()  //creation du fragment champs de case
     val fragmentMenu = FragmentMenu()  //creation du fragment menu
     val manager = supportFragmentManager //appel au gestionnaire de fragment
@@ -34,20 +34,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
 
 
-        object : CountDownTimer(timeLeft, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                var hms = String.format(
-                    "%02d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(millisUntilFinished),
-                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)
-                )
-
-                timer.setText(hms)
-            }
-
-            override fun onFinish() {}
-        }.start()
 
         when(v.id) { //when au lieu de setOnClickListener pour pouvoir mettre plusieurs boutons si besoin
             R.id.btnChangeFragment -> {
@@ -78,8 +64,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         getWindow().setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN); //cachage de la barre de status
         setContentView(layout.activity_main)
         btnChangeFragment.setOnClickListener(this)
-        timer = findViewById(R.id.timer)
+
     }
+
     fun getIsNightModeOn(): Boolean {
         val appSettingPrefs: SharedPreferences = getSharedPreferences("AppSettingPrefs", 0)
         val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
@@ -106,10 +93,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
-
-
-
     fun changeLanguage() {
         val defaultLocale = Locale.getDefault()
         if (defaultLocale.language == "en") {
@@ -124,7 +107,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             recreate()
         }
     }
-
 
     fun changeHardMode() {
          if (hardModeOn) {
