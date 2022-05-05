@@ -15,10 +15,13 @@ import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.SurfaceHolder
 import android.graphics.*
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import java.text.FieldPosition
 import java.util.*
 import kotlin.collections.ArrayList
 import android.os.CountDownTimer as CountDownTimer
@@ -47,28 +50,26 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val safeBoxColor2 = resources.getColor(R.color.safeBox_color2)
     val closeBoxColor = resources.getColor(R.color.closeBox_color)
     val numberColor = resources.getColor(R.color.number_color)
-    val backgroundPaint = Paint()
 
     //variables et valeurs pour le jeu
     var flagWitness = "Off "
     var gameOver = false
     var discoveredBoxes = 0
-    var nbrFlagsLeft = nbrBombs
     var random = Random()
     var flagModeOn = false
     var firstClick = true
     val activity = context as FragmentActivity
     var drawing = true
-    lateinit var thread: Thread
-    lateinit var canvasSVP: Canvas
     lateinit var textViewFlag: com.google.android.material.textview.MaterialTextView
-    lateinit var textViewTimer: com.google.android.material.textview.MaterialTextView
+
 
     //listes d'objets
     val theBoxes = ArrayList<Box>()
     val theBombs = ArrayList<Bomb>()
     val theEmptyBoxes = ArrayList<EmptyBox>()
     val theDiscoveredBoxes = ArrayList<Box>()
+    val theFlags = ArrayList<Flag>()
+    val theLists = listOf(theBombs, theBoxes, theDiscoveredBoxes, theEmptyBoxes, theFlags)
 
 
     init {
@@ -93,62 +94,56 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                     theEmptyBoxes.add(box)
                 }
                 theBoxes.add(box)
-                nbrFlagsLeft = theBombs.size
             }
         }
     }
 
     //gestion du clic du joueur
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onTouchEvent(e: MotionEvent): Boolean {
             when (e.action) {
                 MotionEvent.ACTION_DOWN -> {
                     //clickPosition : position du clic sur le field
-                    val clickPosition =
-                        Point(
-                            (e.rawX / boxSize).toInt(),
-                            ((e.rawY - pixelsTopBar) / boxSize).toInt()
-                        )
+                    val clickPosition = Point((e.rawX / boxSize).toInt(), ((e.rawY - pixelsTopBar) / boxSize).toInt())
 
                     //repere la case sous le clic
                     if (theBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que le clic est sur le champ de case
                         var boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
 
-                        if (flagModeOn) {
-                            boxUnderClick.plantFlag()
-                        } else {
-                            if (firstClick) { //fait en sorte que le premier clic soit toujours sur une case safe
-                                firstClick = false
-                                while (!boxUnderClick.isSafe) {
-                                    theBombs.clear()
-                                    theEmptyBoxes.clear()
-                                    theBoxes.clear()
-                                    boxCreation()
-                                    theBombs.forEach { it.warningBomb(theEmptyBoxes) }
-                                    textViewFlag.text = flagWitness + theBombs.size.toString()
-                                    boxUnderClick =
-                                        theBoxes.single { it.fieldPosition == clickPosition }
+                        //fait en sorte que le premier clic soit toujours sur une case safe
+                        if (firstClick) {
+                            firstClick = false
+                            while (!boxUnderClick.isSafe) {
+                                boxUnderClick = cleanFirstClic(boxUnderClick, clickPosition)
+                            }
+                            boxUnderClick.invoke().cleanField()
+                        }
+                        else {
+
+                            if (flagModeOn) {
+                                if (!theDiscoveredBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que la case n'est pas déjà découverte
+                                    if (theFlags.any { it.fieldPosition == clickPosition }) {
+                                        theFlags.removeIf { it.fieldPosition == clickPosition }
+                                    } else {
+                                        theFlags.add(Flag(clickPosition, this))
+                                    }
                                 }
                             }
-                            boxUnderClick.discover()
-                            if (boxUnderClick.isSafe) {
-                                val emptyBox: EmptyBox =
-                                    boxUnderClick.invoke()   //change la classe de l'objet de Box à EmptyBox pour utiliser cleanField()
-                                emptyBox.cleanField() //devoile toute la partie safe autours de la case
-                                emptyBox.showAround()
-                            }
-                            if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(
-                                    boxUnderClick
-                                )
-                            ) {
-                                theDiscoveredBoxes.add(boxUnderClick)
-                                winCondition()
-                            }
+                            else {
+                                boxUnderClick.discover()
+                                if (boxUnderClick.isSafe) {
+                                    boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
+                                }
+                                if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
+                                    theDiscoveredBoxes.add(boxUnderClick)
+                                    winCondition()
+                                }
 
+                            }
                         }
                         invalidate() //appel à la méthode onDraw
                     }
                 }
-
 
         }
         return true
@@ -163,25 +158,30 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             flagModeOn = true
             flagWitness = "On "
         }
-        textViewFlag.text = flagWitness + nbrFlagsLeft.toString()
+        textViewFlag.text = flagWitness + (theBombs.size - theFlags.size).toString()
+        println(theFlags.size)
     }
 
-    fun countFlagsLeft(flagMode: Boolean) {
-        if (flagMode) {
-            nbrFlagsLeft--
-        } else {
-            nbrFlagsLeft++
-        }
-        textViewFlag.text = flagWitness + nbrFlagsLeft.toString()
+    fun countFlagsLeft() {
+        textViewFlag.text = flagWitness + (theBombs.size - theFlags.size).toString()
     }
 
     //gestion du dessin (ressine tout le plan du jeu à chaque modif
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         theBoxes.forEach { it.draw(canvas) }
+        theFlags.forEach { it.draw(canvas) }
 
     }
 
+    //fait en sorte que le premier clique soit toujours sur une case safe
+    fun cleanFirstClic(box: Box, position: Point): Box{
+        theLists.forEach { it.clear() }
+        boxCreation()
+        theBombs.forEach { it.warningBomb(theEmptyBoxes) }
+        textViewFlag.text = flagWitness + theBombs.size.toString()
+        return theBoxes.single { it.fieldPosition == position }
+    }
 
     fun showGameOverDialog(messageId: Int) {
         class GameResult : DialogFragment() {
@@ -224,10 +224,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         firstClick = true
         drawing = true
         gameOver = false
-        theDiscoveredBoxes.clear()
-        theBombs.clear()
-        theBoxes.clear()
-        theEmptyBoxes.clear()
+        theLists.forEach { it.clear() }
         boxCreation()
         theBombs.forEach { it.warningBomb(theEmptyBoxes) }
         invalidate()

@@ -19,7 +19,6 @@ abstract class Box(val fieldPosition: Point, var view: FieldView) {
 
     var hide = true
     var isSafe = true // est true si la case n'est pas une bomb et ne compte aucune bombe parmis ses voisines
-    var flagMode = false // dessine un drapeau si true
 
 
     init {
@@ -32,28 +31,9 @@ abstract class Box(val fieldPosition: Point, var view: FieldView) {
     open fun draw(canvas: Canvas?) {
         if (hide) {
             canvas?.drawRect(area, hiddenBoxPaint) // dessin de la case cachée
-            if (flagMode) {
-                view.imageFlag.setBounds(area.left.toInt(), area.top.toInt(),
-                    area.right.toInt(), area.bottom.toInt())
-                if (canvas != null) {
-                    view.imageFlag.draw(canvas)
-                }
-            }
         }
     }
 
-    fun plantFlag() { // met un drapeau sur la case
-        if (flagMode) {
-            flagMode = false
-            view.countFlagsLeft(flagMode)
-        }
-        else {
-            if (view.nbrFlagsLeft > 0) {
-                flagMode = true
-                view.countFlagsLeft(flagMode)
-            }
-        }
-    }
 
     fun discover() { //découvre la case
         hide = false

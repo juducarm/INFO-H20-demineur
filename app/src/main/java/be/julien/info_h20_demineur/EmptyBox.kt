@@ -3,6 +3,8 @@ package be.julien.info_h20_demineur
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Point
+import android.os.Build
+import androidx.annotation.RequiresApi
 
 //la classe EmptyBox hérite de la classe Box
 class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
@@ -23,9 +25,11 @@ class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
         numberPaint.textSize = view.boxSize
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
         if (!hide) {
+            view.theFlags.removeIf { it.fieldPosition == fieldPosition }
             canvas?.drawRect(area, boxPaint) // dessin de la case
             if (bombsAround != 0) {
                 canvas?.drawText(

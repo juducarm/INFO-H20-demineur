@@ -12,16 +12,14 @@ class Flag(val fieldPosition: Point, val view: FieldView) {
         (fieldPosition.x + 1) * view.boxSize,
         (fieldPosition.y + 1) * view.boxSize)
 
-    init {
-        paint.color = Color.WHITE
-    }
 
     fun draw(canvas: Canvas?) {
-        canvas?.drawRect(area, paint) // dessin de la case
         view.imageFlag.setBounds(area.left.toInt(), area.top.toInt(),
             area.right.toInt(), area.bottom.toInt())
         if (canvas != null) {
             view.imageFlag.draw(canvas)
         }
+        view.countFlagsLeft()
     }
+
 }
