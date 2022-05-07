@@ -20,8 +20,9 @@ class FragmentField : Fragment() {
     lateinit var textViewTimer: TextView
 
     var nbrBoxesWidth = 9 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
-    var nbrBoxesHeight =13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
+    var nbrBoxesHeight = 13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
     var nbrBombs = 20 //resources.getInteger(R.integer.nbrBombs_EZ)
+    var timeReward = 10000L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? {
@@ -37,6 +38,7 @@ class FragmentField : Fragment() {
         fieldView.nbrBoxesHeight = nbrBoxesHeight
         fieldView.nbrBoxesWidth = nbrBoxesWidth
         fieldView.nbrBombs = nbrBombs
+        fieldView.timeReward = timeReward
         fieldView.boxSize = minOf(fieldView.resolution.x / nbrBoxesWidth, fieldView.resolution.y / nbrBoxesHeight)
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
@@ -48,8 +50,19 @@ class FragmentField : Fragment() {
         return layoutView
     }
 
+    fun goToEasyMode() {
+       nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_EZ)
+       nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_EZ)
+       nbrBombs = resources.getInteger(R.integer.nbrBombs_EZ)
+       timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
+    }
 
-
+    fun goToHardMode() {
+        nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
+        nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_HARD)
+        nbrBombs = resources.getInteger(R.integer.nbrBombs_HARD)
+        timeReward = resources.getInteger(R.integer.hit_reward_hard).toLong()
+    }
 
     override fun onPause() {
         super.onPause()

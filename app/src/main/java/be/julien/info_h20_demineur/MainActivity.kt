@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatButton
 import be.julien.info_h20_demineur.R.*
+import kotlinx.android.synthetic.main.fragment_field.*
 import kotlinx.android.synthetic.main.fragment_menu.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -20,16 +21,10 @@ import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-
-    val fragmentField = FragmentField()  //creation du fragment champs de case
-    val fragmentMenu = FragmentMenu()  //creation du fragment menu
-    val manager = supportFragmentManager //appel au gestionnaire de fragment
-    var timeLeft: Long = 100000
-
+    val fragmentField = FragmentField()
+    val fragmentMenu = FragmentMenu()
+    val manager = supportFragmentManager
     var hardModeOn = false
-
-
-
 
     override fun onClick(v: View) {
 
@@ -108,18 +103,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    fun changeHardMode() {
+    fun changeMode() {
          if (hardModeOn) {
-             fragmentField.nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_EZ)
-             fragmentField.nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_EZ)
-             fragmentField.nbrBombs = resources.getInteger(R.integer.nbrBombs_EZ)
+             fragmentField.goToEasyMode()
              hardModeOn = false
              Toast.makeText(applicationContext,resources.getString(R.string.PopupHardModeOFF), Toast.LENGTH_LONG).show()
          }
         else {
-             fragmentField.nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
-             fragmentField.nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_HARD)
-             fragmentField.nbrBombs = resources.getInteger(R.integer.nbrBombs_HARD)
+             fragmentField.goToHardMode()
              hardModeOn = true
              Toast.makeText(applicationContext,resources.getString(R.string.PopupHardModeON),Toast.LENGTH_LONG).show()
          }

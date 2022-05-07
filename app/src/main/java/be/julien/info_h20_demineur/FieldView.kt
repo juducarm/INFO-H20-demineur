@@ -68,8 +68,12 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val theLists = listOf(theBombs, theBoxes, theDiscoveredBoxes, theEmptyBoxes, theFlags)
 
     //variables pour le timer
-    val timer = Timer(this)
+    val initialTime = resources.getInteger(R.integer.initial_time).toLong()
+    val timerInterval = resources.getInteger(R.integer.timer_interval).toLong()
+    var timer = Timer(initialTime, timerInterval, this)
     val textTimer = resources.getString(R.string.timeRemaining)
+    var timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
+    var timeLeftOnGame = initialTime
 
 
     init {
@@ -130,6 +134,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                                 }
                             }
                             else {
+                                timeBonus(timeReward, timeLeftOnGame)
                                 boxUnderClick.discover()
                                 if (boxUnderClick.isSafe) {
                                     boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
@@ -159,7 +164,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             flagWitness = "On "
         }
         textViewFlag.text = flagWitness + (theBombs.size - theFlags.size).toString()
-        println(theFlags.size)
     }
 
     fun countFlagsLeft() {
@@ -252,13 +256,26 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun resume() {
-        println("resume")
         timer.start()
         drawing = true
         //thread.start()
 
     }
 
+    //gestion du timer
+    fun displayTimer(timeLeft: Long) {
+        println(timeLeft)
+        timeLeftOnGame = timeLeft
+        textViewTimer.text = textTimer + " " + timeLeft.toString()
+    }
+
+    fun timeBonus(timeReward: Long, timeLeft: Long) {
+        println("time reawrd : $timeReward")
+        println("time left : ${timeLeft + timeReward}")
+        timer.cancel()
+        timer = Timer( timeLeft*1000 + timeReward, timerInterval, this)
+        timer.start()
+    }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
@@ -267,9 +284,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     override fun surfaceDestroyed(p0: SurfaceHolder) {}
 
 
-    fun displayTimer(timeLeft: Long) {
-        textViewTimer.text = textTimer + timeLeft.toString()
-    }
 
 }
 
