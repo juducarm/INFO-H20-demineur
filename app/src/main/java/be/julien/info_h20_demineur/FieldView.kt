@@ -15,7 +15,10 @@ import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.SurfaceHolder
 import android.graphics.*
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.os.Build
+import android.util.SparseIntArray
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
@@ -77,10 +80,31 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     var timeLeftOnGame = initialTime
     var totalElapsedTime = 0
 
+    //sons
+    val soundPool: SoundPool
+    val soundMap: SparseIntArray
+
 
     init {
         textPaint.textSize = width / 20f
         textPaint.color = Color.BLACK
+
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(1)
+            .setAudioAttributes(audioAttributes)
+            .build()
+        soundMap = SparseIntArray(5)
+        soundMap.put(0, soundPool.load(context, R.raw.empty_box, 1))
+        soundMap.put(1, soundPool.load(context, R.raw.win, 1))
+        soundMap.put(2, soundPool.load(context, R.raw.lose, 1))
+        soundMap.put(3, soundPool.load(context, R.raw.new_game, 1))
+        soundMap.put(4, soundPool.load(context, R.raw.flag, 1))
+        //soundMap.put(5, soundPool.load(context, R.raw.timer, 1))
     }
 
     //création des boxes
@@ -118,6 +142,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
                     //fait en sorte que le premier clic soit toujours sur une case safe
                     if (firstClick) {
+                        playEmptyBoxSound()
                         firstClick = false
                         while (!boxUnderClick.isSafe) {
                             boxUnderClick = cleanFirstClic(clickPosition)
@@ -130,19 +155,22 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                             if (!theDiscoveredBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que la case n'est pas déjà découverte
                                 if (theFlags.any { it.fieldPosition == clickPosition }) {
                                     theFlags.removeIf { it.fieldPosition == clickPosition }
+                                    playFlagInSound()
                                 } else {
                                     theFlags.add(Flag(clickPosition, this))
+                                    playFlagInSound()
                                 }
                             }
                         }
                         else {
-                            timeBonus(timeReward, timeLeftOnGame)
                             boxUnderClick.discover()
                             if (boxUnderClick.isSafe) {
                                 boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
                             }
                             if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
                                 theDiscoveredBoxes.add(boxUnderClick)
+                                timeBonus(timeReward, timeLeftOnGame)
+                                playEmptyBoxSound()
                                 winCondition()
                             }
 
@@ -226,7 +254,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun newGame() {
-
+        timer.start()
+        playNewGameSound()
         totalElapsedTime = 0
         timeLeftOnGame = initialTime
         flagModeOn = false
@@ -240,11 +269,13 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun gameWon() {
+        playWinSound()
         drawing = false
         showGameOverDialog(R.string.win)
     }
 
     fun gameLost() {
+        playLoseSound()
         theBombs.forEach { it.hide = false } //nombre de boxes qui ont été découvertes pdt les partie
         showGameOverDialog(R.string.lose)
         drawing = false
@@ -268,9 +299,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     //gestion du timer
     fun displayTimer(timeLeft: Long) {
         if (drawing) {
-
         timeLeftOnGame = timeLeft
-            println(timeLeftOnGame)
         textViewTimer.text = textTimer + " " + (timeLeft/1000).toString()
     }
         else timer.cancel()
@@ -279,7 +308,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     fun timeBonus(timeReward: Long, timeLeft: Long) {
         //println("time reawrd : $timeReward")
         //println("time left : ${timeLeft + timeReward}")
-
         timer.cancel()
         timer = Timer( timeLeft + timeReward, timerInterval, this)
         timer.start()
@@ -293,9 +321,27 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun countElapsedTime() {
         totalElapsedTime ++
-        println(totalElapsedTime)
+        //playTimerSound()
     }
 
+    fun playEmptyBoxSound() {
+        soundPool.play(soundMap.get(0), 1f, 1f, 1, 0, 1f)
+    }
+    fun playLoseSound() {
+        soundPool.play(soundMap.get(2), 1f, 1f, 1, 0, 1f)
+    }
+    fun playWinSound() {
+        soundPool.play(soundMap.get(1), 1f, 1f, 1, 0, 1f)
+    }
+    fun playFlagInSound() {
+        soundPool.play(soundMap.get(4), 1f, 1f, 1, 0, 1f)
+    }
+    fun playNewGameSound(){
+        soundPool.play(soundMap.get(3), 1f, 1f, 1, 0, 1f)
+    }
+    fun playTimerSound(){
+        soundPool.play(soundMap.get(5), 1f, 1f, 1, 0, 1f)
+    }
 
 }
 
