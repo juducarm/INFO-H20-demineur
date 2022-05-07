@@ -1,5 +1,6 @@
 package be.julien.info_h20_demineur
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -74,6 +75,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val textTimer = resources.getString(R.string.timeRemaining)
     var timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
     var timeLeftOnGame = initialTime
+    var totalElapsedTime = 0
 
 
     init {
@@ -194,7 +196,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             override fun onCreateDialog(bundle: Bundle?): Dialog {
                 val builder = AlertDialog.Builder(getActivity())
                 builder.setTitle(resources.getString(messageId))
-                //builder.setMessage(resources.getString(R.string.results_format, discoveredBoxes, totalElapsedTime))
+                builder.setMessage(resources.getString(R.string.results_format, theDiscoveredBoxes.size, (timeLeftOnGame/1000).toInt(), totalElapsedTime))
                 builder.setPositiveButton(R.string.reset_game,
                     DialogInterface.OnClickListener { _, _ -> newGame() }
                 )
@@ -224,7 +226,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun newGame() {
-        discoveredBoxes = 0
+
+        totalElapsedTime = 0
         timeLeftOnGame = initialTime
         flagModeOn = false
         firstClick = true
@@ -238,15 +241,14 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun gameWon() {
         drawing = false
-        discoveredBoxes = theDiscoveredBoxes.size
         showGameOverDialog(R.string.win)
     }
 
     fun gameLost() {
-        theBombs.forEach { it.hide = false }
-        discoveredBoxes = theDiscoveredBoxes.size - 1 //nombre de boxes qui ont été découvertes pdt les partie
+        theBombs.forEach { it.hide = false } //nombre de boxes qui ont été découvertes pdt les partie
         showGameOverDialog(R.string.lose)
         drawing = false
+        textViewTimer.text =  " "
         invalidate()
     }
 
@@ -265,16 +267,21 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //gestion du timer
     fun displayTimer(timeLeft: Long) {
-        println(timeLeft)
+        if (drawing) {
+
         timeLeftOnGame = timeLeft
-        textViewTimer.text = textTimer + " " + timeLeft.toString()
+            println(timeLeftOnGame)
+        textViewTimer.text = textTimer + " " + (timeLeft/1000).toString()
+    }
+        else timer.cancel()
     }
 
     fun timeBonus(timeReward: Long, timeLeft: Long) {
-        println("time reawrd : $timeReward")
-        println("time left : ${timeLeft + timeReward}")
+        //println("time reawrd : $timeReward")
+        //println("time left : ${timeLeft + timeReward}")
+
         timer.cancel()
-        timer = Timer( timeLeft*1000 + timeReward, timerInterval, this)
+        timer = Timer( timeLeft + timeReward, timerInterval, this)
         timer.start()
     }
 
@@ -284,6 +291,10 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     override fun surfaceDestroyed(p0: SurfaceHolder) {}
 
+    fun countElapsedTime() {
+        totalElapsedTime ++
+        println(totalElapsedTime)
+    }
 
 
 }

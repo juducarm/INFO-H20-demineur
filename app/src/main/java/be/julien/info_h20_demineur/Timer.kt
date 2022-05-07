@@ -8,6 +8,7 @@ class Timer(millisInFuture: Long, countDownInterval: Long, var view: FieldView):
     }
 
     override fun onTick(timeLeft: Long) {
-        view.displayTimer( timeLeft / view.timerInterval )
+        view.displayTimer( timeLeft )
+        view.countElapsedTime()
     }
 }
