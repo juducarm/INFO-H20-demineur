@@ -105,50 +105,50 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     //gestion du clic du joueur
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onTouchEvent(e: MotionEvent): Boolean {
-            when (e.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    //clickPosition : position du clic sur le field
-                    val clickPosition = Point((e.rawX / boxSize).toInt(), ((e.rawY - pixelsTopBar) / boxSize).toInt())
+        when (e.action) {
+            MotionEvent.ACTION_DOWN -> {
+                //clickPosition : position du clic sur le field
+                val clickPosition = Point((e.rawX / boxSize).toInt(), ((e.rawY - pixelsTopBar) / boxSize).toInt())
 
-                    //repere la case sous le clic
-                    if (theBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que le clic est sur le champ de case
-                        var boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
+                //repere la case sous le clic
+                if (theBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que le clic est sur le champ de case
+                    var boxUnderClick = theBoxes.single { it.fieldPosition == clickPosition }
 
-                        //fait en sorte que le premier clic soit toujours sur une case safe
-                        if (firstClick) {
-                            firstClick = false
-                            while (!boxUnderClick.isSafe) {
-                                boxUnderClick = cleanFirstClic(clickPosition)
+                    //fait en sorte que le premier clic soit toujours sur une case safe
+                    if (firstClick) {
+                        firstClick = false
+                        while (!boxUnderClick.isSafe) {
+                            boxUnderClick = cleanFirstClic(clickPosition)
+                        }
+                        boxUnderClick.invoke().cleanField()
+                    }
+                    else {
+
+                        if (flagModeOn) {
+                            if (!theDiscoveredBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que la case n'est pas déjà découverte
+                                if (theFlags.any { it.fieldPosition == clickPosition }) {
+                                    theFlags.removeIf { it.fieldPosition == clickPosition }
+                                } else {
+                                    theFlags.add(Flag(clickPosition, this))
+                                }
                             }
-                            boxUnderClick.invoke().cleanField()
                         }
                         else {
-
-                            if (flagModeOn) {
-                                if (!theDiscoveredBoxes.any { it.fieldPosition == clickPosition }) {//vérifie que la case n'est pas déjà découverte
-                                    if (theFlags.any { it.fieldPosition == clickPosition }) {
-                                        theFlags.removeIf { it.fieldPosition == clickPosition }
-                                    } else {
-                                        theFlags.add(Flag(clickPosition, this))
-                                    }
-                                }
+                            timeBonus(timeReward, timeLeftOnGame)
+                            boxUnderClick.discover()
+                            if (boxUnderClick.isSafe) {
+                                boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
                             }
-                            else {
-                                timeBonus(timeReward, timeLeftOnGame)
-                                boxUnderClick.discover()
-                                if (boxUnderClick.isSafe) {
-                                    boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
-                                }
-                                if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
-                                    theDiscoveredBoxes.add(boxUnderClick)
-                                    winCondition()
-                                }
-
+                            if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
+                                theDiscoveredBoxes.add(boxUnderClick)
+                                winCondition()
                             }
+
                         }
-                        invalidate() //appel à la méthode onDraw
                     }
+                    invalidate() //appel à la méthode onDraw
                 }
+            }
 
         }
         return true
@@ -225,6 +225,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun newGame() {
         discoveredBoxes = 0
+        timeLeftOnGame = initialTime
         flagModeOn = false
         firstClick = true
         drawing = true
@@ -286,7 +287,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
 
 }
-
 
 
 
