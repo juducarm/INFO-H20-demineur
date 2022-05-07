@@ -16,7 +16,6 @@ abstract class Box(val fieldPosition: Point, var view: FieldView) {
         Point(1, -1), Point(1, 0), Point(1, 1),
         Point(0, 1), Point(0, -1)
     )
-
     var hide = true
     var isSafe = true // est true si la case n'est pas une bomb et ne compte aucune bombe parmis ses voisines
 

@@ -39,7 +39,7 @@ class FragmentField : Fragment() {
         fieldView.nbrBoxesWidth = nbrBoxesWidth
         fieldView.nbrBombs = nbrBombs
         fieldView.timeReward = timeReward
-        fieldView.boxSize = minOf(fieldView.resolution.x / nbrBoxesWidth, fieldView.resolution.y / nbrBoxesHeight)
+        fieldView.boxSize = minOf(fieldView.xRes  / nbrBoxesWidth, fieldView.yRes / nbrBoxesHeight)
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
 

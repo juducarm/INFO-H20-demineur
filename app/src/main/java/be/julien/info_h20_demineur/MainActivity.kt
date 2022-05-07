@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     val manager = supportFragmentManager
     var hardModeOn = false
 
+    lateinit var timeBarView: TimeBarView
+
     override fun onClick(v: View) {
 
 
@@ -59,6 +61,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         getWindow().setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN); //cachage de la barre de status
         setContentView(layout.activity_main)
         btnChangeFragment.setOnClickListener(this)
+        timeBarView = findViewById<TimeBarView>(R.id.timeBarView)
+        timeBarView.start()
 
     }
 

@@ -22,6 +22,7 @@ import android.util.SparseIntArray
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -35,10 +36,11 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
     var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_HARD)
     var nbrBombs = resources.getInteger(R.integer.nbrBombs_HARD)
-    val resolution = PointF(1080f, 1300f) //nombre de pixels sur le fragment
+    val xRes = resources.getInteger(R.integer.xResolution).toFloat()
+    val yRes = resources.getInteger(R.integer.yResolution).toFloat()
     val pixelsTopBar =
-        resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar (Float)
-    var boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
+        resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar
+    var boxSize = minOf(xRes / nbrBoxesWidth, yRes / nbrBoxesHeight)
     val textPaint = Paint()
 
     //réglages graphiques
@@ -54,7 +56,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     //variables et valeurs pour le jeu
     var flagWitness = "Off "
     var gameOver = false
-    var discoveredBoxes = 0
     var random = Random()
     var flagModeOn = false
     var firstClick = true
@@ -165,6 +166,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                         else {
                             boxUnderClick.discover()
                             if (boxUnderClick.isSafe) {
+                                boxUnderClick.invoke().showAround()
                                 boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
                             }
                             if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
@@ -206,7 +208,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         theBoxes.forEach { it.draw(canvas) }
         theFlags.forEach { it.draw(canvas) }
     }
-
 
     //fait en sorte que le premier clique soit toujours sur une case safe
     fun cleanFirstClic(position: Point): Box{
@@ -291,6 +292,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun resume() {
         timer.start()
+        activity.timeBarView.timeMax = initialTime
         drawing = true
         //thread.start()
 
