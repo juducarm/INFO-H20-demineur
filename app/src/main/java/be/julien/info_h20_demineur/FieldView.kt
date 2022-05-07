@@ -10,32 +10,28 @@ import android.graphics.Paint
 import android.graphics.Point
 import android.os.Bundle
 import android.util.AttributeSet
-import android.util.SparseIntArray
 import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.SurfaceHolder
 import android.graphics.*
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import java.text.FieldPosition
 import java.util.*
 import kotlin.collections.ArrayList
-import android.os.CountDownTimer as CountDownTimer
+
 
 
 class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
-    SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback {
+    SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback{
 
 
     //réglages du jeu
     var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
     var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_HARD)
     var nbrBombs = resources.getInteger(R.integer.nbrBombs_HARD)
-    val resolution = PointF(1080f, 1920f) //nombre de pixels sur le fragment
+    val resolution = PointF(1080f, 1300f) //nombre de pixels sur le fragment
     val pixelsTopBar =
         resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar (Float)
     var boxSize = minOf(resolution.x / nbrBoxesWidth, resolution.y / nbrBoxesHeight)
@@ -61,7 +57,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val activity = context as FragmentActivity
     var drawing = true
     lateinit var textViewFlag: com.google.android.material.textview.MaterialTextView
-
+    lateinit var textViewTimer: com.google.android.material.textview.MaterialTextView
 
     //listes d'objets
     val theBoxes = ArrayList<Box>()
@@ -70,6 +66,10 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val theDiscoveredBoxes = ArrayList<Box>()
     val theFlags = ArrayList<Flag>()
     val theLists = listOf(theBombs, theBoxes, theDiscoveredBoxes, theEmptyBoxes, theFlags)
+
+    //variables pour le timer
+    val timer = Timer(this)
+    val textTimer = resources.getString(R.string.timeRemaining)
 
 
     init {
@@ -114,7 +114,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                         if (firstClick) {
                             firstClick = false
                             while (!boxUnderClick.isSafe) {
-                                boxUnderClick = cleanFirstClic(boxUnderClick, clickPosition)
+                                boxUnderClick = cleanFirstClic(clickPosition)
                             }
                             boxUnderClick.invoke().cleanField()
                         }
@@ -171,11 +171,11 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         super.onDraw(canvas)
         theBoxes.forEach { it.draw(canvas) }
         theFlags.forEach { it.draw(canvas) }
-
     }
 
+
     //fait en sorte que le premier clique soit toujours sur une case safe
-    fun cleanFirstClic(box: Box, position: Point): Box{
+    fun cleanFirstClic(position: Point): Box{
         theLists.forEach { it.clear() }
         boxCreation()
         theBombs.forEach { it.warningBomb(theEmptyBoxes) }
@@ -183,7 +183,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         return theBoxes.single { it.fieldPosition == position }
     }
 
+    //gestion de fin du jeu
     fun showGameOverDialog(messageId: Int) {
+
         class GameResult : DialogFragment() {
             override fun onCreateDialog(bundle: Bundle?): Dialog {
                 val builder = AlertDialog.Builder(getActivity())
@@ -211,7 +213,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         )
     }
 
-    //gestion de fin du jeu
     fun winCondition() {
         if (theDiscoveredBoxes.size == (nbrBoxesHeight * nbrBoxesWidth - theBombs.size)) {
             gameWon()
@@ -246,17 +247,29 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun pause() {
         drawing = false
+        //thread.join()
+
     }
 
     fun resume() {
+        println("resume")
+        timer.start()
         drawing = true
+        //thread.start()
+
     }
+
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
     override fun surfaceCreated(holder: SurfaceHolder) {}
 
     override fun surfaceDestroyed(p0: SurfaceHolder) {}
+
+
+    fun displayTimer(timeLeft: Long) {
+        textViewTimer.text = textTimer + timeLeft.toString()
+    }
 
 }
 

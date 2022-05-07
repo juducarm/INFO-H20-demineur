@@ -29,4 +29,6 @@
     <string name="PopupNightModeOFF">Mode NUIT désactivé</string>
     <string name="PopupHardModeON">Mode DIFFICILE activé</string>
     <string name="PopupHardModeOFF">Mode DIFFICILE désactivé</string>
+
+    <string name="timeRemaining">secondes restantes: </string>
 </resources>

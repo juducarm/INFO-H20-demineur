@@ -5,7 +5,6 @@ import android.graphics.*
 
 class Flag(val fieldPosition: Point, val view: FieldView) {
 
-    val paint = Paint()
 
     val area = RectF(fieldPosition.x * view.boxSize,//surface couverte par la case
         fieldPosition.y * view.boxSize,

@@ -7,7 +7,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 
 //la classe EmptyBox hérite de la classe Box
-class EmptyBox(fieldPosition: android.graphics.Point, view: FieldView):
+class EmptyBox(fieldPosition: Point, view: FieldView):
     Box(fieldPosition, view) {
 
     val boxPaint = Paint()

@@ -29,4 +29,6 @@
     <string name="PopupNightModeOFF">NIGHT mode off</string>
     <string name="PopupHardModeON">HARD mode on</string>
     <string name="PopupHardModeOFF">HARD mode off</string>
+
+    <string name="timeRemaining">seconds remaining: </string>
 </resources>
