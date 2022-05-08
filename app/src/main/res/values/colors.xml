@@ -33,18 +33,18 @@
     <color name="safeBox_color2">@color/chineseSilver</color>
     <color name="closeBox_color">@color/darkTurquoise</color>
     <color name="number_color">@color/white</color>
-    
-    <!--Light Color-->
-    <color name="Background">#CCCCCC</color>
+    <color name="bomb_color">@android:color/transparent</color>
+
+    <!-- couleurs de l'affichage-->
+
+    <color name="timerBarColor">@color/darkTurquoise</color>
+    <color name="Background">@color/chineseSilver</color>
     <color name="BackgroundBtn">@color/white</color>
-    <color name="textBtn">#191C1E</color>
-    <color name="Case">#FFFFFFFF</color>
-    <color name="textCase">#CCCCCC</color>
-    <color name="BtnCase">#CCCCCC</color>
-    <color name="textBtnCase">#191C1E</color>
-
-
-
+    <color name="textBtn">@color/vampireBlack</color>
+    <color name="Case">@color/white</color>
+    <color name="textCase">@color/chineseSilver</color>
+    <color name="BtnCase">@color/chineseSilver</color>
+    <color name="textBtnCase">@color/vampireBlack</color>
 
 
 </resources>

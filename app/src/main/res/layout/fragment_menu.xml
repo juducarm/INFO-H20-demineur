@@ -7,15 +7,14 @@
     android:background="@color/Background">
 
 
-    <androidx.appcompat.widget.AppCompatButton
+    <TextView
         android:id="@+id/reglages"
+        style="@style/style_texte_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/BackgroundBtn"
+        android:layout_marginTop="16dp"
         android:text="@string/Réglages"
         android:textColor="@color/textBtn"
-        android:textSize="17dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -60,8 +59,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/CaseHardLevel"
                     android:textAlignment="center"
-                    android:textColor="@color/textBtnCase"
-                    android:textSize="13dp" />
+                    style="@style/style_menu"
+                    android:textColor="@color/textBtnCase" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnHardMode"
@@ -103,9 +102,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/CaseTimer"
+                    style="@style/style_menu"
                     android:textAlignment="center"
-                    android:textColor="@color/textBtnCase"
-                    android:textSize="15dp" />
+                    android:textColor="@color/textBtnCase" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnTimer"
@@ -147,8 +146,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/CaseLanguetxt"
                     android:textAlignment="center"
-                    android:textColor="@color/textBtnCase"
-                    android:textSize="15dp" />
+                    style="@style/style_menu"
+                    android:textColor="@color/textBtnCase" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnLanguage"
@@ -188,11 +187,11 @@
 
                 <TextView
                     android:layout_width="wrap_content"
+                    style="@style/style_menu"
                     android:layout_height="wrap_content"
                     android:text="@string/CaseModeNuit"
                     android:textAlignment="center"
-                    android:textColor="@color/textBtnCase"
-                    android:textSize="14dp" />
+                    android:textColor="@color/textBtnCase" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnNightMode"
@@ -205,6 +204,8 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </GridLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

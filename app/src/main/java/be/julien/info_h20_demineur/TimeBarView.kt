@@ -5,15 +5,12 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import kotlinx.android.synthetic.main.fragment_field.*
-import kotlinx.android.synthetic.main.fragment_field.view.*
 
 
 class TimeBarView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
     SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
 
     var drawing = true
-    var drawBackgroundOnly = true
     lateinit var thread: Thread
     lateinit var canvas: Canvas
 
@@ -40,9 +37,9 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
     init {
-        barPaint.color = Color.WHITE
+        barPaint.color = resources.getColor(R.color.white)
         backgroundPaint.color = resources.getColor(R.color.backgroundPaint_color)
-        timePaint.color = Color.GREEN
+        timePaint.color = resources.getColor(R.color.timerBarColor)
     }
 
     override fun run() {

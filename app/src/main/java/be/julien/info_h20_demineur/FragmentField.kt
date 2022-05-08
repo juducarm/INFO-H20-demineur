@@ -1,7 +1,6 @@
 package be.julien.info_h20_demineur
 
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.textview.MaterialTextView
-import kotlinx.android.synthetic.main.fragment_field.*
 import kotlinx.android.synthetic.main.fragment_field.view.*
 
 
@@ -19,10 +17,10 @@ class FragmentField : Fragment() {
     lateinit var textViewFlag: TextView
     lateinit var textViewTimer: TextView
 
-    var nbrBoxesWidth = 9 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
-    var nbrBoxesHeight = 13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
-    var nbrBombs = 20 //resources.getInteger(R.integer.nbrBombs_EZ)
-    var timeReward = 1000L
+    var nbrBoxesWidth = 0 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
+    var nbrBoxesHeight = 0 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
+    var nbrBombs = 0 //resources.getInteger(R.integer.nbrBombs_EZ)
+    var timeReward = 0L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? {
@@ -35,10 +33,7 @@ class FragmentField : Fragment() {
         fieldView.setWillNotDraw(false)
         fieldView.textViewFlag = textViewFlag as MaterialTextView //seule façon trouvée pour référencer les textView dans le fieldView
         fieldView.textViewTimer = textViewTimer as MaterialTextView
-        fieldView.nbrBoxesHeight = nbrBoxesHeight
-        fieldView.nbrBoxesWidth = nbrBoxesWidth
-        fieldView.nbrBombs = nbrBombs
-        fieldView.timeReward = timeReward
+        goToEasyMode()
         fieldView.boxSize = minOf(fieldView.xRes  / nbrBoxesWidth, fieldView.yRes / nbrBoxesHeight)
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
@@ -72,22 +67,6 @@ class FragmentField : Fragment() {
     override fun onResume() {
         super.onResume()
         fieldView.resume()
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    override fun onStop() {
-        super.onStop()
     }
 
 }

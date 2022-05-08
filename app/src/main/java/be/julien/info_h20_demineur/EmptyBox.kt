@@ -73,6 +73,12 @@ class EmptyBox(fieldPosition: Point, view: FieldView):
 
     }
 
+    fun carefullBomb() {
+        isSafe = false
+        bombsAround++
+        boxPaint.color = view.closeBoxColor
+    }
+
 
 
 

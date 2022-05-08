@@ -1,6 +1,5 @@
 package be.julien.info_h20_demineur
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -14,7 +13,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.SurfaceHolder
-import android.graphics.*
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Build
@@ -36,16 +34,18 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
     var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_HARD)
     var nbrBombs = resources.getInteger(R.integer.nbrBombs_HARD)
+    
+
+    //réglages graphiques ( tout est dans le fieldView pour avoir accès au getResources() )
     val xRes = resources.getInteger(R.integer.xResolution).toFloat()
     val yRes = resources.getInteger(R.integer.yResolution).toFloat()
     val pixelsTopBar =
         resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar
     var boxSize = minOf(xRes / nbrBoxesWidth, yRes / nbrBoxesHeight)
     val textPaint = Paint()
-
-    //réglages graphiques
     val imageBomb = resources.getDrawable(R.drawable.ic_bomb)
     val imageFlag = resources.getDrawable(R.drawable.ic_flag)
+    val bombColor = resources.getColor(R.color.bomb_color)
     val hiddenBoxColor1 = resources.getColor(R.color.hiddenBox_color1)
     val hiddenBoxColor2 = resources.getColor(R.color.hiddenBox_color2)
     val safeBoxColor1 = resources.getColor(R.color.safeBox_color1)
@@ -53,13 +53,15 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val closeBoxColor = resources.getColor(R.color.closeBox_color)
     val numberColor = resources.getColor(R.color.number_color)
 
+
     //variables et valeurs pour le jeu
-    var flagWitness = "Off "
+    val activity = context as FragmentActivity
+    
+    var flagWitness = "Off " //affiche si le mode drapeau est activé ou non
     var gameOver = false
     var random = Random()
     var flagModeOn = false
     var firstClick = true
-    val activity = context as FragmentActivity
     var drawing = true
     lateinit var textViewFlag: com.google.android.material.textview.MaterialTextView
     lateinit var textViewTimer: com.google.android.material.textview.MaterialTextView
@@ -72,11 +74,12 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val theFlags = ArrayList<Flag>()
     val theLists = listOf(theBombs, theBoxes, theDiscoveredBoxes, theEmptyBoxes, theFlags)
 
-    //variables pour le timer
+    //variables et valeurs pour le timer
     val initialTime = resources.getInteger(R.integer.initial_time).toLong()
     val timerInterval = resources.getInteger(R.integer.timer_interval).toLong()
     var timer = Timer(initialTime, timerInterval, this)
     val textTimer = resources.getString(R.string.timeRemaining)
+    
     var timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
     var timeLeftOnGame = initialTime
     var totalElapsedTime = 0
@@ -117,9 +120,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             (1..nbrBoxesHeight).forEach { y ->
 
                 lateinit var box: Box
-                val aléatoire = random.nextInt(nbrBoxesHeight * nbrBoxesWidth)
+                val randomiser = random.nextInt(nbrBoxesHeight * nbrBoxesWidth)
 
-                if (aléatoire <= nbrBombs.toFloat()) {
+                if (randomiser <= nbrBombs.toFloat()) {
                     box = Bomb(Point(x - 1, y - 1), this)
                     box.isSafe = false //la case n'est pas safe (cf. classe Box)
                     theBombs.add(box)
@@ -137,7 +140,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     override fun onTouchEvent(e: MotionEvent): Boolean {
         when (e.action) {
             MotionEvent.ACTION_DOWN -> {
-                //clickPosition : position du clic sur le field
+
+                //clickPosition : position du clic sur le champ de case
                 val clickPosition = Point((e.rawX / boxSize).toInt(), ((e.rawY - pixelsTopBar) / boxSize).toInt())
 
                 //repere la case sous le clic
@@ -171,8 +175,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                         else {
                             boxUnderClick.discover()
                             if (boxUnderClick.isSafe) {
+                                boxUnderClick.invoke().showAround() //dévoile les cases voisines
                                 boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
-                                boxUnderClick.invoke().showAround()
                                 playShowAroundSound()
                             }
                             if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
@@ -195,7 +199,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     //gestion de du mode drapeau
     fun flagMode() {
         playButtonSound()
-        print("hello")
         if (flagModeOn) {
             flagModeOn = false
             flagWitness = "Off "
@@ -210,7 +213,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         textViewFlag.text = flagWitness + (theBombs.size - theFlags.size).toString()
     }
 
-    //gestion du dessin (ressine tout le plan du jeu à chaque modif
+    //gestion du dessin (ressine tout le plan du jeu à chaque modif)
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         theBoxes.forEach { it.draw(canvas) }
@@ -257,13 +260,12 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun winCondition() {
-        if (theDiscoveredBoxes.size == (nbrBoxesHeight * nbrBoxesWidth - theBombs.size)) {
+        if (theDiscoveredBoxes.size == theEmptyBoxes.size) {
             gameWon()
         }
     }
 
     fun newGame() {
-        timer.start()
         playNewGameSound()
         totalElapsedTime = 0
         timeLeftOnGame = initialTime
@@ -275,12 +277,14 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         boxCreation()
         theBombs.forEach { it.warningBomb(theEmptyBoxes) }
         invalidate()
+        timer.start()
     }
 
     fun gameWon() {
         playWinSound()
         drawing = false
         showGameOverDialog(R.string.win)
+        timer.cancel()
     }
 
     fun gameLost() {
@@ -290,19 +294,17 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         drawing = false
         textViewTimer.text =  " "
         invalidate()
+        timer.cancel()
     }
 
     fun pause() {
         drawing = false
-        //thread.join()
-
     }
 
     fun resume() {
         timer.start()
         activity.timeBarView.timeMax = initialTime
         drawing = true
-        //thread.start()
 
     }
 
@@ -330,7 +332,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun countElapsedTime() {
         totalElapsedTime ++
-        //playTikTokSound()
     }
 
     fun playEmptyBoxSound() {
@@ -351,9 +352,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     fun playShowAroundSound(){
         soundPool.play(soundMap.get(6), 1f, 1f, 1, 0, 1f)
     }
-    fun playTikTokSound(){
-        soundPool.play(soundMap.get(7), 1f, 1f, 0, 0, 0.5f)
-    }
+
     fun playButtonSound(){
         soundPool.play(soundMap.get(8), 1f, 1f, 0, 0, 3f)
     }
