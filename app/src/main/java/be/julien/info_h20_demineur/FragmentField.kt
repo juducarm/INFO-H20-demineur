@@ -22,7 +22,7 @@ class FragmentField : Fragment() {
     var nbrBoxesWidth = 9 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
     var nbrBoxesHeight = 13 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
     var nbrBombs = 20 //resources.getInteger(R.integer.nbrBombs_EZ)
-    var timeReward = 10000L
+    var timeReward = 1000L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? {
