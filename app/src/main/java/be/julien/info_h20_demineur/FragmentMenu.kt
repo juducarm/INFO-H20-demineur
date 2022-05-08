@@ -24,9 +24,8 @@ import kotlinx.android.synthetic.main.fragment_menu.*
 class FragmentMenu : Fragment() {
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    lateinit var mainActivity: MainActivity
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,16 +37,17 @@ class FragmentMenu : Fragment() {
         val btnHardMode = view?.findViewById<AppCompatButton>(R.id.btnHardMode)
         val btnNightMode = view?.findViewById<AppCompatButton>(R.id.btnNightMode)
 
+
         btnNightMode?.setOnClickListener {
-            (activity as MainActivity?)!!.changeNightMode()
+            mainActivity.changeNightMode()
         }
 
         btnLangue?.setOnClickListener {
-            (activity as MainActivity?)!!.changeLanguage()
+            mainActivity.changeLanguage()
         }
 
         btnHardMode?.setOnClickListener {
-           (activity as MainActivity?)!!.changeMode()
+            mainActivity.changeMode()
         }
         return view
     }

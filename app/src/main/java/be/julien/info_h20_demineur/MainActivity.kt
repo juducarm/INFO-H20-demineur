@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     val manager = supportFragmentManager
     var hardModeOn = false
     var onMenu = true
-    var englishOn = true
 
     lateinit var timeBarView: TimeBarView
     lateinit var appSettingPrefs: SharedPreferences
@@ -40,9 +39,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnChangeFragment.setOnClickListener(this)
         timeBarView = findViewById<TimeBarView>(R.id.timeBarView)
         setFragmentMenu()
+        fragmentMenu.mainActivity = this
         appSettingPrefs = getSharedPreferences("AppSettingPrefs", 0)
         val sharedPrefEdit: SharedPreferences.Editor = appSettingPrefs.edit()
-        sharedPrefEdit.putBoolean("NightMode", false)
+        //sharedPrefEdit.putBoolean("NightMode", false)
 
     }
 
@@ -83,11 +83,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         transaction.addToBackStack(null) //conserve le fragment en mémoire
         transaction.commit()
     }
-     fun setFragmentMenu() {
-         val transaction = manager.beginTransaction()
-         transaction.replace(id.fragment_container, fragmentMenu)
-         transaction.addToBackStack(null) //conserve le fragment en mémoire
-         transaction.commit()
+
+    fun setFragmentMenu() {
+        val transaction = manager.beginTransaction()
+        transaction.replace(id.fragment_container, fragmentMenu)
+        transaction.addToBackStack(null) //conserve le fragment en mémoire
+        transaction.commit()
      }
 
     fun getIsNightModeOn(): Boolean {
@@ -97,11 +98,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun changeNightMode() {
-        val sharedPrefEdit: SharedPreferences.Editor = appSettingPrefs.edit()
-        println("nightMode : ${getIsNightModeOn()}")
 
-        if (englishOn) { setToEnglish() }
-        else { setToFrench() }
+        val sharedPrefEdit: SharedPreferences.Editor = appSettingPrefs.edit()
+
 
         if (getIsNightModeOn()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -115,20 +114,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
         sharedPrefEdit.apply()
 
-        if (englishOn) { setToEnglish() }
-        else { setToFrench() }
-        println(englishOn)
-        recreate()
-
-
     }
 
     fun changeLanguage() {
         if (Locale.getDefault().language == "en") {
-            englishOn = false
             setToFrench()
         } else {
-            englishOn = true
             setToEnglish()
         }
         recreate()

@@ -84,12 +84,10 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     fun startDrawing() {
-        println("dessin de la barre activé")
         drawing = true
     }
 
     fun stopDrawing() {
-        println("dessin de la barre désactivé")
         drawing = false
     }
 
