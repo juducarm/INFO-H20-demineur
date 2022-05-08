@@ -13,7 +13,7 @@
     <string name="win">Bravo, tu as gagné !</string>
     <string name="lose">Bravo, tu as perdu !</string>
     <string name="reset_game">Recommencer une partie</string>
-    <string name="results_format">Nombre de cases découvertes : %1$d \nTemps restant : %2$d \nTemps écoulé : %3$d secondes </string> <!-- ajouter : \nTemps écoulé : %2$.1f (pour voir le temps écoulé)-->
+    <string name="results_format">Nombre de cases découvertes : %1$d \nTemps restant : %2$d secondes \nTemps écoulé : %3$d secondes </string> <!-- ajouter : \nTemps écoulé : %2$.1f (pour voir le temps écoulé)-->
 
     <string name="Activer">Activer</string>
     <string name="CaseTimer">Minuterie</string>

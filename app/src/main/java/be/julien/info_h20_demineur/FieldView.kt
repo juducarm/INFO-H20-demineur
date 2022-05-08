@@ -99,12 +99,14 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
             .setMaxStreams(1)
             .setAudioAttributes(audioAttributes)
             .build()
-        soundMap = SparseIntArray(5)
+        soundMap = SparseIntArray(10)
         soundMap.put(0, soundPool.load(context, R.raw.empty_box, 1))
         soundMap.put(1, soundPool.load(context, R.raw.win, 1))
         soundMap.put(2, soundPool.load(context, R.raw.lose, 1))
         soundMap.put(3, soundPool.load(context, R.raw.new_game, 1))
         soundMap.put(4, soundPool.load(context, R.raw.flag, 1))
+        soundMap.put(6, soundPool.load(context, R.raw.show_around, 1))
+        soundMap.put(7, soundPool.load(context, R.raw.tiktok, 1))
         //soundMap.put(5, soundPool.load(context, R.raw.timer, 1))
     }
 
@@ -149,6 +151,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                             boxUnderClick = cleanFirstClic(clickPosition)
                         }
                         boxUnderClick.invoke().cleanField()
+                        boxUnderClick.invoke().showAround()
+                        playShowAroundSound()
                     }
                     else {
 
@@ -166,8 +170,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                         else {
                             boxUnderClick.discover()
                             if (boxUnderClick.isSafe) {
-                                boxUnderClick.invoke().showAround()
                                 boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
+                                boxUnderClick.invoke().showAround()
+                                playShowAroundSound()
                             }
                             if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
                                 theDiscoveredBoxes.add(boxUnderClick)
@@ -308,9 +313,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun timeBonus(timeReward: Long, timeLeft: Long) {
-        //println("time reawrd : $timeReward")
-        //println("time left : ${timeLeft + timeReward}")
         timer.cancel()
+        println(timeReward)
         timer = Timer( timeLeft + timeReward, timerInterval, this)
         timer.start()
     }
@@ -323,6 +327,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun countElapsedTime() {
         totalElapsedTime ++
+        //playTikTokSound()
         //playTimerSound()
     }
 
@@ -343,6 +348,12 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
     fun playTimerSound(){
         soundPool.play(soundMap.get(5), 1f, 1f, 1, 0, 1f)
+    }
+    fun playShowAroundSound(){
+        soundPool.play(soundMap.get(6), 1f, 1f, 1, 0, 1f)
+    }
+    fun playTikTokSound(){
+        soundPool.play(soundMap.get(7), 1f, 1f, 0, 0, 0.5f)
     }
 
 }
