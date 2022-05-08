@@ -188,12 +188,11 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //gestion de du mode drapeau
     fun flagMode() {
+        flagModeOn = !flagModeOn
         if (flagModeOn) {
-            flagModeOn = false
-            flagWitness = "Off "
+            flagWitness = "On"
         } else {
-            flagModeOn = true
-            flagWitness = "On "
+            flagWitness = "Off"
         }
         textViewFlag.text = flagWitness + (theBombs.size - theFlags.size).toString()
     }
@@ -308,8 +307,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun timeBonus(timeReward: Long, timeLeft: Long) {
-        //println("time reawrd : $timeReward")
-        //println("time left : ${timeLeft + timeReward}")
         timer.cancel()
         timer = Timer( timeLeft + timeReward, timerInterval, this)
         timer.start()

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">INFO-H20-demineur</string>
-    <string name="afficher_jeu">aller au JEU</string>
-    <string name="afficher_menu">aller au MENU</string>
+    <string name="afficher_jeu">Jeu</string>
     <string name="menu">MENU</string>
     <string name="field">JEU</string>
     <string name="hello_blank_fragment">Bonjour le fragment vide</string>

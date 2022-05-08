@@ -7,7 +7,7 @@
     <dimen name="default_padding">5dp</dimen>
     <dimen name="heightTopBar">100dp</dimen>
     <dimen name="heightBottomBar">100dp</dimen>
-    <dimen name="heightStatusBar">15dp</dimen>
+    <dimen name="heightStatusBar">0dp</dimen>
 
     <integer name="marginLeftTimeBar">450</integer>
     <integer name="widthTimeBar">500</integer>
@@ -27,12 +27,9 @@
 
     <integer name="initial_time">60000</integer>
     <integer name="timer_interval">1000</integer>
-    <integer name="hit_reward_hard">5000</integer>
-    <integer name="hit_reward_easy">10000</integer>
+    <integer name="hit_reward_hard">1000</integer>
+    <integer name="hit_reward_easy">2000</integer>
 
 
-    <integer name="nbrBoxesHeightHardLevel">18</integer>
-    <integer name="nbrBoxesWidthHardLevel">13</integer>
-    <integer name="nbrBombsHardLevel">40</integer>
 
 </resources>

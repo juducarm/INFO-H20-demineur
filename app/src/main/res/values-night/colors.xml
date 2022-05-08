@@ -1,44 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="chineseSilver">#CCCCCC</color>
-    <color name="midnightBlue">#191970</color>
-    <color name="navyBlue">#000080</color>
-    <color name="slateBlue">#6a5acd</color>
-    <color name="blue">#0000ff</color>
-    <color name="skyBlue">#87ceeb</color>
-    <color name="lightSkyBlue">#87cefa</color>
-    <color name="steelBlue">#4682b4</color>
-    <color name="lightSteelBlue">#b0c4de</color>
-    <color name="paleTurquoise">#afeeee</color>
-    <color name="darkTurquoise">#00ced1</color>
-    <color name="gradient">#5618E9</color>
-    <color name="linear">#8909F9</color>
+
 
     <!-- couleurs du champs de cases -->
-    <color name="backgroundPaint_color">@color/lightSteelBlue</color>
+    <color name="backgroundPaint_color">@color/darkGrey</color>
     <color name="main_layout">@color/blue</color>
-    <color name="hiddenBox_color1">@color/gradient</color>
-    <color name="hiddenBox_color2">@color/linear</color>
-    <color name="safeBox_color1">@color/purple_200</color>
-    <color name="safeBox_color2">@color/slateBlue</color>
-    <color name="closeBox_color">@color/midnightBlue</color>
+    <color name="hiddenBox_color1">@color/black</color>
+    <color name="hiddenBox_color2">@color/vampireBlack</color>
+    <color name="safeBox_color1">@color/weardGrey</color>
+    <color name="safeBox_color2">@color/chineseSilver</color>
+    <color name="closeBox_color">@color/darkGrey</color>
     <color name="number_color">@color/white</color>
 
     <!-- Night Color-->
-    <color name="Background">#191970</color>
-    <color name="BackgroundBtn">#5618E9</color>
-    <color name="textBtn">#FFFFFF</color>
-    <color name="Case">#FFFFFFFF</color>
-    <color name="textCase">#CCCCCC</color>
-    <color name="BtnCase">#CCCCCC</color>
-    <color name="textBtnCase">#191C1E</color>
+    <color name="Background">@color/black</color>
+    <color name="BackgroundBtn">@color/vampireBlack</color>
+    <color name="textBtn">@color/white</color>
+    <color name="Case">@color/white</color>
+    <color name="textCase">@color/chineseSilver</color>
+    <color name="BtnCase">@color/chineseSilver</color>
+    <color name="textBtnCase">@color/black</color>
 
 
 

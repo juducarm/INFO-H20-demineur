@@ -13,7 +13,8 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
     SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
 
     var drawing = true
-    val thread = Thread(this)
+    var drawBackgroundOnly = true
+    lateinit var thread: Thread
     lateinit var canvas: Canvas
 
     //réglages des positions
@@ -40,7 +41,7 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
 
     init {
         barPaint.color = Color.WHITE
-        backgroundPaint.color = resources.getColor(R.color.Background)
+        backgroundPaint.color = resources.getColor(R.color.backgroundPaint_color)
         timePaint.color = Color.GREEN
     }
 
@@ -52,16 +53,23 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
 
     fun draw() {
         if (holder.surface.isValid) {
-            canvas = holder.lockCanvas()
-            canvas.drawRect(backgroundArea, backgroundPaint)
-            canvas.drawRect(barArea, barPaint)
-            canvas.drawRect(timeArea, timePaint)
-            holder.unlockCanvasAndPost(canvas)
+                canvas = holder.lockCanvas()
+                canvas.drawRect(backgroundArea, backgroundPaint)
+                canvas.drawRect(barArea, barPaint)
+                canvas.drawRect(timeArea, timePaint)
+                holder.unlockCanvasAndPost(canvas)
         }
     }
 
+
+
     fun start() {
+        thread = Thread(this)
         thread.start()
+    }
+
+    fun stop() {
+        thread.join()
     }
 
     fun updateBar(timeLeft: Long) {
@@ -73,12 +81,19 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
         timeArea = Rect(marginLeft + padding, marginTop + padding,
             marginLeft + padding + timeWidth,
             marginTop + heightBar - padding)
-        println("bar : $widthBar et time : $timeWidth")
-
-
-
-
     }
+
+    fun startDrawing() {
+        println("dessin de la barre activé")
+        drawing = true
+    }
+
+    fun stopDrawing() {
+        println("dessin de la barre désactivé")
+        drawing = false
+    }
+
+
     override fun surfaceCreated(p0: SurfaceHolder) {}
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}
     override fun surfaceDestroyed(p0: SurfaceHolder) {}
