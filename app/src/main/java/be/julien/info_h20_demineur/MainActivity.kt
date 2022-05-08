@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         when(v.id) { //when au lieu de setOnClickListener pour pouvoir mettre plusieurs boutons facilement si besoin
             R.id.btnChangeFragment -> {
-
+                //fieldView.playButtonSound() //ca fait crash jsp pq
                 if (onMenu) {
                     btnChangeFragment.text = getString(string.afficher_menu)
 

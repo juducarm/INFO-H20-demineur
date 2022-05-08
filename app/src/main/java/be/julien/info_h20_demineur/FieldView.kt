@@ -107,7 +107,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         soundMap.put(4, soundPool.load(context, R.raw.flag, 1))
         soundMap.put(6, soundPool.load(context, R.raw.show_around, 1))
         soundMap.put(7, soundPool.load(context, R.raw.tiktok, 1))
-        //soundMap.put(5, soundPool.load(context, R.raw.timer, 1))
+        soundMap.put(8, soundPool.load(context, R.raw.button, 1))
+
     }
 
     //création des boxes
@@ -193,6 +194,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //gestion de du mode drapeau
     fun flagMode() {
+        playButtonSound()
+        print("hello")
         if (flagModeOn) {
             flagModeOn = false
             flagWitness = "Off "
@@ -328,7 +331,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     fun countElapsedTime() {
         totalElapsedTime ++
         //playTikTokSound()
-        //playTimerSound()
     }
 
     fun playEmptyBoxSound() {
@@ -346,15 +348,16 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     fun playNewGameSound(){
         soundPool.play(soundMap.get(3), 1f, 1f, 1, 0, 1f)
     }
-    fun playTimerSound(){
-        soundPool.play(soundMap.get(5), 1f, 1f, 1, 0, 1f)
-    }
     fun playShowAroundSound(){
         soundPool.play(soundMap.get(6), 1f, 1f, 1, 0, 1f)
     }
     fun playTikTokSound(){
         soundPool.play(soundMap.get(7), 1f, 1f, 0, 0, 0.5f)
     }
+    fun playButtonSound(){
+        soundPool.play(soundMap.get(8), 1f, 1f, 0, 0, 3f)
+    }
+
 
 }
 
