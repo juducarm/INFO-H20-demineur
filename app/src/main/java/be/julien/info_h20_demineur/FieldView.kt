@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -282,6 +283,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         firstClick = true
         drawing = true
         gameOver = false
+        activity.timeBarView.timeMax = timeLeftOnGame
         theLists.forEach { it.clear() }
         boxCreation()
         theBombs.forEach { it.warningBomb(theEmptyBoxes) }
@@ -306,6 +308,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         timer.cancel()
     }
 
+
     //gestion de la difficulté
     fun goToEasyMode() {
         nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_EZ)
@@ -314,7 +317,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         nbrBombs = resources.getInteger(R.integer.nbrBombs_EZ)
         timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
     }
-
 
     fun goToHardMode() {
         nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
@@ -333,6 +335,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         drawing = true
 
     }
+
 
     //gestion du timer
     fun displayTimer(timeLeft: Long) {
@@ -354,10 +357,10 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         timer.start()
     }
 
-
     fun countElapsedTime() {
         totalElapsedTime ++
     }
+
 
     fun playEmptyBoxSound() {
         soundPool.play(soundMap.get(0), 1f, 1f, 1, 0, 1f)
@@ -377,7 +380,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     fun playShowAroundSound(){
         soundPool.play(soundMap.get(6), 1f, 1f, 1, 0, 1f)
     }
-
     fun playButtonSound(){
         soundPool.play(soundMap.get(8), 1f, 1f, 0, 0, 3f)
     }

@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import kotlinx.android.synthetic.main.fragment_field.view.*
 
 
 class TimeBarView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
@@ -59,8 +60,6 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
         }
     }
 
-
-
     fun start() {
         threadRunning = true
         thread = Thread(this)
@@ -68,13 +67,11 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     fun stop() {
-        if (threadRunning) {thread.interrupt()}
+        if (threadRunning) thread.interrupt()
     }
 
     fun updateBar(timeLeft: Long) {
-        if (timeLeft > timeMax) {
-            timeMax = timeLeft
-        }
+        if (timeLeft > timeMax)  timeMax = timeLeft
         var timePourcentage = timeLeft.toFloat() / timeMax.toFloat()
         timeWidth = ((widthBar - 2*padding) * timePourcentage).toInt()
         timeArea = Rect(marginLeft + padding, marginTop + padding,
@@ -89,7 +86,6 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
     fun stopDrawing() {
         drawing = false
     }
-
 
     override fun surfaceCreated(p0: SurfaceHolder) {}
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}
