@@ -144,6 +144,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         }
     }
 
+
     //gestion du clic du joueur
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onTouchEvent(e: MotionEvent): Boolean {
@@ -205,6 +206,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         return true
     }
 
+
     //gestion de du mode drapeau
     fun flagMode() {
         playButtonSound()
@@ -222,12 +224,14 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         textViewFlag.text = flagWitness + (theBombs.size - theFlags.size).toString()
     }
 
+
     //gestion du dessin (ressine tout le plan du jeu à chaque modif)
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         theBoxes.forEach { it.draw(canvas) }
         theFlags.forEach { it.draw(canvas) }
     }
+
 
     //fait en sorte que le premier clique soit toujours sur une case safe
     fun cleanFirstClic(position: Point): Box{
@@ -237,6 +241,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         textViewFlag.text = flagWitness + theBombs.size.toString()
         return theBoxes.single { it.fieldPosition == position }
     }
+
 
     //gestion de fin du jeu
     fun showGameOverDialog(messageId: Int) {
@@ -324,16 +329,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         timeReward = resources.getInteger(R.integer.hit_reward_hard).toLong()
     }
 
-    fun pause() {
-        drawing = false
-    }
-
-    fun resume() {
-        activity.timeBarView.timeMax = initialTime
-        drawing = true
-
-    }
-
 
     //gestion du timer
     fun displayTimer(timeLeft: Long) {
@@ -360,6 +355,17 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
 
+    fun pause() {
+        drawing = false
+    }
+
+    fun resume() {
+        activity.timeBarView.timeMax = initialTime
+        drawing = true
+
+    }
+
+    //gestion des sons
     fun playEmptyBoxSound() {
         soundPool.play(soundMap.get(0), 1f, 1f, 1, 0, 1f)
     }

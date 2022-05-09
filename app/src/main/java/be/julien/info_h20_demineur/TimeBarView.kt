@@ -61,6 +61,7 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     fun start() {
+        drawing = true
         threadRunning = true
         thread = Thread(this)
         thread.start()
@@ -68,6 +69,7 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
 
     fun stop() {
         if (threadRunning) thread.interrupt()
+        drawing = false
     }
 
     fun updateBar(timeLeft: Long) {

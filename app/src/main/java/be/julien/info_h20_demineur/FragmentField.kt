@@ -47,7 +47,6 @@ class FragmentField : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        println("resume")
         fieldView.resume()
     }
 

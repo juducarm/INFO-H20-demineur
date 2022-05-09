@@ -35,39 +35,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(layout.activity_main)
         btnChangeFragment.setOnClickListener(this)
         createFragments()
-        timeBarView = findViewById<TimeBarView>(R.id.timeBarView)
-        fragmentMenu.mainActivity = this
+        timeBarView = findViewById(id.timeBarView)
+        fragmentMenu.mainActivity = this //moyen le plus simple pour référencer mainActivity dans le fragment
         appSettingPrefs = getSharedPreferences("AppSettingPrefs", 0)
     }
 
     override fun onClick(v: View) {
 
         when(v.id) { //when au lieu de setOnClickListener pour pouvoir mettre plusieurs boutons facilement si besoin
-            R.id.btnChangeFragment -> {
+            id.btnChangeFragment -> {
                 if (onMenu) {
                     btnChangeFragment.text = getString(string.afficher_menu)
-
                     showFragmentField()
-
                 }
                 else {
                     btnChangeFragment.text = getString(string.afficher_jeu)
-
                     showFragmentMenu()
-
-
                 }
             }
         }
     }
 
-    
    fun createFragments() {
-       val transaction = manager.beginTransaction()
-       transaction.add(id.fragment_container, fragmentMenu)
-       transaction.add(id.fragment_container, fragmentField)
-       transaction.hide(fragmentField)
-       transaction.commit()
+       manager.beginTransaction()
+           .add(id.fragment_container, fragmentMenu)
+           .add(id.fragment_container, fragmentField)
+           .hide(fragmentField)
+           .commit()
    }
 
    fun showFragmentField() {
@@ -77,12 +71,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
            .hide(fragmentMenu)
            .commit()
        timeBarView.background = Color.TRANSPARENT.toDrawable()
-       timeBarView.startDrawing()
        timeBarView.start()
 
        if (changeMade) { //redémarre la partie si besoin
            fragmentField.fieldView.newGame()
-           fragmentField.fieldView.timer.start()
        }
        else {
            fragmentField.fieldView.setNewTimer()
@@ -98,29 +90,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
            .hide(fragmentField)
            .commit()
        timeBarView.background = resources.getColor(R.color.Background).toDrawable()
-       timeBarView.stopDrawing()
        timeBarView.stop()
    }
 
     fun getIsNightModeOn(): Boolean {
-        val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
-
-        return isNightModeOn
+        return appSettingPrefs.getBoolean("NightMode", false)
     }
 
     fun changeNightMode() {
 
-        val sharedPrefEdit: SharedPreferences.Editor = appSettingPrefs.edit()
+        val sharedPrefEdit = appSettingPrefs.edit()
 
         if (getIsNightModeOn()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             sharedPrefEdit.putBoolean("NightMode", false)
-            //Toast.makeText(applicationContext,resources.getString(R.string.PopupNightModeOFF),Toast.LENGTH_LONG).show()
 
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             sharedPrefEdit.putBoolean("NightMode", true)
-            //Toast.makeText(applicationContext,resources.getString(R.string.PopupNightModeON),Toast.LENGTH_LONG).show()
+
         }
         sharedPrefEdit.apply()
 
@@ -134,7 +122,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             setToEnglish()
         }
         recreate()
-        }
+    }
 
     fun setToEnglish() {
         resources.configuration.setLocale(Locale("en"))
@@ -187,10 +175,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
     
-    fun changesHaveBeenMade() { //permet de redémarrer la partie si des réglages ont été changés
+    fun changesHaveBeenMade() { //permet de redémarrer la partie si des réglages du jeu ont été changés
         changeMade = true
     }
-
 
 }
 
