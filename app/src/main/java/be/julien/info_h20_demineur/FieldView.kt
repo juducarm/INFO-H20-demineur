@@ -30,11 +30,17 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback{
 
 
+    //mode developpeur (affiche le type des cases lorsqu'elles sont cachées pour pouvoir faire des tests)
+    var devMode = false
+    val devSafeColor = resources.getColor(R.color.dev_safe1)
+    val devBombColor = resources.getColor(R.color.dev_bomb)
+    val devCloseColor = resources.getColor(R.color.dev_close1)
+
+
     //réglages du jeu
-    var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
-    var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_HARD)
-    var nbrBombs = resources.getInteger(R.integer.nbrBombs_HARD)
-    
+    var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_EZ )
+    var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_EZ)
+    var nbrBombs = resources.getInteger(R.integer.nbrBombs_EZ)
 
     //réglages graphiques ( tout est dans le fieldView pour avoir accès au getResources() )
     val xRes = resources.getInteger(R.integer.xResolution).toFloat()
@@ -79,7 +85,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val timerInterval = resources.getInteger(R.integer.timer_interval).toLong()
     var timer = Timer(initialTime, timerInterval, this)
     val textTimer = resources.getString(R.string.timeRemaining)
-    
     var timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
     var timeLeftOnGame = initialTime
     var totalElapsedTime = 0
@@ -112,6 +117,10 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         soundMap.put(7, soundPool.load(context, R.raw.tiktok, 1))
         soundMap.put(8, soundPool.load(context, R.raw.button, 1))
 
+    }
+
+    fun changeDevMode(devModeOn: Boolean) {
+        devMode = devModeOn
     }
 
     //création des boxes
@@ -174,18 +183,18 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                         }
                         else {
                             boxUnderClick.discover()
-                            if (boxUnderClick.isSafe) {
-                                boxUnderClick.invoke().showAround() //dévoile les cases voisines
-                                boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
-                                playShowAroundSound()
-                            }
+
                             if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
                                 theDiscoveredBoxes.add(boxUnderClick)
                                 timeBonus(timeReward, timeLeftOnGame)
                                 playEmptyBoxSound()
                                 winCondition()
                             }
-
+                            if (boxUnderClick.isSafe) {
+                                boxUnderClick.invoke().showAround() //dévoile les cases voisines
+                                boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
+                                playShowAroundSound()
+                            }
                         }
                     }
                     invalidate() //appel à la méthode onDraw
@@ -277,7 +286,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         boxCreation()
         theBombs.forEach { it.warningBomb(theEmptyBoxes) }
         invalidate()
-        timer.start()
+        setNewTimer()
     }
 
     fun gameWon() {
@@ -297,12 +306,29 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         timer.cancel()
     }
 
+    //gestion de la difficulté
+    fun goToEasyMode() {
+        nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_EZ)
+        nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_EZ)
+        boxSize = minOf(xRes / nbrBoxesWidth, yRes / nbrBoxesHeight)
+        nbrBombs = resources.getInteger(R.integer.nbrBombs_EZ)
+        timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
+    }
+
+
+    fun goToHardMode() {
+        nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
+        nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_HARD)
+        boxSize = minOf(xRes / nbrBoxesWidth, yRes / nbrBoxesHeight)
+        nbrBombs = resources.getInteger(R.integer.nbrBombs_HARD)
+        timeReward = resources.getInteger(R.integer.hit_reward_hard).toLong()
+    }
+
     fun pause() {
         drawing = false
     }
 
     fun resume() {
-        timer.start()
         activity.timeBarView.timeMax = initialTime
         drawing = true
 
@@ -311,6 +337,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     //gestion du timer
     fun displayTimer(timeLeft: Long) {
         if (drawing) {
+            println("time left : $timeLeftOnGame")
             timeLeftOnGame = timeLeft
             textViewTimer.text = textTimer + " " + (timeLeft/1000).toString()
         }
@@ -319,16 +346,14 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun timeBonus(timeReward: Long, timeLeft: Long) {
         timer.cancel()
-        println(timeReward)
-        timer = Timer( timeLeft + timeReward, timerInterval, this)
+        setNewTimer(timeLeft + timeReward)
+    }
+
+    fun setNewTimer(timeLeft: Long = timeLeftOnGame) {
+        timer = Timer(timeLeft, timerInterval, this)
         timer.start()
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
-
-    override fun surfaceCreated(holder: SurfaceHolder) {}
-
-    override fun surfaceDestroyed(p0: SurfaceHolder) {}
 
     fun countElapsedTime() {
         totalElapsedTime ++
@@ -357,6 +382,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         soundPool.play(soundMap.get(8), 1f, 1f, 0, 0, 3f)
     }
 
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
+    override fun surfaceCreated(holder: SurfaceHolder) {}
+    override fun surfaceDestroyed(p0: SurfaceHolder) {}
 
 }
 

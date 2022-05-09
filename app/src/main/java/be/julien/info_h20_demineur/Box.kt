@@ -6,6 +6,9 @@ import android.graphics.*
 
 abstract class Box(val fieldPosition: Point, var view: FieldView) {
 
+    //mode dev
+    val devPaint = Paint()
+
     val area = RectF(fieldPosition.x * view.boxSize,//surface couverte par la case
         fieldPosition.y * view.boxSize,
         (fieldPosition.x + 1) * view.boxSize,
@@ -18,6 +21,7 @@ abstract class Box(val fieldPosition: Point, var view: FieldView) {
     )
     var hide = true
     var isSafe = true // est true si la case n'est pas une bomb et ne compte aucune bombe parmis ses voisines
+    val paint = Paint()
 
 
     init {

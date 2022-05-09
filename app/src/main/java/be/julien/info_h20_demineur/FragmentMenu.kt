@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_menu.*
 
 
 class FragmentMenu : Fragment() {
@@ -24,6 +25,7 @@ class FragmentMenu : Fragment() {
         val btnLangue = view?.findViewById<AppCompatButton>(R.id.btnLanguage)
         val btnHardMode = view?.findViewById<AppCompatButton>(R.id.btnHardMode)
         val btnNightMode = view?.findViewById<AppCompatButton>(R.id.btnNightMode)
+        val btnDevMode = view?.findViewById<AppCompatButton>(R.id.btnDevMode)
 
         btnNightMode?.setOnClickListener {
             mainActivity.changeNightMode()
@@ -34,7 +36,14 @@ class FragmentMenu : Fragment() {
         }
 
         btnHardMode?.setOnClickListener {
-            mainActivity.changeMode()
+            mainActivity.changeDifficulty()
+            mainActivity.changesHaveBeenMade()
+
+        }
+
+        btnDevMode?.setOnClickListener {
+            mainActivity.changeDevMode()
+            mainActivity.changesHaveBeenMade()
         }
 
         return view

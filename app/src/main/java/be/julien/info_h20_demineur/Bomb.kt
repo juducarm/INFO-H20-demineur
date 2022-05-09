@@ -2,7 +2,7 @@ package be.julien.info_h20_demineur
 
 import android.graphics.Canvas
 
-import android.graphics.Paint
+
 import android.graphics.Point
 
 
@@ -10,10 +10,10 @@ import android.graphics.Point
 class Bomb(fieldPosition: Point, view: FieldView):
     Box(fieldPosition, view) {
 
-    val paint = Paint()
 
     init {
         paint.color = view.bombColor
+        devPaint.color = view.devBombColor
     }
 
     override fun draw(canvas: Canvas?) {
@@ -26,6 +26,11 @@ class Bomb(fieldPosition: Point, view: FieldView):
                 view.imageBomb.draw(canvas)
             }
             if (view.drawing) {view.gameLost()}
+        }
+        else {
+            if (view.devMode) {
+                canvas?.drawRect(area, devPaint) // dessin de la case
+            }
         }
     }
 

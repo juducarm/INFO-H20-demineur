@@ -11,6 +11,7 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
     SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
 
     var drawing = true
+    var threadRunning = false
     lateinit var thread: Thread
     lateinit var canvas: Canvas
 
@@ -61,12 +62,13 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
     fun start() {
+        threadRunning = true
         thread = Thread(this)
         thread.start()
     }
 
     fun stop() {
-        thread.join()
+        if (threadRunning) {thread.interrupt()}
     }
 
     fun updateBar(timeLeft: Long) {

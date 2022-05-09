@@ -16,7 +16,7 @@
     <string name="results_format">Nombre de cases découvertes : %1$d \nTemps restant : %2$d secondes \nTemps écoulé : %3$d secondes </string> <!-- ajouter : \nTemps écoulé : %2$.1f (pour voir le temps écoulé)-->
 
     <string name="Activer">Activer</string>
-    <string name="CaseTimer">Minuterie</string>
+    <string name="CaseDevMode">Mode développeur</string>
     <string name="CaseHardLevel">Mode difficile</string>
     <string name="CaseLangue">Anglais</string>
     <string name="CaseModeNuit">Mode nuit</string>
@@ -32,6 +32,8 @@
     <string name="PopupNightModeOFF">Mode NUIT désactivé</string>
     <string name="PopupHardModeON">Mode DIFFICILE activé</string>
     <string name="PopupHardModeOFF">Mode DIFFICILE désactivé</string>
+    <string name="PopupdevModeOFF">Mode développeur désactivé</string>
+    <string name="PopupdevModeON">Mode développeur activé</string>
 
     <string name="timeRemaining">secondes restantes: </string>
 

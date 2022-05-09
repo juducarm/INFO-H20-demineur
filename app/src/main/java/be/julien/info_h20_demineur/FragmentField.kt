@@ -17,24 +17,18 @@ class FragmentField : Fragment() {
     lateinit var textViewFlag: TextView
     lateinit var textViewTimer: TextView
 
-    var nbrBoxesWidth = 0 //resources.getInteger(R.integer.nbrBoxesWidth_EZ)
-    var nbrBoxesHeight = 0 //resources.getInteger(R.integer.nbrBoxesHeight_EZ)
-    var nbrBombs = 0 //resources.getInteger(R.integer.nbrBombs_EZ)
-    var timeReward = 0L
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? {
 
         val layoutView = inflater.inflate(R.layout.fragment_field, container, false)
-
         textViewFlag = layoutView.findViewById(R.id.textFlag)
         textViewTimer = layoutView.findViewById(R.id.textTimer)
         fieldView = layoutView.findViewById(R.id.fieldView)
         fieldView.setWillNotDraw(false)
         fieldView.textViewFlag = textViewFlag as MaterialTextView //seule façon trouvée pour référencer les textView dans le fieldView
         fieldView.textViewTimer = textViewTimer as MaterialTextView
-        goToEasyMode()
-        fieldView.boxSize = minOf(fieldView.xRes  / nbrBoxesWidth, fieldView.yRes / nbrBoxesHeight)
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
 
@@ -45,19 +39,6 @@ class FragmentField : Fragment() {
         return layoutView
     }
 
-    fun goToEasyMode() {
-       nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_EZ)
-       nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_EZ)
-       nbrBombs = resources.getInteger(R.integer.nbrBombs_EZ)
-       timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
-    }
-
-    fun goToHardMode() {
-        nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_HARD)
-        nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_HARD)
-        nbrBombs = resources.getInteger(R.integer.nbrBombs_HARD)
-        timeReward = resources.getInteger(R.integer.hit_reward_hard).toLong()
-    }
 
     override fun onPause() {
         super.onPause()
@@ -66,6 +47,7 @@ class FragmentField : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        println("resume")
         fieldView.resume()
     }
 

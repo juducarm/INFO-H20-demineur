@@ -10,19 +10,21 @@ import androidx.annotation.RequiresApi
 class EmptyBox(fieldPosition: Point, view: FieldView):
     Box(fieldPosition, view) {
 
-    val boxPaint = Paint()
     val numberPaint = Paint()
     var bombsAround = 0
     var cleaned = false
 
-
     init {
         if ((fieldPosition.x + fieldPosition.y ) % 2 == 0) { //permet d'avoir un quadrillage
-            boxPaint.color = view.safeBoxColor1
+            paint.color = view.safeBoxColor1
         }
-        else {boxPaint.color = view.safeBoxColor2}
+        else {
+            paint.color = view.safeBoxColor2
+        }
         numberPaint.color = view.numberColor
         numberPaint.textSize = view.boxSize
+        devPaint.color = view.devSafeColor
+
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -30,7 +32,7 @@ class EmptyBox(fieldPosition: Point, view: FieldView):
         super.draw(canvas)
         if (!hide) {
             view.theFlags.removeIf { it.fieldPosition == fieldPosition }
-            canvas?.drawRect(area, boxPaint) // dessin de la case
+            canvas?.drawRect(area, paint) // dessin de la case
             if (bombsAround != 0) {
                 canvas?.drawText(
                     "$bombsAround", // dessin du nombre
@@ -38,6 +40,11 @@ class EmptyBox(fieldPosition: Point, view: FieldView):
                     area.bottom - (view.boxSize / 10),
                     numberPaint
                 )
+            }
+        }
+        else {
+            if (view.devMode) {
+                canvas?.drawRect(area, devPaint) // dessin de la case cachée
             }
         }
     }
@@ -76,7 +83,8 @@ class EmptyBox(fieldPosition: Point, view: FieldView):
     fun carefullBomb() {
         isSafe = false
         bombsAround++
-        boxPaint.color = view.closeBoxColor
+        paint.color = view.closeBoxColor
+        devPaint.color = view.devCloseColor
     }
 
 

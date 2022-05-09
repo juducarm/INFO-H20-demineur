@@ -10,7 +10,9 @@ import android.view.WindowManager.LayoutParams.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.graphics.drawable.toDrawable
+import androidx.fragment.app.Fragment
 import be.julien.info_h20_demineur.R.*
+import kotlinx.android.synthetic.main.fragment_field.*
 import java.util.*
 
 
@@ -21,7 +23,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     val manager = supportFragmentManager
     var hardModeOn = false
     var onMenu = true
-    var fragmentFieldExist = false
+    var devModeOn = false
+    var changeMade = false
 
     lateinit var timeBarView: TimeBarView
     lateinit var appSettingPrefs: SharedPreferences
@@ -31,8 +34,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         getWindow().setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN); //cachage de la barre de status
         setContentView(layout.activity_main)
         btnChangeFragment.setOnClickListener(this)
+        createFragments()
         timeBarView = findViewById<TimeBarView>(R.id.timeBarView)
-        setFragmentMenu()
         fragmentMenu.mainActivity = this
         appSettingPrefs = getSharedPreferences("AppSettingPrefs", 0)
     }
@@ -44,43 +47,60 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 if (onMenu) {
                     btnChangeFragment.text = getString(string.afficher_menu)
 
-                   setFragmentField()
+                    showFragmentField()
 
-                    timeBarView.background = Color.TRANSPARENT.toDrawable()
-                    timeBarView.startDrawing()
-                    timeBarView.start()
                 }
                 else {
                     btnChangeFragment.text = getString(string.afficher_jeu)
 
-                    setFragmentMenu()
+                    showFragmentMenu()
 
-                    timeBarView.background = resources.getColor(R.color.Background).toDrawable()
-                    timeBarView.stopDrawing()
-                    timeBarView.stop()
-                    val sharedPrefEdit: SharedPreferences.Editor = appSettingPrefs.edit()
-                    sharedPrefEdit.putBoolean("NightMode", false)
 
                 }
-                onMenu = !onMenu
             }
         }
     }
 
-    fun setFragmentField() {
-        fragmentFieldExist = true
-        val transaction = manager.beginTransaction()
-        transaction.replace(id.fragment_container, fragmentField)
-        transaction.addToBackStack(null) //conserve le fragment en mémoire
-        transaction.commit()
-    }
+    
+   fun createFragments() {
+       val transaction = manager.beginTransaction()
+       transaction.add(id.fragment_container, fragmentMenu)
+       transaction.add(id.fragment_container, fragmentField)
+       transaction.hide(fragmentField)
+       transaction.commit()
+   }
 
-    fun setFragmentMenu() {
-        val transaction = manager.beginTransaction()
-        transaction.replace(id.fragment_container, fragmentMenu)
-        transaction.addToBackStack(null) //conserve le fragment en mémoire
-        transaction.commit()
-     }
+   fun showFragmentField() {
+       onMenu = false
+       manager.beginTransaction()
+           .show(fragmentField)
+           .hide(fragmentMenu)
+           .commit()
+       timeBarView.background = Color.TRANSPARENT.toDrawable()
+       timeBarView.startDrawing()
+       timeBarView.start()
+
+       if (changeMade) { //redémarre la partie si besoin
+           fragmentField.fieldView.newGame()
+           fragmentField.fieldView.timer.start()
+       }
+       else {
+           fragmentField.fieldView.setNewTimer()
+       }
+       changeMade = false
+   }
+
+   fun showFragmentMenu() {
+       fragmentField.fieldView.timer.cancel()
+       onMenu = true
+       manager.beginTransaction()
+           .show(fragmentMenu)
+           .hide(fragmentField)
+           .commit()
+       timeBarView.background = resources.getColor(R.color.Background).toDrawable()
+       timeBarView.stopDrawing()
+       timeBarView.stop()
+   }
 
     fun getIsNightModeOn(): Boolean {
         val isNightModeOn: Boolean = appSettingPrefs.getBoolean("NightMode", false)
@@ -91,7 +111,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     fun changeNightMode() {
 
         val sharedPrefEdit: SharedPreferences.Editor = appSettingPrefs.edit()
-
 
         if (getIsNightModeOn()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -105,7 +124,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
         sharedPrefEdit.apply()
 
-    }
+        }
 
     fun changeLanguage() {
 
@@ -115,40 +134,61 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             setToEnglish()
         }
         recreate()
-    }
+        }
 
     fun setToEnglish() {
         resources.configuration.setLocale(Locale("en"))
         resources.updateConfiguration(resources.configuration, resources.displayMetrics)
         Locale.setDefault(Locale("en"))
-    }
+        }
 
     fun setToFrench() {
         resources.configuration.setLocale(Locale("fr"))
         resources.updateConfiguration(resources.configuration, resources.displayMetrics)
         Locale.setDefault(Locale("fr"))
+        }
+
+    fun changeDifficulty() {
+        if (hardModeOn) {
+            fragmentField.fieldView.goToEasyMode()
+            hardModeOn = false
+            Toast.makeText(
+                applicationContext,
+                resources.getString(R.string.PopupHardModeOFF),
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
+            fragmentField.fieldView.goToHardMode()
+            hardModeOn = true
+            Toast.makeText(
+                applicationContext,
+                resources.getString(R.string.PopupHardModeON),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
-    fun changeMode() {
-        if (fragmentFieldExist) {
-            if (hardModeOn) {
-                fragmentField?.goToEasyMode()
-                hardModeOn = false
-                Toast.makeText(
-                    applicationContext,
-                    resources.getString(R.string.PopupHardModeOFF),
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                fragmentField?.goToHardMode()
-                hardModeOn = true
-                Toast.makeText(
-                    applicationContext,
-                    resources.getString(R.string.PopupHardModeON),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+    fun changeDevMode() {
+        devModeOn = !devModeOn
+        fragmentField.fieldView.changeDevMode(devModeOn)
+        if (devModeOn) {
+            Toast.makeText(
+                applicationContext,
+                resources.getString(R.string.PopupdevModeON),
+                Toast.LENGTH_LONG
+            ).show()
         }
+        else {
+            Toast.makeText(
+                applicationContext,
+                resources.getString(R.string.PopupdevModeOFF),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+    
+    fun changesHaveBeenMade() { //permet de redémarrer la partie si des réglages ont été changés
+        changeMade = true
     }
 
 

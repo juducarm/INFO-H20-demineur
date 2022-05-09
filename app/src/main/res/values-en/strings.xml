@@ -14,7 +14,7 @@
     <string name="reset_game">Restart the game</string>
     <string name="results_format">"Number of squares found : %1$d \nTime left: %2$d seconds \nTotal time required : %3$d seconds "</string>
     <string name="Activer">Enable</string>
-    <string name="CaseTimer">Timer</string>
+    <string name="CaseDevMode">Dev mode</string>
     <string name="CaseHardLevel">Hard level</string>
     <string name="CaseLangue">French</string>
     <string name="CaseModeNuit">Night mode</string>
@@ -29,6 +29,8 @@
     <string name="PopupNightModeOFF">NIGHT mode off</string>
     <string name="PopupHardModeON">HARD mode on</string>
     <string name="PopupHardModeOFF">HARD mode off</string>
+    <string name="PopupdevModeOFF">Dev mode off</string>
+    <string name="PopupdevModeON">Dev mode on</string>
 
     <string name="timeRemaining">seconds remaining: </string>
 </resources>
