@@ -26,6 +26,7 @@
     <color name="weardGrey">#888b77</color>
     <color name="darkRed">#a02016</color>
     <color name="lightRed">#e3453a</color>
+    <color name="darkAnthracite">#262626</color>
 
     <!-- couleurs du champs de cases -->
     <color name="backgroundPaint_color">@color/lightSteelBlue</color>

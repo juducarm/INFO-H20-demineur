@@ -3,10 +3,10 @@
 
 
     <!-- couleurs du champs de cases -->
-    <color name="backgroundPaint_color">@color/darkGrey</color>
+    <color name="backgroundPaint_color">@color/black</color>
     <color name="main_layout">@color/blue</color>
     <color name="hiddenBox_color1">@color/black</color>
-    <color name="hiddenBox_color2">@color/vampireBlack</color>
+    <color name="hiddenBox_color2">@color/darkAnthracite</color>
     <color name="safeBox_color1">@color/weardGrey</color>
     <color name="safeBox_color2">@color/chineseSilver</color>
     <color name="closeBox_color">@color/darkGrey</color>
@@ -14,7 +14,7 @@
 
     <!-- Night Color-->
     <color name="Background">@color/black</color>
-    <color name="BackgroundBtn">@color/vampireBlack</color>
+    <color name="BackgroundBtn">@color/darkAnthracite</color>
     <color name="textBtn">@color/white</color>
     <color name="Case">@color/white</color>
     <color name="textCase">@color/chineseSilver</color>
