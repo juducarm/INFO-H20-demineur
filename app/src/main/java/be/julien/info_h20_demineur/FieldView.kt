@@ -65,7 +65,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     val activity = context as FragmentActivity
     
     var flagWitness = "Off " //affiche si le mode drapeau est activé ou non
-    var gameOver = false
     var random = Random()
     var flagModeOn = false
     var firstClick = true
@@ -282,7 +281,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         flagModeOn = false
         firstClick = true
         drawing = true
-        gameOver = false
         activity.timeBarView.timeMax = timeLeftOnGame
         theLists.forEach { it.clear() }
         boxCreation()
