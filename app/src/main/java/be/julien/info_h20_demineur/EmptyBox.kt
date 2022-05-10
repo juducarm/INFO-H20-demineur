@@ -10,9 +10,9 @@ import androidx.annotation.RequiresApi
 class EmptyBox(fieldPosition: Point, view: FieldView):
     Box(fieldPosition, view) {
 
-    val numberPaint = Paint()
-    var bombsAround = 0
-    var cleaned = false
+    private val numberPaint = Paint()
+    private var bombsAround = 0
+    private var cleaned = false //permet d'éviter que cleanfield tourne en boucle infinie
 
     init {
         if ((fieldPosition.x + fieldPosition.y ) % 2 == 0) { //permet d'avoir un quadrillage
@@ -49,31 +49,31 @@ class EmptyBox(fieldPosition: Point, view: FieldView):
         }
     }
 
-    fun showAround() { //dévoile les 8 cases entourant la case
+    fun showAround(theEmptyBoxes: ArrayList<EmptyBox>, theDiscoveredBoxes: ArrayList<Box>) { //dévoile les 8 cases entourant la case
         aroundList.forEach { point -> //aroundList est définie dans la classe Box
             val fieldAround = Point(point.x + fieldPosition.x, point.y + fieldPosition.y)
-            if (view.theEmptyBoxes.any { it.fieldPosition == fieldAround}) {//verifie si la case n'est pas hors du field
-                val boxAround = view.theEmptyBoxes.single { it.fieldPosition == fieldAround } // récupère l'objet case
+            if (theEmptyBoxes.any { it.fieldPosition == fieldAround}) {//verifie si la case n'est pas hors du field
+                val boxAround = theEmptyBoxes.single { it.fieldPosition == fieldAround } // récupère l'objet case
                 boxAround.discover()
-                if (!view.theDiscoveredBoxes.contains(boxAround)) view.theDiscoveredBoxes.add(boxAround)
+                if (!theDiscoveredBoxes.contains(boxAround)) theDiscoveredBoxes.add(boxAround)
                 view.winCondition()
             }
         }
     }
 
-    fun cleanField() { //dévoile toutes les cases vides au contact indirect d'une case safe
+    fun cleanField(theEmptyBoxes: ArrayList<EmptyBox>, theDiscoveredBoxes: ArrayList<Box>) { //dévoile toutes les cases vides au contact indirect d'une case safe
         cleaned = true
         aroundList.forEach { point ->
             val fieldAround = Point(point.x + fieldPosition.x, point.y + fieldPosition.y)
-            if (view.theEmptyBoxes.any { it.fieldPosition == fieldAround}) {//verifie si la case n'est pas hors du field
-                val boxAround = view.theEmptyBoxes.single { it.fieldPosition == fieldAround } //recupère l'objet case
+            if (theEmptyBoxes.any { it.fieldPosition == fieldAround}) {//verifie si la case n'est pas hors du field
+                val boxAround = theEmptyBoxes.single { it.fieldPosition == fieldAround } //recupère l'objet case
                 if (boxAround.isSafe && !boxAround.cleaned) {
-                    if (!view.theDiscoveredBoxes.contains(boxAround)) {
-                        view.theDiscoveredBoxes.add(boxAround)
+                    if (!theDiscoveredBoxes.contains(boxAround)) {
+                        theDiscoveredBoxes.add(boxAround)
                     }
                     view.winCondition()
-                    boxAround.showAround()
-                    boxAround.cleanField()
+                    boxAround.showAround(theEmptyBoxes, theDiscoveredBoxes)
+                    boxAround.cleanField(theEmptyBoxes, theDiscoveredBoxes)
                 }
             }
         }

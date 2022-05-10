@@ -13,8 +13,7 @@ import androidx.core.graphics.toRect
 //la classe Bomb hérite de la classe Box
 class Bomb(fieldPosition: Point, view: FieldView): Box(fieldPosition, view) {
 
-    val animPaint = Paint()
-    var animColor = false
+    private val animPaint = Paint()
 
 
     init {
@@ -38,7 +37,6 @@ class Bomb(fieldPosition: Point, view: FieldView): Box(fieldPosition, view) {
     }
 
     fun setAnimColor() {
-        animColor = true
         animPaint.color = view.bombColor1
         paint.color = view.bombColor2
     }

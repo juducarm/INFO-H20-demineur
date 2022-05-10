@@ -48,9 +48,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     private val yRes = resources.getInteger(R.integer.yResolution).toFloat()
     private val pixelsTopBar =
         resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar
-    var boxSize = minOf(xRes / nbrBoxesWidth, yRes / nbrBoxesHeight)
     private val textPaint = Paint()
     private val backgroundPaint = Paint()
+    var boxSize = minOf(xRes / nbrBoxesWidth, yRes / nbrBoxesHeight)
     val imageBomb = resources.getDrawable(R.drawable.ic_bomb)
     val imageFlag = resources.getDrawable(R.drawable.ic_flag)
     val bombColor1 = resources.getColor(R.color.bomb_color1)
@@ -135,6 +135,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //création des boxes
     fun boxCreation() {
+        println("classetype : ${textPaint::class}")
         (1..nbrBoxesWidth).forEach { x ->
             (1..nbrBoxesHeight).forEach { y ->
 
@@ -175,8 +176,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                         while (!boxUnderClick.isSafe) {
                             boxUnderClick = cleanFirstClic(clickPosition)
                         }
-                        boxUnderClick.invoke().cleanField()
-                        boxUnderClick.invoke().showAround()
+                        boxUnderClick.invoke().cleanField(theEmptyBoxes, theDiscoveredBoxes)
+                        boxUnderClick.invoke().showAround(theEmptyBoxes, theDiscoveredBoxes)
                         playShowAroundSound()
                     }
                     else {
@@ -200,11 +201,11 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                                 timeBonus(timeReward, timeLeftOnGame)
                                 playEmptyBoxSound()
                                 winCondition()
-                            }
-                            if (boxUnderClick.isSafe) {
-                                boxUnderClick.invoke().showAround() //dévoile les cases voisines
-                                boxUnderClick.invoke().cleanField() //devoile toute la partie safe autours de la case
-                                playShowAroundSound()
+                                if (boxUnderClick.isSafe) {
+                                    boxUnderClick.invoke().showAround(theEmptyBoxes, theDiscoveredBoxes) //dévoile les cases voisines
+                                    boxUnderClick.invoke().cleanField(theEmptyBoxes, theDiscoveredBoxes) //devoile toute la partie safe autours de la case
+                                    playShowAroundSound()
+                                }
                             }
                         }
                     }
@@ -380,7 +381,28 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         totalElapsedTime ++
     }
 
+    //gestion de l'animation
+    private fun prepareAnimation() {
+        theBombs.forEach { it.setAnimColor() }
+        timerAnimation = TimerAnimation(0L, animInterval, this)
+        timerAnimation.start()
+        onDrawOff = true
+    }
 
+    override fun drawAnim() {
+        super.drawAnim()
+        bombsOn = !bombsOn
+        if (holder.surface.isValid) {
+            canvas = holder.lockCanvas()
+            theBoxes.forEach { it.draw(canvas) }
+            if (bombsOn) theBombs.forEach { it.draw(canvas) }
+            else theBombs.forEach { it.anim(canvas) }
+            holder.unlockCanvasAndPost(canvas)
+        }
+        timerAnimation.cancel()
+        timerAnimation = TimerAnimation(animInterval, animInterval, this)
+        timerAnimation.start()
+    }
 
     //gestion des sons
     private fun playEmptyBoxSound() {
@@ -406,27 +428,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
 
-    fun prepareAnimation() {
-        theBombs.forEach { it.setAnimColor() }
-        timerAnimation = TimerAnimation(0L, animInterval, this)
-        timerAnimation.start()
-        onDrawOff = true
-    }
-
-    override fun drawAnim() {
-        super.drawAnim()
-        bombsOn = !bombsOn
-        if (holder.surface.isValid) {
-            canvas = holder.lockCanvas()
-            theBoxes.forEach { it.draw(canvas) }
-            if (bombsOn) theBombs.forEach { it.draw(canvas) }
-            else theBombs.forEach { it.anim(canvas) }
-            holder.unlockCanvasAndPost(canvas)
-        }
-        timerAnimation.cancel()
-        timerAnimation = TimerAnimation(animInterval, animInterval, this)
-        timerAnimation.start()
-    }
 
     override fun surfaceCreated(p0: SurfaceHolder) {}
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}
