@@ -8,7 +8,6 @@ abstract class Box(fieldPosition: Point,view: FieldView) : SquareObject(fieldPos
 
     //mode dev
     val devPaint = Paint()
-
     private val hiddenBoxPaint = Paint()
     val aroundList = listOf( //liste permettant d'accéder aux cases voisines
         Point(-1, -1), Point(-1, 0), Point(-1, 1),
@@ -33,12 +32,11 @@ abstract class Box(fieldPosition: Point,view: FieldView) : SquareObject(fieldPos
         }
     }
 
-
     fun discover() { //découvre la case
         hide = false
     }
 
-    operator fun invoke(): EmptyBox { //permet de change la classe de l'objet de Box à EmptyBo
+    operator fun invoke(): EmptyBox { //permet de change la classe de l'objet de Box à EmptyBox
     return EmptyBox(fieldPosition, view)
     }
 

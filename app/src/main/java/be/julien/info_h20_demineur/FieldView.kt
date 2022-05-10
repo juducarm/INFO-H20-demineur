@@ -88,15 +88,15 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     private var timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
     private var textTimer = resources.getString(R.string.timeRemaining)
     var timerInGame = TimerInGame(initialTime, timerInterval, this)
-    var timeLeftOnGame = initialTime
-    var totalElapsedTime = 0
+    private var timeLeftOnGame = initialTime
+    private var totalElapsedTime = 0
 
     //valeurs et variables pour l'animation des bombes en fin de partie
-    var bombsOn = true
-    val animInterval = resources.getInteger(R.integer.interval_anim_bombs).toLong()
+    private var bombsOn = true
+    private val animInterval = resources.getInteger(R.integer.interval_anim_bombs).toLong()
     lateinit var canvas: Canvas
     lateinit var timerAnimation: TimerAnimation
-    var onDrawOff = false
+    private var onDrawOff = false
 
     //sons
     private val soundPool: SoundPool

@@ -45,7 +45,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             id.btnChangeFragment -> {
                 if (onMenu) {
                     btnChangeFragment.text = getString(string.afficher_menu)
+
                     showFragmentField()
+
                 }
                 else {
                     btnChangeFragment.text = getString(string.afficher_jeu)
