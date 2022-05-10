@@ -18,16 +18,15 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    val fragmentField = FragmentField()
-    val fragmentMenu = FragmentMenu()
-    val manager = supportFragmentManager
-    var hardModeOn = false
-    var onMenu = true
-    var devModeOn = false
-    var changeMade = false
+    private val fragmentField = FragmentField()
+    private val fragmentMenu = FragmentMenu()
+    private var hardModeOn = false
+    private var onMenu = true
+    private var devModeOn = false
+    private var changeMade = false
 
-    lateinit var timeBarView: TimeBarView
-    lateinit var appSettingPrefs: SharedPreferences
+    private lateinit var timeBarView: TimeBarView
+    private lateinit var appSettingPrefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,17 +55,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-   fun createFragments() {
-       manager.beginTransaction()
+   private fun createFragments() {
+       supportFragmentManager.beginTransaction()
            .add(id.fragment_container, fragmentMenu)
            .add(id.fragment_container, fragmentField)
            .hide(fragmentField)
            .commit()
    }
 
-   fun showFragmentField() {
+   private fun showFragmentField() {
        onMenu = false
-       manager.beginTransaction()
+       supportFragmentManager.beginTransaction()
            .show(fragmentField)
            .hide(fragmentMenu)
            .commit()
@@ -82,10 +81,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
        changeMade = false
    }
 
-   fun showFragmentMenu() {
+   private fun showFragmentMenu() {
        fragmentField.fieldView.timerInGame.cancel()
        onMenu = true
-       manager.beginTransaction()
+       supportFragmentManager.beginTransaction()
            .show(fragmentMenu)
            .hide(fragmentField)
            .commit()
@@ -93,9 +92,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
        timeBarView.stop()
    }
 
-    fun getIsNightModeOn(): Boolean {
-        return appSettingPrefs.getBoolean("NightMode", false)
-    }
 
     fun changeNightMode() {
 
@@ -114,6 +110,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         }
 
+    private fun getIsNightModeOn(): Boolean {
+        return appSettingPrefs.getBoolean("NightMode", false)
+    }
+
     fun changeLanguage() {
 
         if (Locale.getDefault().language == "en") {
@@ -124,13 +124,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         recreate()
     }
 
-    fun setToEnglish() {
+
+
+    private fun setToEnglish() {
         resources.configuration.setLocale(Locale("en"))
         resources.updateConfiguration(resources.configuration, resources.displayMetrics)
         Locale.setDefault(Locale("en"))
         }
 
-    fun setToFrench() {
+    private fun setToFrench() {
         resources.configuration.setLocale(Locale("fr"))
         resources.updateConfiguration(resources.configuration, resources.displayMetrics)
         Locale.setDefault(Locale("fr"))

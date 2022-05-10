@@ -27,8 +27,8 @@ class FragmentField : Fragment() {
         textViewTimer = layoutView.findViewById(R.id.textTimer)
         fieldView = layoutView.findViewById(R.id.fieldView)
         fieldView.setWillNotDraw(false)
-        fieldView.textViewFlag = textViewFlag as MaterialTextView //seule façon trouvée pour référencer les textView dans le fieldView
-        fieldView.textViewTimer = textViewTimer as MaterialTextView
+        fieldView.textViewFlag = textViewFlag
+        fieldView.textViewTimer = textViewTimer
         fieldView.boxCreation()
         fieldView.theBombs.forEach { it.warningBomb(fieldView.theEmptyBoxes) }
 
@@ -37,15 +37,6 @@ class FragmentField : Fragment() {
         }
 
         return layoutView
-    }
-
-
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
 }

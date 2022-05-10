@@ -17,6 +17,7 @@ import android.media.SoundPool
 import android.os.Build
 import android.util.SparseIntArray
 import android.view.SurfaceHolder
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
@@ -70,8 +71,8 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     private var firstClick = true
     var playing = true
     var ending = false
-    lateinit var textViewFlag: com.google.android.material.textview.MaterialTextView
-    lateinit var textViewTimer: com.google.android.material.textview.MaterialTextView
+    lateinit var textViewFlag: TextView
+    lateinit var textViewTimer: TextView
 
     //listes d'objets
     private val theBoxes = ArrayList<Box>()
@@ -89,6 +90,13 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     var timerInGame = TimerInGame(initialTime, timerInterval, this)
     var timeLeftOnGame = initialTime
     var totalElapsedTime = 0
+
+    //valeurs et variables pour l'animation des bombes en fin de partie
+    var bombsOn = true
+    val animInterval = resources.getInteger(R.integer.interval_anim_bombs).toLong()
+    lateinit var canvas: Canvas
+    lateinit var timerAnimation: TimerAnimation
+    var onDrawOff = false
 
     //sons
     private val soundPool: SoundPool
@@ -163,7 +171,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
                     //fait en sorte que le premier clic soit toujours sur une case safe
                     if (firstClick) {
-                        playEmptyBoxSound()
                         firstClick = false
                         while (!boxUnderClick.isSafe) {
                             boxUnderClick = cleanFirstClic(clickPosition)
@@ -294,6 +301,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun newGame() {
         playNewGameSound()
+        if (!playing) timerAnimation.cancel() //évite une erreur après un changement de mode
         onDrawOff = false
         ending = false
         timeLeftOnGame = initialTime
@@ -301,7 +309,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         firstClick = true
         playing = true
         backgroundPaint.color = hiddenBoxColor2
-        timerAnimation.cancel()
         totalElapsedTime = 0
         activity.timeBarView.timeMax = timeLeftOnGame
         theLists.forEach { it.clear() }
@@ -312,10 +319,14 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     private fun gameWon() {
+        backgroundPaint.color = Color.TRANSPARENT
         timerInGame.cancel()
         playWinSound()
-        playing = false
+        theBombs.forEach { it.hide = false }
+        textViewTimer.text =  " "
+        ending = true
         showGameOverDialog(R.string.win)
+        invalidate()
     }
 
     fun gameLost() {
@@ -394,11 +405,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         soundPool.play(soundMap.get(8), 1f, 1f, 0, 0, 3f)
     }
 
-    var bombsOn = true
-    val animInterval = resources.getInteger(R.integer.interval_anim_bombs).toLong()
-    lateinit var canvas: Canvas
-    lateinit var timerAnimation: TimerAnimation
-    var onDrawOff = false
 
     fun prepareAnimation() {
         theBombs.forEach { it.setAnimColor() }
@@ -421,27 +427,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         timerAnimation = TimerAnimation(animInterval, animInterval, this)
         timerAnimation.start()
     }
-/*
-    fun draw() {
-        bombsOn = !bombsOn
-        if (holder.surface.isValid) {
-            canvas = holder.lockCanvas()
-            theBoxes.forEach { it.draw(canvas) }
-            if (bombsOn) theBombs.forEach { it.draw(canvas) }
-            else theBombs.forEach { it.anim(canvas) }
-            holder.unlockCanvasAndPost(canvas)
-        }
-        timerAnimation.cancel()
-        timerAnimation = TimerAnimation(animInterval, animInterval, this)
-        timerAnimation.start()
-    }
- */
-
 
     override fun surfaceCreated(p0: SurfaceHolder) {}
-
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}
-
     override fun surfaceDestroyed(p0: SurfaceHolder) {}
 
 

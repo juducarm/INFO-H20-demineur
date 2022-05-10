@@ -25,7 +25,6 @@ class Bomb(fieldPosition: Point, view: FieldView): Box(fieldPosition, view) {
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
         if (!hide ) {
-            println(animColor)
             canvas?.drawRect(area, paint)
             view.imageBomb.setBounds(area.toRect())
             view.imageBomb.draw(canvas!!)
