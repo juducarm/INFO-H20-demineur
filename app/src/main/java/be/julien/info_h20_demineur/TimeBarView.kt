@@ -9,30 +9,30 @@ import kotlinx.android.synthetic.main.fragment_field.view.*
 
 
 class TimeBarView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
-    SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable {
+    SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback, Runnable, DrawAnimation {
 
-    var drawing = true
-    var threadRunning = false
-    lateinit var thread: Thread
-    lateinit var canvas: Canvas
+    private var drawing = true
+    private var threadRunning = false
+    private lateinit var thread: Thread
+    private lateinit var canvas: Canvas
 
     //réglages des positions
-    val xRes = resources.getInteger(R.integer.xResolution)
-    val yRes = resources.getInteger(R.integer.yResolution)
-    val marginLeft = resources.getInteger(R.integer.marginLeftTimeBar)
-    val marginTop = resources.getInteger(R.integer.marginTopTimeBar)
-    val heightBar = resources.getInteger(R.integer.heightTimeBar)
-    val widthBar = resources.getInteger(R.integer.widthTimeBar)
-    val barArea = Rect(marginLeft, marginTop, marginLeft + widthBar, marginTop + heightBar)
-    val backgroundArea = Rect(0, 0, xRes, yRes)
-    val padding = 5
+    private val xRes = resources.getInteger(R.integer.xResolution)
+    private val yRes = resources.getInteger(R.integer.yResolution)
+    private val marginLeft = resources.getInteger(R.integer.marginLeftTimeBar)
+    private val marginTop = resources.getInteger(R.integer.marginTopTimeBar)
+    private val heightBar = resources.getInteger(R.integer.heightTimeBar)
+    private val widthBar = resources.getInteger(R.integer.widthTimeBar)
+    private val barArea = Rect(marginLeft, marginTop, marginLeft + widthBar, marginTop + heightBar)
+    private val backgroundArea = Rect(0, 0, xRes, yRes)
+    private val padding = resources.getInteger(R.integer.paddingtTimeBar)
 
-    val barPaint = Paint()
-    val backgroundPaint = Paint()
-    val timePaint = Paint()
+    private val barPaint = Paint()
+    private val backgroundPaint = Paint()
+    private val timePaint = Paint()
 
-    var timeWidth = 0
-    var timeArea = Rect(marginLeft + padding, marginTop + padding,
+    private var timeWidth = 0
+    private var timeArea = Rect(marginLeft + padding, marginTop + padding,
         marginLeft + padding + timeWidth,
         marginTop + heightBar - padding)
     var timeMax = 0L
@@ -46,17 +46,18 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
 
     override fun run() {
         while (drawing) {
-            draw()
+            drawAnim()
         }
     }
 
-    fun draw() {
+    override fun drawAnim() {
+        super.drawAnim()
         if (holder.surface.isValid) {
-                canvas = holder.lockCanvas()
-                canvas.drawRect(backgroundArea, backgroundPaint)
-                canvas.drawRect(barArea, barPaint)
-                canvas.drawRect(timeArea, timePaint)
-                holder.unlockCanvasAndPost(canvas)
+            canvas = holder.lockCanvas()
+            canvas.drawRect(backgroundArea, backgroundPaint)
+            canvas.drawRect(barArea, barPaint)
+            canvas.drawRect(timeArea, timePaint)
+            holder.unlockCanvasAndPost(canvas)
         }
     }
 
@@ -81,13 +82,6 @@ class TimeBarView @JvmOverloads constructor (context: Context, attributes: Attri
             marginTop + heightBar - padding)
     }
 
-    fun startDrawing() {
-        drawing = true
-    }
-
-    fun stopDrawing() {
-        drawing = false
-    }
 
     override fun surfaceCreated(p0: SurfaceHolder) {}
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}

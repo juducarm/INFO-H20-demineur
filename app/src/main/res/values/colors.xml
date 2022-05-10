@@ -37,7 +37,8 @@
     <color name="safeBox_color2">@color/chineseSilver</color>
     <color name="closeBox_color">@color/darkTurquoise</color>
     <color name="number_color">@color/white</color>
-    <color name="bomb_color">@android:color/transparent</color>
+    <color name="bomb_color1">@color/black</color>
+    <color name="bomb_color2">@color/white</color>
 
     <!-- couleurs de l'affichage-->
 

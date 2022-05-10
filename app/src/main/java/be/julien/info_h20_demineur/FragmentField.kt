@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.fragment_field.view.*
 class FragmentField : Fragment() {
 
     lateinit var fieldView: FieldView
-    lateinit var textViewFlag: TextView
-    lateinit var textViewTimer: TextView
+    private lateinit var textViewFlag: TextView
+    private lateinit var textViewTimer: TextView
 
 
 
@@ -42,12 +42,10 @@ class FragmentField : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        fieldView.pause()
     }
 
     override fun onResume() {
         super.onResume()
-        fieldView.resume()
     }
 
 }

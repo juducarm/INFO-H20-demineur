@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
    }
 
    fun showFragmentMenu() {
-       fragmentField.fieldView.timer.cancel()
+       fragmentField.fieldView.timerInGame.cancel()
        onMenu = true
        manager.beginTransaction()
            .show(fragmentMenu)

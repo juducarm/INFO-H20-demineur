@@ -4,30 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Background">
+    android:background="@android:color/transparent">
 
      <be.julien.info_h20_demineur.FieldView
          android:id="@+id/fieldView"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:background="@color/backgroundPaint_color"
+         android:background="@android:color/transparent"
          app:layout_constraintBottom_toBottomOf="parent"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintTop_toTopOf="parent" />
 
+
      <ImageButton
          android:id="@+id/btnFlag"
          android:layout_width="67dp"
          android:layout_height="71dp"
-         android:layout_marginBottom="16dp"
+         android:layout_marginBottom="32dp"
          android:contentDescription="@string/nombre_de_drapeau"
          app:layout_constraintBottom_toBottomOf="parent"
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintStart_toStartOf="parent"
          app:srcCompat="@drawable/ic_flag"
          tools:ignore="ImageContrastCheck" />
-
 
      <TextView
          android:id="@+id/textFlag"
@@ -45,14 +45,14 @@
          android:id="@+id/textTimer"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_marginBottom="4dp"
          android:text="timer"
          android:textColor="@color/white"
          android:textSize="20dp"
-         app:layout_constraintBottom_toTopOf="@+id/btnFlag"
+
          app:layout_constraintEnd_toEndOf="parent"
          app:layout_constraintHorizontal_bias="0.498"
-         app:layout_constraintStart_toStartOf="parent" />
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/btnFlag" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

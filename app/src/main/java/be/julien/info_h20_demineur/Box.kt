@@ -4,16 +4,12 @@ package be.julien.info_h20_demineur
 import android.graphics.*
 
 
-abstract class Box(val fieldPosition: Point, var view: FieldView) {
+abstract class Box(fieldPosition: Point,view: FieldView) : SquareObject(fieldPosition, view) {
 
     //mode dev
     val devPaint = Paint()
 
-    val area = RectF(fieldPosition.x * view.boxSize,//surface couverte par la case
-        fieldPosition.y * view.boxSize,
-        (fieldPosition.x + 1) * view.boxSize,
-        (fieldPosition.y + 1) * view.boxSize)
-    val hiddenBoxPaint = Paint()
+    private val hiddenBoxPaint = Paint()
     val aroundList = listOf( //liste permettant d'accéder aux cases voisines
         Point(-1, -1), Point(-1, 0), Point(-1, 1),
         Point(1, -1), Point(1, 0), Point(1, 1),

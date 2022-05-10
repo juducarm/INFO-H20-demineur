@@ -12,23 +12,22 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
-import android.view.SurfaceHolder
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Build
 import android.util.SparseIntArray
+import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 
 class FieldView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
-    SurfaceView(context, attributes,defStyleAttr) , SurfaceHolder.Callback{
+    SurfaceView(context, attributes,defStyleAttr), SurfaceHolder.Callback, DrawAnimation {
 
 
     //mode developpeur (affiche le type des cases lorsqu'elles sont cachées pour pouvoir faire des tests)
@@ -39,20 +38,22 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
 
     //réglages du jeu
-    var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_EZ )
-    var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_EZ)
-    var nbrBombs = resources.getInteger(R.integer.nbrBombs_EZ)
+    private var nbrBoxesWidth = resources.getInteger(R.integer.nbrBoxesWidth_EZ )
+    private var nbrBoxesHeight = resources.getInteger(R.integer.nbrBoxesHeight_EZ)
+    private var nbrBombs = resources.getInteger(R.integer.nbrBombs_EZ)
 
     //réglages graphiques ( tout est dans le fieldView pour avoir accès au getResources() )
-    val xRes = resources.getInteger(R.integer.xResolution).toFloat()
-    val yRes = resources.getInteger(R.integer.yResolution).toFloat()
-    val pixelsTopBar =
+    private val xRes = resources.getInteger(R.integer.xResolution).toFloat()
+    private val yRes = resources.getInteger(R.integer.yResolution).toFloat()
+    private val pixelsTopBar =
         resources.getDimension(R.dimen.heightTopBar) + resources.getDimension(R.dimen.heightStatusBar)//hauteur en pixel de la TopBar
     var boxSize = minOf(xRes / nbrBoxesWidth, yRes / nbrBoxesHeight)
-    val textPaint = Paint()
+    private val textPaint = Paint()
+    private val backgroundPaint = Paint()
     val imageBomb = resources.getDrawable(R.drawable.ic_bomb)
     val imageFlag = resources.getDrawable(R.drawable.ic_flag)
-    val bombColor = resources.getColor(R.color.bomb_color)
+    val bombColor1 = resources.getColor(R.color.bomb_color1)
+    val bombColor2 = resources.getColor(R.color.bomb_color2)
     val hiddenBoxColor1 = resources.getColor(R.color.hiddenBox_color1)
     val hiddenBoxColor2 = resources.getColor(R.color.hiddenBox_color2)
     val safeBoxColor1 = resources.getColor(R.color.safeBox_color1)
@@ -63,40 +64,41 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //variables et valeurs pour le jeu
     val activity = context as FragmentActivity
-    
-    var flagWitness = "Off " //affiche si le mode drapeau est activé ou non
-    var random = Random()
-    var flagModeOn = false
-    var firstClick = true
-    var drawing = true
+    private var flagWitness = "Off " //affiche si le mode drapeau est activé ou non
+    private var random = Random()
+    private var flagModeOn = false
+    private var firstClick = true
+    var playing = true
+    var ending = false
     lateinit var textViewFlag: com.google.android.material.textview.MaterialTextView
     lateinit var textViewTimer: com.google.android.material.textview.MaterialTextView
 
     //listes d'objets
-    val theBoxes = ArrayList<Box>()
+    private val theBoxes = ArrayList<Box>()
     val theBombs = ArrayList<Bomb>()
     val theEmptyBoxes = ArrayList<EmptyBox>()
     val theDiscoveredBoxes = ArrayList<Box>()
     val theFlags = ArrayList<Flag>()
-    val theLists = listOf(theBombs, theBoxes, theDiscoveredBoxes, theEmptyBoxes, theFlags)
+    private val theLists = listOf(theBombs, theBoxes, theDiscoveredBoxes, theEmptyBoxes, theFlags)
 
     //variables et valeurs pour le timer
-    val initialTime = resources.getInteger(R.integer.initial_time).toLong()
-    val timerInterval = resources.getInteger(R.integer.timer_interval).toLong()
-    var timer = Timer(initialTime, timerInterval, this)
-    val textTimer = resources.getString(R.string.timeRemaining)
-    var timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
+    private val initialTime = resources.getInteger(R.integer.initial_time).toLong()
+    private val timerInterval = resources.getInteger(R.integer.timer_interval).toLong()
+    private var timeReward = resources.getInteger(R.integer.hit_reward_easy).toLong()
+    private var textTimer = resources.getString(R.string.timeRemaining)
+    var timerInGame = TimerInGame(initialTime, timerInterval, this)
     var timeLeftOnGame = initialTime
     var totalElapsedTime = 0
 
     //sons
-    val soundPool: SoundPool
-    val soundMap: SparseIntArray
+    private val soundPool: SoundPool
+    private val soundMap: SparseIntArray
 
 
     init {
         textPaint.textSize = width / 20f
         textPaint.color = Color.BLACK
+        backgroundPaint.color = hiddenBoxColor2
 
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
@@ -151,6 +153,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         when (e.action) {
             MotionEvent.ACTION_DOWN -> {
 
+
                 //clickPosition : position du clic sur le champ de case
                 val clickPosition = Point((e.rawX / boxSize).toInt(), ((e.rawY - pixelsTopBar) / boxSize).toInt())
 
@@ -198,7 +201,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                             }
                         }
                     }
-                    invalidate() //appel à la méthode onDraw
+                    if (playing) invalidate() //appel à la méthode onDraw
                 }
             }
 
@@ -209,6 +212,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //gestion de du mode drapeau
     fun flagMode() {
+
         playButtonSound()
         if (flagModeOn) {
             flagModeOn = false
@@ -228,13 +232,22 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     //gestion du dessin (ressine tout le plan du jeu à chaque modif)
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        theBoxes.forEach { it.draw(canvas) }
-        theFlags.forEach { it.draw(canvas) }
+        if (playing) {
+            println("onDraw de fils deup $playing")
+            canvas!!.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
+            theBoxes.forEach { it.draw(canvas) }
+            theFlags.forEach { it.draw(canvas) }
+
+            if (ending) {
+                prepareAnimation()
+                playing = false
+            }
+        }
     }
 
 
     //fait en sorte que le premier clique soit toujours sur une case safe
-    fun cleanFirstClic(position: Point): Box{
+    private fun cleanFirstClic(position: Point): Box{
         theLists.forEach { it.clear() }
         boxCreation()
         theBombs.forEach { it.warningBomb(theEmptyBoxes) }
@@ -244,7 +257,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
 
     //gestion de fin du jeu
-    fun showGameOverDialog(messageId: Int) {
+    private fun showGameOverDialog(messageId: Int) {
 
         class GameResult : DialogFragment() {
             override fun onCreateDialog(bundle: Bundle?): Dialog {
@@ -281,11 +294,15 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun newGame() {
         playNewGameSound()
-        totalElapsedTime = 0
+        onDrawOff = false
+        ending = false
         timeLeftOnGame = initialTime
         flagModeOn = false
         firstClick = true
-        drawing = true
+        playing = true
+        backgroundPaint.color = hiddenBoxColor2
+        timerAnimation.cancel()
+        totalElapsedTime = 0
         activity.timeBarView.timeMax = timeLeftOnGame
         theLists.forEach { it.clear() }
         boxCreation()
@@ -294,21 +311,23 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         setNewTimer()
     }
 
-    fun gameWon() {
+    private fun gameWon() {
+        timerInGame.cancel()
         playWinSound()
-        drawing = false
+        playing = false
         showGameOverDialog(R.string.win)
-        timer.cancel()
     }
 
     fun gameLost() {
+        backgroundPaint.color = Color.TRANSPARENT
+        timerInGame.cancel()
         playLoseSound()
-        theBombs.forEach { it.hide = false } //nombre de boxes qui ont été découvertes pdt les partie
+        theBombs.forEach { it.hide = false }
         showGameOverDialog(R.string.lose)
-        drawing = false
         textViewTimer.text =  " "
+        ending = true
         invalidate()
-        timer.cancel()
+
     }
 
 
@@ -332,22 +351,18 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //gestion du timer
     fun displayTimer(timeLeft: Long) {
-        if (drawing) {
-            println("time left : $timeLeftOnGame")
-            timeLeftOnGame = timeLeft
-            textViewTimer.text = textTimer + " " + (timeLeft/1000).toString()
-        }
-        else timer.cancel()
+        timeLeftOnGame = timeLeft
+        textViewTimer.text = textTimer + " " + (timeLeft/1000).toString()
     }
 
-    fun timeBonus(timeReward: Long, timeLeft: Long) {
-        timer.cancel()
+    private fun timeBonus(timeReward: Long, timeLeft: Long) {
         setNewTimer(timeLeft + timeReward)
     }
 
     fun setNewTimer(timeLeft: Long = timeLeftOnGame) {
-        timer = Timer(timeLeft, timerInterval, this)
-        timer.start()
+        timerInGame.cancel()
+        timerInGame = TimerInGame(timeLeft, timerInterval, this)
+        timerInGame.start()
     }
 
     fun countElapsedTime() {
@@ -355,42 +370,80 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
 
-    fun pause() {
-        drawing = false
-    }
-
-    fun resume() {
-        activity.timeBarView.timeMax = initialTime
-        drawing = true
-
-    }
 
     //gestion des sons
-    fun playEmptyBoxSound() {
+    private fun playEmptyBoxSound() {
         soundPool.play(soundMap.get(0), 1f, 1f, 1, 0, 1f)
     }
-    fun playLoseSound() {
+    private fun playLoseSound() {
         soundPool.play(soundMap.get(2), 1f, 1f, 1, 0, 1f)
     }
-    fun playWinSound() {
+    private fun playWinSound() {
         soundPool.play(soundMap.get(1), 1f, 1f, 1, 0, 1f)
     }
-    fun playFlagInSound() {
+    private fun playFlagInSound() {
         soundPool.play(soundMap.get(4), 1f, 1f, 1, 0, 1f)
     }
-    fun playNewGameSound(){
+    private fun playNewGameSound(){
         soundPool.play(soundMap.get(3), 1f, 1f, 1, 0, 1f)
     }
-    fun playShowAroundSound(){
+    private fun playShowAroundSound(){
         soundPool.play(soundMap.get(6), 1f, 1f, 1, 0, 1f)
     }
-    fun playButtonSound(){
+    private fun playButtonSound(){
         soundPool.play(soundMap.get(8), 1f, 1f, 0, 0, 3f)
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
-    override fun surfaceCreated(holder: SurfaceHolder) {}
+    var bombsOn = true
+    val animInterval = resources.getInteger(R.integer.interval_anim_bombs).toLong()
+    lateinit var canvas: Canvas
+    lateinit var timerAnimation: TimerAnimation
+    var onDrawOff = false
+
+    fun prepareAnimation() {
+        theBombs.forEach { it.setAnimColor() }
+        timerAnimation = TimerAnimation(0L, animInterval, this)
+        timerAnimation.start()
+        onDrawOff = true
+    }
+
+    override fun drawAnim() {
+        super.drawAnim()
+        bombsOn = !bombsOn
+        if (holder.surface.isValid) {
+            canvas = holder.lockCanvas()
+            theBoxes.forEach { it.draw(canvas) }
+            if (bombsOn) theBombs.forEach { it.draw(canvas) }
+            else theBombs.forEach { it.anim(canvas) }
+            holder.unlockCanvasAndPost(canvas)
+        }
+        timerAnimation.cancel()
+        timerAnimation = TimerAnimation(animInterval, animInterval, this)
+        timerAnimation.start()
+    }
+/*
+    fun draw() {
+        bombsOn = !bombsOn
+        if (holder.surface.isValid) {
+            canvas = holder.lockCanvas()
+            theBoxes.forEach { it.draw(canvas) }
+            if (bombsOn) theBombs.forEach { it.draw(canvas) }
+            else theBombs.forEach { it.anim(canvas) }
+            holder.unlockCanvasAndPost(canvas)
+        }
+        timerAnimation.cancel()
+        timerAnimation = TimerAnimation(animInterval, animInterval, this)
+        timerAnimation.start()
+    }
+ */
+
+
+    override fun surfaceCreated(p0: SurfaceHolder) {}
+
+    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {}
+
     override fun surfaceDestroyed(p0: SurfaceHolder) {}
+
 
 }
 
