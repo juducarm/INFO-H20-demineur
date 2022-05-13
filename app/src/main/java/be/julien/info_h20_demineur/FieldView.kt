@@ -19,6 +19,7 @@ import android.util.SparseIntArray
 import android.view.SurfaceHolder
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -135,7 +136,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     //création des boxes
     fun boxCreation() {
-        println("classetype : ${textPaint::class}")
         (1..nbrBoxesWidth).forEach { x ->
             (1..nbrBoxesHeight).forEach { y ->
 
@@ -177,7 +177,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                             boxUnderClick = cleanFirstClic(clickPosition)
                         }
                         boxUnderClick.invoke().cleanField(theEmptyBoxes, theDiscoveredBoxes)
-                        boxUnderClick.invoke().showAround(theEmptyBoxes, theDiscoveredBoxes)
                         playShowAroundSound()
                     }
                     else {
@@ -188,21 +187,21 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
                                     theFlags.removeIf { it.fieldPosition == clickPosition }
                                     playFlagInSound()
                                 } else {
-                                    theFlags.add(Flag(clickPosition, this))
-                                    playFlagInSound()
+                                    if (theBombs.size - theFlags.size > 0) {
+                                        theFlags.add(Flag(clickPosition, this))
+                                        playFlagInSound()
+                                    }
                                 }
                             }
                         }
                         else {
                             boxUnderClick.discover()
-
                             if (!theDiscoveredBoxes.contains(boxUnderClick) && !theBombs.contains(boxUnderClick)) {
                                 theDiscoveredBoxes.add(boxUnderClick)
                                 timeBonus(timeReward, timeLeftOnGame)
                                 playEmptyBoxSound()
                                 winCondition()
                                 if (boxUnderClick.isSafe) {
-                                    boxUnderClick.invoke().showAround(theEmptyBoxes, theDiscoveredBoxes) //dévoile les cases voisines
                                     boxUnderClick.invoke().cleanField(theEmptyBoxes, theDiscoveredBoxes) //devoile toute la partie safe autours de la case
                                     playShowAroundSound()
                                 }
@@ -222,6 +221,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     fun flagMode() {
 
         playButtonSound()
+
         if (flagModeOn) {
             flagModeOn = false
             flagWitness = "Off "
@@ -241,7 +241,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         if (playing) {
-            println("onDraw de fils deup $playing")
+            backgroundPaint.color = hiddenBoxColor2
             canvas!!.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
             theBoxes.forEach { it.draw(canvas) }
             theFlags.forEach { it.draw(canvas) }
@@ -320,7 +320,7 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     private fun gameWon() {
-        backgroundPaint.color = Color.TRANSPARENT
+        backgroundPaint.color = hiddenBoxColor2
         timerInGame.cancel()
         playWinSound()
         theBombs.forEach { it.hide = false }
@@ -331,7 +331,6 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun gameLost() {
-        backgroundPaint.color = Color.TRANSPARENT
         timerInGame.cancel()
         playLoseSound()
         theBombs.forEach { it.hide = false }
@@ -394,7 +393,9 @@ class FieldView @JvmOverloads constructor (context: Context, attributes: Attribu
         bombsOn = !bombsOn
         if (holder.surface.isValid) {
             canvas = holder.lockCanvas()
+            canvas!!.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
             theBoxes.forEach { it.draw(canvas) }
+            theFlags.forEach { it.draw(canvas) }
             if (bombsOn) theBombs.forEach { it.draw(canvas) }
             else theBombs.forEach { it.anim(canvas) }
             holder.unlockCanvasAndPost(canvas)
