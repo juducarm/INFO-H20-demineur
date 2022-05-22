@@ -20,8 +20,6 @@
     <color name="textCase">@color/chineseSilver</color>
     <color name="BtnCase">@color/chineseSilver</color>
     <color name="textBtnCase">@color/black</color>
-    <color name="bomb_color1">@color/white</color>
-    <color name="bomb_color2">@color/blue</color>
 
 
 
